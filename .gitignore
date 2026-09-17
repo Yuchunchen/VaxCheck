@@ -1,0 +1,11 @@
+node_modules/
+dist/
+e2e/shots/
+*.zip
+*.log
+.DS_Store
+Thumbs.db
+# 匯出診斷 JSON 含病歷資料,永不進 repo
+vaccine-checker-diag-*.json
+# 任何未去識別的原始擷取
+fixtures/raw/

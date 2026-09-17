@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "疫苗檢核程式",
+  "version": "0.1.0",
+  "description": "門診插卡後一鍵檢核公費疫苗接種資格(健保雲端 + 特殊給付限制 + CDC NIIS 接種史)。病患資料只留在瀏覽器。",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://medcloud2.nhi.gov.tw/*",
+    "https://10.241.219.35/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://medcloud2.nhi.gov.tw/imu/*"],
+      "js": ["content-medcloud.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://10.241.219.35/*"],
+      "js": ["content-niis.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "疫苗檢核",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["rules/*.json"],
+      "matches": ["https://medcloud2.nhi.gov.tw/*"]
+    }
+  ]
+}

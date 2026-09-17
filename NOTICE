@@ -1,0 +1,11 @@
+VaxCheck
+Copyright 2026 Yu Chun Chen
+
+This product is licensed under the Apache License, Version 2.0.
+
+Portions of the NHI MediCloud adapter (planned: src/adapters/nhi/tokenUtils.js,
+src/adapters/nhi/userInfoUtils.js) are derived from
+leescot/NHITW_cloud_analyzer_react_MUI
+(https://github.com/leescot/NHITW_cloud_analyzer_react_MUI),
+licensed under the Apache License, Version 2.0.
+Update this NOTICE when those files are actually added to src/.

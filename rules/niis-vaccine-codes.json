@@ -1,0 +1,1366 @@
+{
+  "$comment": "NIIS 疫苗代碼表(VaccID)。機器正本;規則引擎 historyMatch.vaccineCodes 以 canonical 欄位比對。",
+  "version": "2026.09.17-niis1",
+  "sources": [
+    {
+      "id": "SRC_NIIS_API_IMMU_137",
+      "title": "疫苗接種紀錄應用程式介面(API)規格書 第1.3.7版 附錄二 疫苗/大便卡代碼表",
+      "issuer": "衛生福利部疾病管制署",
+      "date": "2026-09-01"
+    },
+    {
+      "id": "SRC_NIIS_API_QUERY_092",
+      "title": "預注資料查詢應用程式介面(API)規格書 第0.9.2版(ImmuRcd.VaccineID / BatchType 格式)",
+      "issuer": "衛生福利部疾病管制署",
+      "date": "2026-08-01"
+    },
+    {
+      "id": "SRC_SELFPAY_11410",
+      "title": "目前國內使用之自費疫苗名稱及代碼表(檔案匯入專用)",
+      "issuer": "衛生福利部疾病管制署",
+      "date": "2025-10"
+    }
+  ],
+  "conventions": {
+    "vaccineIdFormat": "{code}-{dose};單劑疫苗可無劑次(例 BCG、HBIG、MV);COVID 追加劑於查詢 API 回覆為 {code}-Booster、{code}-Booster2…;上傳 API 則為 B、B2…",
+    "parseHint": "code 內含 '-'(JE-CV_LiveAtd、DTaP-HepB-IPV…)與 '/'(CoV_bModerna_BA4/5),不可用 split('-');請對本表 code 做最長前綴比對後再取劑次",
+    "fundingSource": "查詢 API ImmuRcd.BatchType = 公費|自費|臨床試驗;上傳 API BatchType = 1 中央公費|2 自費|3 地方自購;批號字尾 -CDC 中央公費、-HPA 公費HPV、-{縣市碼}-hb 地方自購、無字尾 自費",
+    "active": "false = 規格書註記刪除(市面上已無提供),歷史接種紀錄仍可能出現,對照表不可移除",
+    "canonical": "本專案規則檔使用的代碼;多個 NIIS code 可對到同一 canonical(FLU、COVID、HEPA、JE…)"
+  },
+  "stoolCard": {
+    "code": "Stool",
+    "zh": "大便卡篩檢",
+    "en": "Stool Card Screening",
+    "note": "VaccDoses=第n次篩檢;非疫苗,解析時應排除"
+  },
+  "codes": [
+    {
+      "code": "HBIG",
+      "zh": "B型肝炎免疫球蛋白",
+      "en": "Hepatitis B immunoglobulin",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "HEPB",
+      "canonical": "HBIG",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "BCG",
+      "zh": "卡介苗",
+      "en": "Bacille Calmette-Guérin vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TB",
+      "canonical": "BCG",
+      "selfPayListed": false
+    },
+    {
+      "code": "rHepB",
+      "zh": "B型肝炎遺傳工程疫苗",
+      "en": "Hepatitis B vaccine",
+      "doses": "1~3,無劑次",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "noDoseAllowed": true
+      },
+      "active": true,
+      "group": "HEPB",
+      "canonical": "HEPB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "5in1",
+      "zh": "五合一疫苗(白喉破傷風非細胞性百日咳、b型嗜血桿菌及不活化小兒麻痺混合疫苗)",
+      "en": "Diphtheria, tetanus, acellular pertussis, inactivated polio and Haemophilus influenzae type b conjugate vaccine",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "DTP_COMBO",
+      "canonical": "DTAP_IPV_HIB",
+      "selfPayListed": false
+    },
+    {
+      "code": "Var",
+      "zh": "水痘疫苗",
+      "en": "Varicella vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "VAR",
+      "canonical": "VAR",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "2",
+        "target": "滿4到6歲(自費接種第2劑)或成人"
+      }
+    },
+    {
+      "code": "MMR",
+      "zh": "麻疹腮腺炎德國麻疹混合疫苗",
+      "en": "Measles, mumps and rubella vaccine",
+      "doses": "1~2,無劑次",
+      "doseRange": {
+        "min": 1,
+        "max": 2,
+        "noDoseAllowed": true
+      },
+      "active": true,
+      "group": "MMR",
+      "canonical": "MMR",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "3",
+        "target": "出生滿6個月以上未滿1歲(前往流行地區自費接種)或非常規對象"
+      }
+    },
+    {
+      "code": "JE",
+      "zh": "日本腦炎疫苗(鼠腦製備)",
+      "en": "Japanese encephalitis vaccine, inactivated (mouse brain-derived)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": false,
+      "group": "JE",
+      "canonical": "JE",
+      "selfPayListed": false
+    },
+    {
+      "code": "JE-CV_LiveAtd",
+      "zh": "活性減毒嵌合型日本腦炎疫苗",
+      "en": "Japanese encephalitis vaccine, live attenuated",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "JE",
+      "canonical": "JE",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "JE_LiveAtd",
+      "zh": "活性減毒日本腦炎疫苗(中國成都廠製)",
+      "en": "Japanese encephalitis vaccine, live attenuated",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": false,
+      "group": "JE",
+      "canonical": "JE",
+      "selfPayListed": false
+    },
+    {
+      "code": "JE-VC_Inactd",
+      "zh": "Vero細胞培養不活化日本腦炎疫苗",
+      "en": "Japanese encephalitis vaccine, inactivated (Vero cell culture-derived)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "JE",
+      "canonical": "JE",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "Tdap-IPV",
+      "zh": "減量破傷風白喉非細胞性百日咳及不活化小兒麻痺混合疫苗",
+      "en": "Tetanus toxoid, reduced diphtheria toxoid, acellular pertussis and inactivated polio vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": false,
+      "group": "DTP_COMBO",
+      "canonical": "TDAP_IPV",
+      "selfPayListed": false
+    },
+    {
+      "code": "Td",
+      "zh": "破傷風減量白喉混合疫苗",
+      "en": "Tetanus and diphtheria toxoids for older children/adults",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TD",
+      "canonical": "TD",
+      "selfPayListed": false
+    },
+    {
+      "code": "Flu",
+      "zh": "流行性感冒疫苗",
+      "en": "Influenza vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "FLU",
+      "canonical": "FLU",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "2HepA",
+      "zh": "A型肝炎疫苗(2劑時程)",
+      "en": "Hepatitis A vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "HEPA",
+      "canonical": "HEPA",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "6in1",
+      "zh": "六合一疫苗(白喉破傷風非細胞性百日咳、B型肝炎、b型嗜血桿菌及不活化小兒麻痺混合疫苗)",
+      "en": "Diphtheria, tetanus, acellular pertussis, hepatitis B, inactivated polio and Haemophilus influenzae type b conjugate vaccine",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "DTP_COMBO",
+      "canonical": "DTAP_IPV_HIB_HEPB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "PPV",
+      "zh": "23價多醣體肺炎鏈球菌疫苗",
+      "en": "Pneumococcal polysaccharide vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "PNEUMO",
+      "canonical": "PPV23",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "13PCV",
+      "zh": "13價結合型肺炎鏈球菌疫苗",
+      "en": "Pneumococcal conjugate vaccine (13-valent)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "PNEUMO",
+      "canonical": "PCV13",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "DTaP-IPV",
+      "zh": "白喉破傷風非細胞性百日咳及不活化小兒麻痺混合疫苗",
+      "en": "Diphtheria and tetanus toxoids with acellular pertussis and inactivated polio vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": true,
+      "group": "DTP_COMBO",
+      "canonical": "DTAP_IPV",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-5",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "MV",
+      "zh": "麻疹疫苗",
+      "en": "Measles vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": false,
+      "group": "MMR",
+      "canonical": "MV",
+      "selfPayListed": false
+    },
+    {
+      "code": "DTaP",
+      "zh": "全量型百日咳成分之白喉破傷風非細胞性百日咳三合一疫苗",
+      "en": "Diphtheria and tetanus toxoids with acellular pertussis",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": false,
+      "group": "DTP_COMBO",
+      "canonical": "DTAP",
+      "selfPayListed": false
+    },
+    {
+      "code": "IPV",
+      "zh": "不活化小兒麻痺疫苗",
+      "en": "Inactivated polio vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": true,
+      "group": "POLIO",
+      "canonical": "IPV",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "Hib",
+      "zh": "b型嗜血桿菌疫苗",
+      "en": "Haemophilus influenzae type b vaccine",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "HIB",
+      "canonical": "HIB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "DTP",
+      "zh": "白喉破傷風百日咳混合疫苗",
+      "en": "Diphtheria, tetanus and pertussis vaccine",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": false,
+      "group": "DTP_COMBO",
+      "canonical": "DTWP",
+      "selfPayListed": false
+    },
+    {
+      "code": "DT",
+      "zh": "白喉破傷風混合疫苗",
+      "en": "Diphtheria and tetanus toxoids for children",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "TD",
+      "canonical": "DT",
+      "selfPayListed": false
+    },
+    {
+      "code": "7PCV",
+      "zh": "7價結合型肺炎鏈球菌疫苗",
+      "en": "Pneumococcal conjugate vaccine (7-valent)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": false,
+      "group": "PNEUMO",
+      "canonical": "PCV7",
+      "selfPayListed": false
+    },
+    {
+      "code": "2Rota",
+      "zh": "輪狀病毒疫苗(2劑時程)",
+      "en": "Rotavirus vaccine (2 dose schedule)",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "ROTA",
+      "canonical": "ROTA",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "3Rota",
+      "zh": "輪狀病毒疫苗(3劑時程)",
+      "en": "Rotavirus vaccine (3 dose schedule)",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "ROTA",
+      "canonical": "ROTA",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "MMRV",
+      "zh": "麻疹腮腺炎德國麻疹水痘混合疫苗",
+      "en": "Measles, mumps, rubella and varicella vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": false,
+      "group": "MMR",
+      "canonical": "MMRV",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "10PCV",
+      "zh": "10價結合型肺炎鏈球菌疫苗",
+      "en": "Pneumococcal conjugate vaccine (10-valent)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": false,
+      "group": "PNEUMO",
+      "canonical": "PCV10",
+      "selfPayListed": false
+    },
+    {
+      "code": "4MCV",
+      "zh": "4價結合型流行性腦脊髓膜炎疫苗",
+      "en": "Meningococcal ACYW-135 conjugate vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": true,
+      "group": "MENING",
+      "canonical": "MENACWY",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-5",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "HPV",
+      "zh": "人類乳突病毒疫苗",
+      "en": "Human papillomavirus vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": false,
+      "group": "HPV",
+      "canonical": "HPV",
+      "selfPayListed": false
+    },
+    {
+      "code": "HepAB",
+      "zh": "A型及B型肝炎混合疫苗",
+      "en": "Hepatitis A and hepatitis B vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": false,
+      "group": "HEPA",
+      "canonical": "HEPA_HEPB",
+      "selfPayListed": false
+    },
+    {
+      "code": "Tdap",
+      "zh": "減量破傷風白喉非細胞性百日咳混合疫苗",
+      "en": "Tetanus toxoid, reduced diphtheria toxoid and acellular pertussis vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TD",
+      "canonical": "TDAP",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "pHepB",
+      "zh": "B型肝炎血漿疫苗",
+      "en": "Hepatitis B vaccine (plasma-derived)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": false,
+      "group": "HEPB",
+      "canonical": "HEPB",
+      "selfPayListed": false
+    },
+    {
+      "code": "Mumps",
+      "zh": "腮腺炎疫苗",
+      "en": "Mumps vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": false,
+      "group": "MMR",
+      "canonical": "MUMPS",
+      "selfPayListed": false
+    },
+    {
+      "code": "2HPV",
+      "zh": "人類乳突病毒疫苗(2價)",
+      "en": "Human papillomavirus vaccine (2-valent)",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "HPV",
+      "canonical": "HPV2",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "4HPV",
+      "zh": "人類乳突病毒疫苗(4價)",
+      "en": "Human papillomavirus vaccine (4-valent)",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "HPV",
+      "canonical": "HPV4",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "9HPV",
+      "zh": "人類乳突病毒疫苗(9價)",
+      "en": "Human papillomavirus vaccine (9-valent)",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "HPV",
+      "canonical": "HPV9",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "OPV",
+      "zh": "小兒麻痺口服疫苗",
+      "en": "Oral polio vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": false,
+      "group": "POLIO",
+      "canonical": "OPV",
+      "selfPayListed": false
+    },
+    {
+      "code": "3HepA",
+      "zh": "A型肝炎疫苗",
+      "en": "Hepatitis A vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": false,
+      "group": "HEPA",
+      "canonical": "HEPA",
+      "selfPayListed": false
+    },
+    {
+      "code": "MR",
+      "zh": "麻疹德國麻疹混合疫苗",
+      "en": "Measles and rubella vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": false,
+      "group": "MMR",
+      "canonical": "MR",
+      "selfPayListed": false
+    },
+    {
+      "code": "RV",
+      "zh": "德國麻疹疫苗",
+      "en": "Rubella vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": false,
+      "group": "MMR",
+      "canonical": "RUBELLA",
+      "selfPayListed": false
+    },
+    {
+      "code": "PPD",
+      "zh": "精製結核菌素",
+      "en": "Purified protein derivative (tuberculin test)",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": false,
+      "group": "TB",
+      "canonical": "PPD",
+      "selfPayListed": false
+    },
+    {
+      "code": "15PCV",
+      "zh": "15價結合型肺炎鏈球菌疫苗(目前核准18歲以上)",
+      "en": "Pneumococcal conjugate vaccine (15-valent)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "PNEUMO",
+      "canonical": "PCV15",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "DTaP-HepB-IPV",
+      "zh": "白喉破傷風非細胞性百日咳、B型肝炎及不活化小兒麻痺混合疫苗",
+      "en": "Diphtheria, tetanus, acellular pertussis, hepatitis B and inactivated polio vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": false,
+      "group": "DTP_COMBO",
+      "canonical": "DTAP_HEPB_IPV",
+      "selfPayListed": false
+    },
+    {
+      "code": "YF",
+      "zh": "黃熱病疫苗",
+      "en": "Yellow fever vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TRAVEL",
+      "canonical": "YF",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "Zoster",
+      "zh": "帶狀皰疹疫苗",
+      "en": "Zoster vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": false,
+      "group": "ZOSTER",
+      "canonical": "ZOSTER_UNSPEC",
+      "selfPayListed": false
+    },
+    {
+      "code": "TT",
+      "zh": "破傷風類毒素",
+      "en": "Tetanus toxoid vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TD",
+      "canonical": "TT",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "Rabies",
+      "zh": "狂犬病疫苗",
+      "en": "Rabies vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": true,
+      "group": "TRAVEL",
+      "canonical": "RABIES",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-5",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "Typhoid",
+      "zh": "傷寒疫苗",
+      "en": "Typhoid fever vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "TRAVEL",
+      "canonical": "TYPHOID",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_AZ",
+      "zh": "阿斯特捷利康COVID-19疫苗",
+      "en": "AstraZeneca COVID-19 vaccine",
+      "doses": "1~3、B",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "booster": [
+          "B"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Moderna",
+      "zh": "莫德納COVID-19疫苗",
+      "en": "Moderna COVID-19 Vaccine",
+      "doses": "1~3、B,B2,B3,B4",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "booster": [
+          "B",
+          "B2",
+          "B3",
+          "B4"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_BioNTech",
+      "zh": "輝瑞/BNT COVID-19疫苗",
+      "en": "BioNTech COVID-19 Vaccine",
+      "doses": "1~3、B,B2,B3,B4,B5",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "booster": [
+          "B",
+          "B2",
+          "B3",
+          "B4",
+          "B5"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "DTwP-HepB-Hib",
+      "zh": "白喉、破傷風、全細胞性百日咳、B型肝炎及B型嗜血桿菌混合疫苗",
+      "en": "Diphtheria, tetanus, pertussis, Haemophilus influenzae type B and hepatitis B vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": false,
+      "group": "DTP_COMBO",
+      "canonical": "DTWP_HEPB_HIB",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Medigen",
+      "zh": "高端COVID-19疫苗",
+      "en": "MVC COVID-19 Vaccine",
+      "doses": "1~3、B,B2,B3",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "booster": [
+          "B",
+          "B2",
+          "B3"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Novavax",
+      "zh": "NUVAXOVID COVOVAX(印度製)",
+      "en": "NUVAXOVID COVOVAX COVID-19 vaccine",
+      "doses": "1~3、B,B2,B3,B4,B5",
+      "doseRange": {
+        "min": 1,
+        "max": 3,
+        "booster": [
+          "B",
+          "B2",
+          "B3",
+          "B4",
+          "B5"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "MenB",
+      "zh": "B型腦膜炎雙球菌疫苗",
+      "en": "Meningococcal Group B Vaccine",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "MENING",
+      "canonical": "MENB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_bModerna_BA1",
+      "zh": "莫德納Spikevax雙價疫苗(原病毒株/Omicron BA.1變異株)",
+      "en": "Spikevax Bivalent Original/Omicron BA.1",
+      "doses": "B,B2,B3,B4",
+      "doseRange": {
+        "booster": [
+          "B",
+          "B2",
+          "B3",
+          "B4"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "MPV",
+      "zh": "M痘疫苗",
+      "en": "Mpox Vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "MPOX",
+      "canonical": "MPOX",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_bModerna_BA4/5",
+      "zh": "莫德納雙價疫苗(原病毒株/Omicron BA.4/5變異株)",
+      "en": "Spikevax Bivalent Original/Omicron BA.4/5",
+      "doses": "1~2、B,B2,B3,B4,B5",
+      "doseRange": {
+        "min": 1,
+        "max": 2,
+        "booster": [
+          "B",
+          "B2",
+          "B3",
+          "B4",
+          "B5"
+        ]
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "ZVL",
+      "zh": "活性減毒帶狀疱疹疫苗",
+      "en": "Herpes Zoster Live-Attenuated Vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "ZOSTER",
+      "canonical": "ZVL",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "RZV",
+      "zh": "非活性基因重組蛋白帶狀疱疹疫苗",
+      "en": "Recombinant Zoster Vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "ZOSTER",
+      "canonical": "RZV",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "EV71_Medigen",
+      "zh": "高端腸病毒71型疫苗",
+      "en": "Enterovirus A71 vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "EV71",
+      "canonical": "EV71",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-3",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "EV71_Enimmune",
+      "zh": "安特羅腸病毒71型疫苗",
+      "en": "Enterovirus A71 vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "EV71",
+      "canonical": "EV71",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_Moderna_XBB",
+      "zh": "莫德納(Spikevax) XBB.1.5 COVID-19疫苗",
+      "en": "Moderna (Spikevax) XBB.1.5 COVID-19 Vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "20PCV",
+      "zh": "20價結合型肺炎鏈球菌疫苗",
+      "en": "Pneumococcal conjugate vaccine (20-valent)",
+      "doses": "1~4",
+      "doseRange": {
+        "min": 1,
+        "max": 4
+      },
+      "active": true,
+      "group": "PNEUMO",
+      "canonical": "PCV20",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-4",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_Novavax_XBB",
+      "zh": "Novavax XBB.1.5 COVID-19疫苗",
+      "en": "Novavax XBB.1.5 COVID-19 Vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": false,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Moderna_JN",
+      "zh": "莫德納(Spikevax) JN.1 COVID-19疫苗",
+      "en": "Moderna (Spikevax) JN.1 COVID-19 Vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "RSV",
+      "zh": "呼吸道融合病毒疫苗",
+      "en": "Respiratory Syncytial Virus Vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "RSV",
+      "canonical": "RSV",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "CoV_Novavax_JN",
+      "zh": "Novavax JN.1 COVID-19疫苗",
+      "en": "Novavax JN.1 COVID-19 Vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "4MPSV",
+      "zh": "4價多醣類流行性腦脊髓膜炎疫苗",
+      "en": "Meningococcal ACYW-135 polysaccharide Vaccine",
+      "doses": "1~5",
+      "doseRange": {
+        "min": 1,
+        "max": 5
+      },
+      "active": false,
+      "group": "MENING",
+      "canonical": "MENACWY_PS",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Moderna_LP",
+      "zh": "莫德納(Spikevax) LP.8.1 COVID-19疫苗",
+      "en": "Moderna (Spikevax) LP.8.1 COVID-19 Vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "RSV_mAb",
+      "zh": "呼吸道融合病毒單株抗體",
+      "en": "RSV Monoclonal Antibody",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "RSV",
+      "canonical": "RSV_MAB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "RSV_mAb_S",
+      "zh": "呼吸道融合病毒單株抗體(SYNAGIS)",
+      "en": "RSV Monoclonal Antibody (SYNAGIS)",
+      "doses": "1~6",
+      "doseRange": {
+        "min": 1,
+        "max": 6
+      },
+      "active": true,
+      "group": "RSV",
+      "canonical": "RSV_MAB",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-6",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "LAIV",
+      "zh": "活性減毒流感疫苗",
+      "en": "Live attenuated influenza vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "FLU",
+      "canonical": "FLU",
+      "selfPayListed": true,
+      "selfPay": {
+        "doses": "1-2",
+        "target": "非常規對象"
+      }
+    },
+    {
+      "code": "HepA_L",
+      "zh": "活性減毒A型肝炎疫苗",
+      "en": "Live attenuated hepatitis A vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "HEPA",
+      "canonical": "HEPA",
+      "selfPayListed": false
+    },
+    {
+      "code": "21PCV",
+      "zh": "21價結合型肺炎鏈球菌疫苗",
+      "en": "Pneumococcal conjugate vaccine (21-valent)",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "PNEUMO",
+      "canonical": "PCV21",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Moderna_XFG",
+      "zh": "莫德納XFG COVID-19疫苗",
+      "en": "Moderna XFG COVID-19 Vaccine",
+      "doses": "1~3",
+      "doseRange": {
+        "min": 1,
+        "max": 3
+      },
+      "active": true,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "CoV_Novavax_XFG",
+      "zh": "Novavax XFG COVID-19疫苗",
+      "en": "Novavax XFG COVID-19 Vaccine",
+      "doses": "1~2",
+      "doseRange": {
+        "min": 1,
+        "max": 2
+      },
+      "active": true,
+      "group": "COVID",
+      "canonical": "COVID",
+      "selfPayListed": false
+    },
+    {
+      "code": "FluHD",
+      "zh": "加強型流感疫苗(高劑量)",
+      "en": "High-Dose Inactivated Influenza Vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "FLU",
+      "canonical": "FLU",
+      "selfPayListed": false
+    },
+    {
+      "code": "FluAdj",
+      "zh": "加強型流感疫苗(含佐劑)",
+      "en": "Adjuvanted Inactivated Influenza Vaccine",
+      "doses": "1",
+      "doseRange": {
+        "min": 1,
+        "max": 1
+      },
+      "active": true,
+      "group": "FLU",
+      "canonical": "FLU",
+      "selfPayListed": false
+    }
+  ]
+}

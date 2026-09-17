@@ -1,0 +1,352 @@
+# =====================================================================
+# 疫苗檢核規則集(唯一來源;建置時轉成 dist/rules/vaccines.json)
+# 格式:見 rules/schema.json;寫法說明:見 rules/AUTHORING.md
+#
+# 狀態:
+#   - 肺炎鏈球菌 PCV20/21:正式轉譯自 Notion Canonical(Policy 2026-08-10 起適用)
+#   - 流感:仍為【示範】,數字不是正式公費規則,待規則 agent 產出後取代
+# =====================================================================
+
+ruleSetVersion: 2026.09.15-pneumo1   # 肺鏈為正式轉譯(Policy 2026-08-10);流感仍為示範
+effectiveFrom: "2026-08-10"
+effectiveTo: "2027-09-30"
+
+sources:
+  - id: SRC_EXAMPLE
+    title: 示範用規則集(非正式)— 僅流感示範仍引用此來源
+    issuer: 示範
+  - id: SRC_PNEUMO_CANONICAL
+    title: Notion Canonical Layer｜成人肺炎鏈球菌疫苗(ACTIVE / Production-approved,人工確認 2026-08-20)
+    issuer: 院內(YC)
+    date: "2026-08-20"
+    url: https://app.notion.com/p/3c14b4642c99812e8b90cef734919537
+  - id: SRC_CDC_QA_20260810
+    title: 成人肺炎鏈球菌疫苗接種Q&A|自115年8月10日(含)起適用(最後更新 2026-08-07)
+    issuer: 衛生福利部疾病管制署
+    date: "2026-08-07"
+    url: https://www.cdc.gov.tw/Category/QAPage/CY4qDyIrTM1YPhfOHX-76g
+  - id: SRC_CDC_PLAN_20260810
+    title: 成人公費肺炎鏈球菌疫苗接種計畫|自115年8月10日起適用(最後更新 2026-07-28)
+    issuer: 衛生福利部疾病管制署
+    date: "2026-07-28"
+    url: https://www.cdc.gov.tw/Category/ListContent/PiUlO1cbz0SD6d4S7ycpcA?uaid=EEWg-6treo0pkD14SYcIKA
+  - id: SRC_CDC_LETTER_612
+    title: 疾病管制署致醫界通函第612號|115年8月10日起全面升級 PCV20/PCV21
+    issuer: 衛生福利部疾病管制署
+    docNo: 致醫界通函第612號
+    date: "2026-08-05"
+    url: https://www.cdc.gov.tw/Bulletin/Detail/314drgt9vg05Js-q1Wgdrw?typeid=48
+
+# ---------------------------------------------------------------------
+# 可重用的代碼清單:規則裡以 { $list: 名稱 } 引用
+# 寫法:完整碼 E11.9|前綴 E11*|區間 E08-E13(區間比對字母+前兩碼)
+# ---------------------------------------------------------------------
+codeLists:
+  CHRONIC_DZ_HIGHRISK:
+    label: 高風險慢性病(示範清單,需依 CDC 公告校正)
+    system: ICD-10-CM
+    codes: [E08-E13, I10-I16, I20-I25, "I50*", "J44*", "J45*", "N18*", K70-K77]
+  IMMUNOSUPPRESSANTS:
+    label: 免疫抑制劑/生物製劑(示範:ATC L04A 整群 + 抗腫瘤 L01)
+    system: ATC
+    codes: ["L04A*", "L01*"]
+  HIV_DX:
+    label: HIV 感染
+    system: ICD-10-CM
+    codes: [B20, Z21]
+  COCHLEAR_IMPLANT_MATERIAL:
+    label: 人工電子耳(特材代碼待查,先留空位)
+    system: NHI-MATERIAL
+    codes: [TBD_COCHLEAR]
+  IPD_HIGHRISK_DX:                                          # MCB-07 可由 ICD 偵測的部分;命中即視為高風險,未命中不代表沒有
+    label: IPD 高風險診斷(脾臟功能缺損、免疫功能不全、HIV、腦脊髓液滲漏、人工耳植入、器官移植)
+    system: ICD-10-CM
+    codes:
+      - "D73*"      # 脾臟疾病(功能缺損)
+      - Z90.81      # 後天無脾
+      - "D57*"      # 鐮刀型貧血(功能性無脾)
+      - D80-D84     # 免疫機轉疾患
+      - B20         # HIV
+      - Z21
+      - "G96.0*"    # 腦脊髓液滲漏
+      - Z96.21      # 人工耳植入狀態
+      - "Z94*"      # 器官移植狀態
+  MALIGNANCY_DX:
+    label: 惡性腫瘤
+    system: ICD-10-CM
+    codes: [C00-C96]
+
+# ---------------------------------------------------------------------
+# 三個資料來源都查不到、需醫師在面板勾選的條件
+# askWhen:只在符合條件時才問(減少面板雜訊)
+# ---------------------------------------------------------------------
+manualConditions:
+  - key: indigenous
+    label: 具原住民身分
+    hint: 戶籍註記為準;健保雲端無此欄位
+  - key: pregnant
+    label: 孕婦
+    askWhen:
+      all:
+        - sex: F
+        - age: { min: { years: 12 }, max: { years: 55 } }
+  - key: ltcResident
+    label: 長照機構/安養機構住民或工作人員
+  - key: healthcareWorker
+    label: 醫事及衛生防疫人員
+  - key: bmi30
+    label: BMI ≥ 30
+  - key: ipdHighRisk
+    label: IPD 高風險對象
+    hint: "疾管署定義:脾臟功能缺損、先天或後天免疫功能不全、人工耳植入、腦脊髓液滲漏、一年內接受免疫抑制劑或放射治療的惡性腫瘤者、器官移植者。不得擴張至其他慢性病。"
+  - key: dialysis
+    label: 洗腎患者
+    hint: 病人資訊摘要有「透析」字樣時會自動偵測;沒有時請勾選
+  - key: declinedPcv13Statement
+    label: 曾簽立「無需接種 PCV13 聲明書」
+    hint: 視為具自費接種 PCV13 之紀錄,依 CDC Q&A Q10 辦理
+  - key: severeAllergyToVaccine
+    label: 曾對本疫苗或其成分發生嚴重過敏反應
+  - key: acuteFebrileIllness
+    label: 目前有急性中重度疾病或發燒
+
+# ---------------------------------------------------------------------
+# 疫苗
+# ---------------------------------------------------------------------
+vaccines:
+
+  # ===== 流感 =====
+  - vaccineId: FLU
+    name: { zh: 流感疫苗(公費), en: Seasonal influenza vaccine }
+    historyMatch: { vaccineCodes: [FLU] }       # NIIS Flu/LAIV/FluHD/FluAdj → canonical FLU(對照表 rules/niis-vaccine-codes.json)
+    season: { start: "2026-10-01", end: "2027-03-31" }   # 公費施打期間;季前 → 等到開打日,季後 → 暫不可打
+    sourceIds: [SRC_EXAMPLE]
+
+    eligibilityGroups:
+      - groupId: FLU_ELDER_65
+        label: 65 歲以上長者
+        priorityPhase: 1
+        criteria:
+          age: { min: { years: 65 } }           # 「年滿 65 歲」以檢核當日實足年齡計
+
+      - groupId: FLU_INDIGENOUS_55
+        label: 55 歲以上原住民
+        priorityPhase: 1
+        criteria:
+          all:
+            - age: { min: { years: 55 } }
+            - manual: indigenous                # 雲端查不到 → 醫師勾選
+
+      - groupId: FLU_HIGHRISK_50_64
+        label: 50 至 64 歲具潛在疾病者
+        priorityPhase: 2
+        criteria:
+          all:
+            - age: { min: { years: 50 }, max: { years: 64 } }
+            - any:
+                - diagnosis: { $list: CHRONIC_DZ_HIGHRISK, minRecords: 2 }   # 至少 2 筆,避免單次誤打 ICD
+                - medication: { $list: IMMUNOSUPPRESSANTS, withinDays: 180 }
+                - manual: bmi30
+
+      - groupId: FLU_PREGNANT
+        label: 孕婦
+        priorityPhase: 1
+        criteria: { manual: pregnant }
+
+      - groupId: FLU_LTC
+        label: 安養、養護、長期照顧等機構之受照顧者及工作人員
+        priorityPhase: 1
+        criteria: { manual: ltcResident }
+
+      - groupId: FLU_CHILD_6M_TO_ELEMENTARY
+        label: 滿 6 個月以上至國小入學前幼兒
+        priorityPhase: 1
+        criteria:
+          age: { min: { months: 6 }, max: { years: 6 } }
+        dosingOverride:                          # 8 歲以下初次接種要打兩劑
+          seasonal: true
+          series:
+            - { dose: 1, minAge: { months: 6 }, label: 初次接種第 1 劑 }
+            - { dose: 2, minIntervalDays: 28, label: 8 歲以下初次接種需間隔 4 週打第 2 劑 }
+
+    dosing:
+      seasonal: true                             # 每季重算
+      series:
+        - { dose: 1, minAge: { months: 6 } }
+
+    contraindications:
+      - { id: FLU_C_AGE, label: 未滿 6 個月, severity: absolute, criteria: { age: { max: { months: 5 } } } }
+      - { id: FLU_C_ALLERGY, label: 曾對流感疫苗或其成分嚴重過敏, severity: absolute, manual: severeAllergyToVaccine }
+      - { id: FLU_C_FEVER, label: "急性中重度疾病或發燒,建議延後", severity: precaution, manual: acuteFebrileIllness }
+
+    explain:
+      eligible: "{name}:符合公費對象「{groupLabels}」,本季尚未接種,建議施打第 {nextDose} 劑。"
+      ineligible: "{name}:{age},不在 65 歲以上、50–64 歲高風險、孕婦、機構住民等公費對象內({missing}),需自費。"
+      completed: "{name}:本季已於 {lastDate} 接種,不需再打。"
+
+  # =====================================================================
+  # 肺炎鏈球菌 PCV20 / PCV21(公費)— 正式轉譯
+  # 來源:Notion Canonical「成人肺炎鏈球菌疫苗」ACTIVE 2026-08-20,Policy 2026-08-10 起適用
+  #   CDC 成人肺炎鏈球菌疫苗接種 Q&A(自115年8月10日起適用,最後更新 2026-08-07)
+  #   CDC 成人公費肺炎鏈球菌疫苗接種計畫(自115年8月10日起適用)
+  #   疾管署致醫界通函第612號(2026-08-05):115年8月10日起全面升級 PCV20/PCV21
+  # 對應 Canonical 的 Rule A–E、MCB-01~08、Exception S1–S3;每個案別旁標 sourceRef
+  # =====================================================================
+  - vaccineId: PNEUMO_PCV20_21
+    name: { zh: 肺炎鏈球菌疫苗 PCV20/PCV21(公費), en: Pneumococcal conjugate vaccine PCV20/PCV21 }
+    historyMatch: { vaccineCodes: [PCV20, PCV21] }
+    sourceIds: [SRC_PNEUMO_CANONICAL, SRC_CDC_QA_20260810, SRC_CDC_PLAN_20260810, SRC_CDC_LETTER_612]
+    notes: 年齡依疾管署算法「接種年 − 出生年」(ageByYear),不用實足生日。
+
+    eligibilityGroups:                                      # MCB-01
+      - groupId: PNEUMO_ELDER_65
+        label: 65歲以上長者
+        criteria:
+          ageByYear: { min: 65 }                            # 115年例:民國50年次(含)以前出生
+
+      - groupId: PNEUMO_INDIGENOUS_55_64
+        label: 55–64歲原住民
+        criteria:
+          all:
+            - ageByYear: { min: 55, max: 64 }               # 115年例:民國51–60年次
+            - manual: indigenous                            # 需檢具原住民身分證明
+
+      - groupId: PNEUMO_IPD_19_64
+        label: 19–64歲 IPD 高風險對象
+        criteria:
+          all:
+            - ageByYear: { min: 19, max: 64 }               # 115年例:民國51–96年次
+            - any:                                          # MCB-07 定義;雲端能自動偵測的先偵測,偵測不到由醫師確認
+                - diagnosis: { $list: IPD_HIGHRISK_DX }
+                - specialPayment: { category: material, $list: COCHLEAR_IMPLANT_MATERIAL }
+                - all:                                      # 一年內接受免疫抑制劑或放射治療的惡性腫瘤者
+                    - diagnosis: { $list: MALIGNANCY_DX }
+                    - medication: { $list: IMMUNOSUPPRESSANTS, withinDays: 365 }
+                - manual: ipdHighRisk
+
+    dosing:
+      mode: cases                                           # 依既往接種史逐案判定,第一個命中者為準
+      unknownTypeCodes: [PNEUMO_UNKNOWN, PCV]               # 型別不明的肺鏈紀錄 → 標「接種史需確認」
+      cases:
+        # --- 已有公費 PCV20/21 → 完整 ---
+        - id: D_PCV20_21_PUBLIC
+          label: 已接種公費 PCV20/PCV21
+          sourceRef: Rule D / MCB-06
+          when: { has: { codes: [PCV20, PCV21], funding: 公費 } }
+          then: { action: complete, note: "已完整接種,無需再接種 PCV20/PCV21" }
+
+        # --- Q10:自費 PCV20/21,仍有公費需求 → 滿 5 年,醫師評估 ---
+        - id: S3_SELF_PCV20_21
+          label: 自費接種 PCV20/PCV21
+          sourceRef: Exception S3 / MCB-08(4)
+          when: { has: { codes: [PCV20, PCV21], funding: 自費 } }
+          then: { action: give, dose: 1, minInterval: { years: 5 }, intervalFrom: [PCV20, PCV21], note: "醫療上已完整接種;若仍有公費需求,與前劑間隔至少 5 年,經醫師評估可公費 1 劑" }
+
+        # --- Q10:自費 PPV23 + 公費 PCV13 → 不再公費 ---
+        - id: S3_NOT_FUNDED
+          label: 自費 PPV23 + 公費 PCV13
+          sourceRef: Exception S3 / MCB-08(5)
+          when:
+            all:
+              - has: { codes: [PPV23], funding: 自費 }
+              - has: { codes: [PCV13], funding: 公費 }
+          then: { action: notFunded, note: "過去已由公費提供 PCV13,不再提供公費 PCV20/PCV21;如仍有需求可經醫師評估後自費" }
+
+        # --- Q10:自費 PCV13/15 + PPV23(任一來源)→ 滿 5 年,醫師評估 ---
+        - id: S3_SELF_PCV_PLUS_PPV
+          label: 自費 PCV13/15 + PPV23
+          sourceRef: Exception S3 / MCB-08(4)
+          when:
+            all:
+              - has: { codes: [PCV13, PCV15], funding: 自費 }
+              - has: [PPV23]
+          then: { action: give, dose: 1, minInterval: { years: 5 }, note: "醫療上已完整接種;若仍有公費需求,與前劑間隔至少 5 年,經醫師評估可公費 1 劑" }
+
+        # --- Rule E:IPD 高風險者 65 歲前完成 PCV13/15+PPV23 → 滿 65 且滿 5 年追加 ---
+        - id: E_IPD_65_BOOST
+          label: IPD 高風險者 65 歲後追加
+          sourceRef: Rule E / MCB-06
+          when:
+            all:
+              - has: [PCV13, PCV15]
+              - has: [PPV23]
+          criteria:
+            all:
+              - ageByYear: { min: 65 }
+              - manual: ipdHighRisk
+          then: { action: give, dose: 1, minInterval: { years: 5 }, note: "65歲前已完成 PCV13/15 + PPV23 之 IPD 高風險者,滿 65 歲且與前劑間隔至少 5 年可追加 1 劑" }
+
+        # --- Rule D:PCV13/15 + PPV23 → 完整 ---
+        - id: D_PCV_PLUS_PPV
+          label: 已接種 PCV13/15 + PPV23
+          sourceRef: Rule D / MCB-06
+          when:
+            all:
+              - has: [PCV13, PCV15]
+              - has: [PPV23]
+          then: { action: complete, note: "一般視為已完整接種,無需再接種 PCV20/PCV21" }
+
+        # --- Rule B:僅 PPV23 → 滿 1 年(IPD 高風險亦為 1 年,不適用 8 週)---
+        - id: B_PPV_ONLY
+          label: 僅接種 PPV23
+          sourceRef: Rule B / MCB-04
+          when:
+            all:
+              - has: [PPV23]
+              - none: [PCV13, PCV15, PCV20, PCV21]
+          then: { action: give, dose: 1, minInterval: { years: 1 }, intervalFrom: [PPV23], note: "與 PPV23 間隔至少 1 年;IPD 高風險對象亦為 1 年,不適用 8 週" }
+
+        # --- Rule C 縮短:僅 PCV13/15 且 IPD 高風險 / 65歲以上機構住民 / 65歲以上洗腎 → 8 週 ---
+        - id: C_PCV_ONLY_8WK
+          label: 僅接種 PCV13/15(特定族群 8 週)
+          sourceRef: Rule C / MCB-05
+          when:
+            all:
+              - has: [PCV13, PCV15]
+              - none: [PPV23, PCV20, PCV21]
+          criteria:
+            any:
+              - manual: ipdHighRisk
+              - all:
+                  - ageByYear: { min: 65 }
+                  - any:
+                      - flag: dialysis
+                      - manual: dialysis
+                      - manual: ltcResident
+          then: { action: give, dose: 1, minIntervalDays: 56, intervalFrom: [PCV13, PCV15], note: "IPD 高風險、65歲以上機構住民或洗腎患者,與 PCV13/15 間隔至少 8 週(56 天)" }
+
+        # --- Rule C 一般:僅 PCV13/15 → 滿 1 年 ---
+        - id: C_PCV_ONLY
+          label: 僅接種 PCV13/15
+          sourceRef: Rule C / MCB-05
+          when:
+            all:
+              - has: [PCV13, PCV15]
+              - none: [PPV23, PCV20, PCV21]
+          then: { action: give, dose: 1, minInterval: { years: 1 }, intervalFrom: [PCV13, PCV15], note: "與前劑間隔至少 1 年" }
+
+        # --- Q10:曾簽「無需接種 PCV13 聲明書」→ 視為自費 PCV13 紀錄,依 Q10 ---
+        - id: S_DECLINED_PCV13
+          label: 曾簽立無需接種 PCV13 聲明書
+          sourceRef: MCB-08(2)
+          when: { none: [PCV13, PCV15, PCV20, PCV21] }
+          criteria: { manual: declinedPcv13Statement }
+          then: { action: review, note: "視為具自費接種 PCV13 之紀錄,依 Q10 接種原則辦理;請醫師評估" }
+
+        # --- Rule A:從未接種 ---
+        - id: A_NAIVE
+          label: 從未接種肺炎鏈球菌疫苗
+          sourceRef: Rule A / MCB-03;Exception S1–S2(查無紀錄視為未曾接種)
+          when: { none: [PCV13, PCV15, PCV20, PCV21, PPV23] }
+          then: { action: give, dose: 1, note: "接種 1 劑 PCV20 或 PCV21;若病患自述曾自費接種,建議先補登紀錄再判定" }
+
+    contraindications:
+      - { id: PNEUMO_C_ALLERGY, label: 曾對本疫苗或其成分嚴重過敏, severity: absolute, manual: severeAllergyToVaccine }
+
+    explain:
+      eligible: "{name}:{groupLabels};{caseLabel} — {caseReason}。建議接種 1 劑 PCV20 或 PCV21。"
+      eligiblePending: "{name}:{groupLabels};接種史尚未查詢,需依既往肺鏈疫苗史決定下一步。"
+      ineligible: "{name}:{age},不在 65歲以上、55–64歲原住民、19–64歲 IPD 高風險三類公費對象內({missing}),需自費。"
+      completed: "{name}:{caseLabel} — {caseReason}。"
+      not_funded: "{name}:{caseLabel} — {caseReason}。"
+      needs_review: "{name}:{caseLabel} — {caseReason}。"
