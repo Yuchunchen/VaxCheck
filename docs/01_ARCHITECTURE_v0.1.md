@@ -57,7 +57,7 @@ VaxCheck/
 │   │   │   ├── medication.js    # imue0008 s02 → diagnoses[] + medications[]
 │   │   │   ├── allergy.js       # imue0040 s02 → allergies[](僅顯示,不自動判定)
 │   │   │   ├── lab.js           # imue0060 s02 → labs[](eGFR/HbA1c/CD4 正規化)
-│   │   │   ├── lftp.js          # imue0190 s01 → specialPayment(結構見 docs/internal 探勘筆記)
+│   │   │   ├── lftp.js          # imue0190 s01 → specialPayment(結構依院內探勘,筆記未公開)
 │   │   │   └── specialMaterial.js # 10.1 特材(端點待定,stub)
 │   │   └── niis/
 │   │       ├── parseTable.js    # 結果頁 HTML table → vaccinations[](劑別代號最長前綴比對,見 rules/NIIS_CODES.md)

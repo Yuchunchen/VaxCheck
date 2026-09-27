@@ -10,13 +10,13 @@
 - 方案 a:規則檔一律寫 canonical 代碼;NIIS 劑別代號 → canonical 由程式載入 niis-vaccine-codes.json 對照。
 - 2026-09-16:規則更新全自動 + 自動閘門,高風險差異才人核;外掛執行期從 GitHub 取規則;縣市規則先做花蓮、台東;schema 預留開源給他院;佈署走 Chrome Web Store(unlisted → public);另做獨立 HTML 手動模式。
 - 2026-09-17:GitHub repo 建立(private 先起);v0.3.0 原始碼未保存,src/ 待重建。
-- 2026-09-28:線上規則放公開 repo Yuchunchen/VaxCheck-rules(程式維持私人),只在發行時更新(YC)。
+- 2026-09-28:VaxCheck 轉公開;線上規則統一從本 repo rules 分支下載,只在發行時更新;使用說明放 repo(YC;取代同日稍早「另開 VaxCheck-rules」)。
 - 2026-09-28:面板四組(可接種/待確認/尚未開打/不符合)與保底/升級判定;待確認只收「確認後今天可打」;第一階段未確認條件全列 + 以上皆否;開打前無保底 → 不符合 + 選填提示;decisiveManual 依 §5 變更,其餘 Result 既有欄位不變(YC,v0.4.12)。
 - 2026-09-28:COVID 結核/失能/精神/失智 ICD 轉錄核准;IPD 抗癌藥含 L02;Z94 全章不排除(YC;docs/11 §7 第 2、3 項結案)。COVID 免疫低下證據維持 L01(計畫原文「免疫抑制治療」)。
 - 2026-09-27:罕見疾病改用國健署完整名單(115-07-23)作病歷證據(YC;取代同日稍早「不另建清單」之決定)。通用碼不作證據,見 v0.4.8。
 
 ## 已完成
-- **v0.4.13**(2026-09-28):線上規則預設開啟,來源 `https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/`(公開 repo,只放建置後規則;VaxCheck 維持私人)。只在發行時推送(release workflow,secret RULES_PUSH_TOKEN;未設定則警告跳過)。取捨(src/rulesource.js):雜湊不符、manifest `minEngine` 高於本外掛引擎、或版本不同且發布時間早於內建 → 用內建。空白位址視同預設;停用改勾 pinBundled。host_permissions 加 raw.githubusercontent.com。YC 決定:另開公開規則 repo、只在發行時更新。單元與情境 120/120。
+- **v0.4.13**(2026-09-28):repo 轉公開(YC);移除 docs/internal(結構筆記,無個資;仍在 git 歷史)。使用說明 docs/使用說明.md(含示範頁截圖)。線上規則預設開啟,來源 `https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`(release workflow 以 GITHUB_TOKEN 推 rules 分支,只在發行時)。取捨(src/rulesource.js):雜湊不符、manifest `minEngine` 高於本外掛引擎、或版本不同且發布時間早於內建 → 用內建。空白位址視同預設;停用改勾 pinBundled。host_permissions 加 raw.githubusercontent.com。單元與情境 120/120。
 - **發行**(2026-09-28):v0.4.12 為院內第一個正式發行版(GitHub Release,未封裝安裝;YC 決定走院內,商店未列出另議)。新增 CHANGELOG.md、.github/workflows/release.yml(推 tag vX.Y.Z 自動發行:zip、單檔示範頁、SHA256SUMS)、scripts/release-notes.mjs;README 改寫(安裝/更新/回復/發行);移除過期的 docs/manifest.draft.json。src 與規則未動。
 - **v0.4.12**(2026-09-28):面板四組(可接種 → 待確認 → 尚未開打 → 不符合)+ 保底/升級判定(docs/07 §3.1、docs/10 §3.1)。引擎新增 `vaccines[].display`(bucket、fallback、upgrade)、`dosing.fallback`/`dosing.upgrade`(待定 case 確認後的結果);既有欄位語意不變,v0.4.10 引擎快照 50 情境回歸比對(規則 v0411 重產)。只有「確認後今天可打」(3a)列入 decisiveManual/ask:55 歲 10/1–11/1 問第一階段全部未確認條件(7 項,附「以上皆否」);未來才生效的升級(55 歲 10/1 前、PCV13 未滿 8 週、PCV13+PPV23 未滿 5 年、開打前無保底者)改為卡片內選填提示。YC 決定:開打前無保底 → 不符合 + 選填;禁忌改歸不符合(v0.4.10 歸待確認)。卡片人工條件改「是/否」鈕。示範頁加病患 J(55 歲)、K(PCV13 10 週)。規則檔未改。單元與情境 116/116、端對端 53/53。院內測試 TESTING_v0.4.md N1–N4。
 - **v0.4.11**(2026-09-28):規則 2026.09.28-v0411。IPD 惡性腫瘤證據的抗癌藥擴為 L01+L02(乳癌荷爾蒙治療、攝護腺癌去勢治療等可預勾 IPD 高風險);COVID 免疫低下證據另立 COVID_CANCER_TX_ATC 仍為 L01;移植 Z94 全章預勾確定;COVID 其他風險 ICD 移除「待核准」標記。單元與情境 96/96、端對端 43/43。
@@ -33,7 +33,7 @@
 - **v0.4.0**:src/ 依 docs/01、05–11 重建。引擎(三值邏輯、ageByYear、cases 待定機制、曆法間隔、時間窗與分階段 scheduled/not_open/out_of_season、人工條件 evidence 預勾、只問決定性條件、縣市 overlay 合併與來源標註)、adapters(健保雲端 5 個 API、NIIS 劑別代號最長前綴)、background、content scripts、面板、設定頁、示範頁。IPD 高風險證據改用疾管署官方 ICD 表(1,847 碼,rules/codelists/)。scripts/validate-rules.mjs 併入 build-rules.mjs --check;CI 改為 ci.yml(驗證 + 測試 + 建置)。單元與情境 32/32、端對端 15/15(真 Chromium + 偽造頁面)。FHIR Bundle 轉換尚未重建(引擎直接吃 facts)。
 - 2026-09-17:NIIS 疫苗代碼表(81 碼 + Stool;31 碼註記刪除但保留;38 碼自費標記;canonical 對照);validate-rules 加疫苗代碼白名單;build-rules 產出 dist/rules/。
 - v0.3.0(2026-09-15):公費肺炎鏈球菌 PCV20/21 規則正式轉譯;引擎 `ageByYear`、`dosing.mode: cases`、曆法間隔、含公/自費的接種史述詞、待定 case、verdict `not_funded`/`needs_review`。單元 46/46、端對端 13/13(原始碼遺失)。
-- 院內探勘 7 位病患(docs/internal/03_FIELD_NOTES);解析器 7/7 真實頁面成功。
+- 院內探勘 7 位病患(筆記 docs/internal 已於公開前移除,見 git 歷史);解析器 7/7 真實頁面成功。
 
 ## 程式待辦(v0.4.x)
 1. 院內實測(docs/TESTING_v0.4.md):W1–W7 工作區流程(健保雲端入口實際路徑、換卡代按副作用、NIIS 是否需 PIN、代按讀卡)、肺鏈判定與臨床一致性、IMUE0190 可讀性。

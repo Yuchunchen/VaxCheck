@@ -8,7 +8,7 @@
 | 規則檔 | `npm run validate-rules` | schema、引用完整性、疫苗代碼白名單、葉條件單一 key | ✓ |
 | 端對端 | `node e2e/run.mjs` | Chromium 載入外掛,本機 HTTPS 代理偽造 medcloud2 與 NIIS(v0.4.9 起;外掛自己開的分頁不經 Playwright 路由),含標題列工作區、換卡、NIIS 代按、空身分;跑「按鍵 → 第一層 → 勾人工條件 → 開 NIIS → 過卡 → 回寫 → 身分不符 → 換卡」 | 33/33(v0.4.9)|
 
-**2026-09-15 院內實地探勘已結案**:JWT UserID 完整 10 碼 ✓;lftp 回傳結構已取得 ✓;NIIS 結果表結構已取得,解析器在 7 位真實病患頁面上全數成功 ✓(細節見 `docs/internal/03_FIELD_NOTES_2026-09-15.md`)。
+**2026-09-15 院內實地探勘已結案**:JWT UserID 完整 10 碼 ✓;lftp 回傳結構已取得 ✓;NIIS 結果表結構已取得,解析器在 7 位真實病患頁面上全數成功 ✓(細節為院內筆記,公開前已自 repo 移除)。
 
 **仍待院內驗**:特材紀錄(10.1)端點;lftp 的 special_material / medical_service 真實欄位(目前假設同 drugs);NIIS 劑別代號 Booster 寫法再確認一位;ServiSign 讀卡能否被 `#btn_Query.click()` 觸發;院內 Chrome 政策是否允許載入未打包外掛。
 

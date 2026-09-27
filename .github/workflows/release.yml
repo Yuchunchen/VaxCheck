@@ -34,15 +34,17 @@ jobs:
         run: |
           gh release create "v$V" "dist/vaxcheck-ext-$V.zip" "dist/vaxcheck-web-$V.html" dist/SHA256SUMS.txt \
             --target "$GITHUB_SHA" --title "VaxCheck v$V" --notes-file dist/notes.md
-      - name: 推送線上規則到 Yuchunchen/VaxCheck-rules(需 secret RULES_PUSH_TOKEN)
-        env: { RULES_PUSH_TOKEN: '${{ secrets.RULES_PUSH_TOKEN }}' }
+      - name: 推送線上規則到本 repo 的 rules 分支(外掛預設從這裡下載)
+        env: { GH_TOKEN: '${{ github.token }}' }
         run: |
-          if [ -z "$RULES_PUSH_TOKEN" ]; then echo "::warning::未設定 RULES_PUSH_TOKEN,線上規則未更新(外掛會用內建規則)"; exit 0; fi
-          git clone --depth 1 "https://x-access-token:${RULES_PUSH_TOKEN}@github.com/Yuchunchen/VaxCheck-rules.git" rules-repo
-          cp dist/rules/manifest.json dist/rules/vaccines.*.json rules-repo/
-          cd rules-repo
+          mkdir dist/pub && cd dist/pub
+          git init -q
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth 1 origin rules; then git checkout -q -b rules FETCH_HEAD; else git checkout -q --orphan rules; fi
+          cp ../rules/manifest.json ../rules/vaccines.*.json .
+          printf '# VaxCheck 線上規則\n\n發行時由 release workflow 自動推送,請勿手動修改。外掛預設從 https://raw.githubusercontent.com/%s/rules/ 下載;來源規則見 main 分支 rules/vaccines.yaml。\n' "$GITHUB_REPOSITORY" > README.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "VaxCheck v$V 規則 $(node -p "require('../dist/rules/manifest.json').latest.TW.version")"
-          git push origin HEAD:main
+          git commit -qm "VaxCheck v$V 規則 $(node -p "require('../rules/manifest.json').latest.TW.version")"
+          git push -q origin rules

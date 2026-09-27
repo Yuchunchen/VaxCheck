@@ -14,7 +14,7 @@
 - 企業政策自架更新:IT 派送 + 自架 `update_url`,不經商店;適合院方不願公開時,但 IT 要長期維護派送。
 
 建議路徑:未列出 → 兩院試用 → 公開(與開源同步)。
-現況(2026-09-28):v0.4.12 起以 GitHub Release 發行未封裝 zip(院內正式版,流程見 README「發行」);商店未列出待帳號名義決定後再做。v0.4.13 起線上規則預設從公開 repo Yuchunchen/VaxCheck-rules 下載(取代原規劃的 GitHub Pages;程式 repo 維持私人),發行時推送。
+現況(2026-09-28):v0.4.12 起以 GitHub Release 發行未封裝 zip(院內正式版,流程見 README「發行」);商店未列出待帳號名義決定後再做。v0.4.13 起 repo 公開,線上規則預設從本 repo `rules` 分支(raw.githubusercontent.com)下載,取代原規劃的 GitHub Pages;發行時推送。
 userscript 包裝不列為備案:若 GPO 封鎖全部擴充功能,Tampermonkey 也一起被封;若是允許清單制,加本外掛 ID 與加 Tampermonkey 是同一件事。
 
 ## 2. 商店審查要準備的

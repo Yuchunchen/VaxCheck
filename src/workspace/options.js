@@ -1,8 +1,8 @@
 // 工作站設定(chrome.storage.sync):預設值、讀取、網址檢查。background 與設定頁共用。
 export const MEDCLOUD_ORIGIN = 'https://medcloud2.nhi.gov.tw';
 export const NIIS_ORIGIN = 'https://10.241.219.35';
-/** 線上規則預設來源:公開 repo Yuchunchen/VaxCheck-rules(發行時由 release workflow 推送) */
-export const DEFAULT_RULES_BASE = 'https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/';
+/** 線上規則預設來源:本 repo 的 rules 分支(發行時由 release workflow 推送建置後規則) */
+export const DEFAULT_RULES_BASE = 'https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/';
 
 export const DEFAULTS = {
   jurisdiction: 'TW',

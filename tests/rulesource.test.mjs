@@ -1,4 +1,4 @@
-// 線上規則來源:預設 VaxCheck-rules、空白 = 預設、取捨條件(引擎版本、比內建舊)
+// 線上規則來源:預設 VaxCheck rules 分支、空白 = 預設、取捨條件(引擎版本、比內建舊)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULTS, DEFAULT_RULES_BASE, readOptions } from '../src/workspace/options.js';
@@ -11,8 +11,8 @@ import path from 'node:path';
 
 const sync = (stored) => ({ get: async () => ({ ...stored }) });
 
-test('線上規則預設來源 = 公開 repo Yuchunchen/VaxCheck-rules;空白視同預設;pinBundled 預設關', async () => {
-  assert.equal(DEFAULT_RULES_BASE, 'https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/');
+test('線上規則預設來源 = VaxCheck repo 的 rules 分支;空白視同預設;pinBundled 預設關', async () => {
+  assert.equal(DEFAULT_RULES_BASE, 'https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/');
   assert.equal(DEFAULTS.remoteRulesBase, DEFAULT_RULES_BASE);
   assert.equal(DEFAULTS.pinBundled, false);
   assert.equal((await readOptions(sync({}))).remoteRulesBase, DEFAULT_RULES_BASE, '新安裝');
