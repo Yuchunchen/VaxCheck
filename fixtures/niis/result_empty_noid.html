@@ -1,0 +1,9 @@
+<!-- 合成頁面:讀卡失敗仍送出表單(#tb_RocID 為空),伺服器回「查無接種紀錄」 -->
+<html><body><form method="post" action="/"><input type="hidden" id="tb_RocID" name="tb_RocID" value=""><input type="hidden" id="tb_bd" name="tb_bd" value="">
+<input type="checkbox" id="cb_reader" checked><input type="submit" id="btn_Query" value="讀取健保卡及醫事人員卡" onclick="return CheckInput();"></form>
+<div id="div_result"><section class="tabs">
+<span class="tabItem active">預防接種紀錄</span>
+<div class="tabContent"><div class="dataTb"><table>
+<tr><td>序號</td><td>劑別代號</td><td>疫苗中文名稱</td><td>接種日</td><td>批號類型</td><td>接種單位</td></tr>
+<tr><td colspan="6">本個案查無接種紀錄</td></tr>
+</table></div></div></section></div></body></html>

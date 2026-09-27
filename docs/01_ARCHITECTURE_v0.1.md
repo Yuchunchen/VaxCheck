@@ -12,18 +12,25 @@
 
 ## 1. 使用流程(醫師視角)
 
+v0.4.9 起(標題列 icon = 一鍵工作區):
+
 ```
-插健保卡 → 開健保雲端 → 按外掛浮動鈕「疫苗檢核」
-   ↓ (1–2 秒)
-結果面板(第一層):身分/年齡 + 雲端資料能判的每支疫苗
-   接種史欄位顯示「未查詢」
-   ↓ 按面板內「查接種史」
-開/切到 NIIS 分頁 → 醫師過卡+PIN(硬性限制,無法免)
-   ↓ PostBack 完成,外掛自動解析
-結果面板自動更新:劑次、間隔、已完成
+插健保卡 → 按標題列 VaxCheck 圖示
+   ↓
+健保雲端分頁:有 → 切過去(並代按「請換卡再按我」);沒有 → 開設定頁的「健保雲端入口網址」
+NIIS 分頁:沒有 → 在健保雲端右側開背景分頁;同一病患 → 不動;不同病患/未查詢 → 導回查詢頁
+   ↓ 健保雲端取得本次病患 token(最多等 120 秒)
+結果面板自動開啟(第一層):身分/年齡 + 雲端資料能判的每支疫苗
+   ↓ NIIS 需按一次「讀取健保卡及醫事人員卡」(可由外掛代按,設定 autoClickNiis,預設關)
+PostBack 完成 → 外掛自動解析 → 面板自動更新:劑次、間隔、已完成
 ```
 
-一鍵能做到的上限是「第一層」。第二層一定多一次過卡。NIIS 頁面能否由外掛程式化觸發 `btn_Query`(省掉醫師再按一次)待實測。
+- 第二層需按一次讀卡鈕(可由外掛代按);PIN 推定不需要(NIIS 頁面程式中簽章與 PIN 相關程式碼已被註解),待院內確認。
+- 代按條件(全部成立才按,每次按圖示最多一次):來自按圖示、健保雲端已取得本次病患 token(避免兩個讀卡元件同時搶健保卡)、NIIS 在查詢頁且無 `#div_result`、本次尚未按過。
+- NIIS 讀卡失敗時頁面仍會送出表單(`#tb_RocID` 為空)。此時的「本個案查無接種紀錄」一律視為 `error/niis_no_identity`,不寫入接種史,面板顯示「NIIS 未讀到健保卡,接種史未更新」(否則 0 筆會讓肺鏈誤判為從未接種)。
+- 健保雲端右下浮動鈕「疫苗檢核」保留為備援入口;面板內「查接種史」按鈕仍可開/切到 NIIS 分頁(不代按)。
+- 設定:`medcloudEntryUrl`、`niisQueryUrl`(空白或主機不符 → 按圖示改開設定頁)、`autoSwitchCard`(預設開)、`autoClickNiis`(預設關)。
+- 實作:`src/workspace/`(workspace.js 分頁決策與代按條件、switch.js 換卡與等 token、options.js 設定);background 的 `openWorkspace` 由 `chrome.action.onClicked` 與 runtime 訊息 `{type:"workspace:open"}`(e2e 用,只接受外掛自己的頁面)觸發。manifest 的 action 不可設 `default_popup`。
 
 ## 2. 目錄結構
 
@@ -132,7 +139,7 @@ VaxCheck/
 ## 4. 跨來源合併(background)
 
 1. medcloud content 讀 JWT → `UserID`、生日 → 送 background `{type:"session:start", idHash, birthDate}`(idHash = SHA-256(UserID),不存明文)。
-2. 按「查接種史」→ background `chrome.tabs.create` 或聚焦既有 NIIS 分頁。
+2. 按標題列圖示(或面板「查接種史」)→ background 開/聚焦 NIIS 分頁(§1 的分頁決策)。
 3. NIIS content 在 PostBack 後解析表格,並讀頁面上的 `tb_RocID`,同樣 SHA-256 後送 background。
 4. background 比對 idHash 相同才把 vaccinations 寫進 `chrome.storage.session`(關瀏覽器即清)並通知 medcloud 分頁重算;不同則丟棄並警示「NIIS 查的不是同一人」。
 5. 換卡(UserID 變)→ 清 session storage。

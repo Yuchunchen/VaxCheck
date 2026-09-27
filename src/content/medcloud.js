@@ -1,9 +1,11 @@
-// 健保雲端(medcloud2)content script:浮動鈕 → 讀資料 → 組 facts → 引擎判定 → 面板
+// 健保雲端(medcloud2)content script:標題列 icon(工作區)或浮動鈕 → 讀資料 → 組 facts → 引擎判定 → 面板
 import { evaluate } from '../engine/index.js';
 import { ageYears, todayISO } from '../engine/dates.js';
 import { decodeJwt, userFromPayload, sha256Hex } from '../adapters/nhi/token.js';
 import { buildFacts } from '../adapters/nhi/facts.js';
 import { mountPanel, renderPanel } from '../panel/panel.js';
+import { findSwitchLink, isLoginUrl, switchCard, waitForToken } from '../workspace/switch.js';
+import { AUTORUN_TIMEOUT_MS } from '../workspace/workspace.js';
 
 const API = 'https://medcloud2.nhi.gov.tw/imu/api/';
 const ENDPOINTS = {
@@ -22,6 +24,10 @@ let raw = null;             // 雲端回傳原始資料(僅記憶體)
 let rulesPack = null;
 let panel = null;           // { host, wrap }
 let lastNotice = null;
+let computed = null;        // 最近一次判定(只換提示時重畫,不重算)
+let niisNoIdentity = false; // NIIS 未讀到健保卡(只在記憶體)
+let autorunOp = null;       // 進行中的工作區操作 id
+const NOTICE_NO_ID = { tone: 'wait', text: 'NIIS 未讀到健保卡,接種史未更新' };
 
 function apiUrl(path) {
   const t = encodeURIComponent(new Date().toISOString().slice(0, 19));
@@ -44,7 +50,17 @@ async function checkSession() {
   const idHash = await sha256Hex(user.userId);
   const changed = session?.idHash !== idHash;
   session = { token, user: { ...user, userId: undefined }, idHash };
-  if (changed) { raw = null; lastNotice = null; closePanel(); await send({ type: 'session:start', idHash }); log('新病患 session'); }
+  if (changed) { raw = null; computed = null; lastNotice = null; niisNoIdentity = false; closePanel(); await send({ type: 'session:start', idHash }); log('新病患 session'); }
+}
+
+/** 讀取雲端資料;期間換了病患就丟棄 */
+async function load() {
+  const h = session?.idHash;
+  if (!h) return;
+  const data = await fetchAll();
+  if (session?.idHash !== h) { log('讀取期間已換病患,丟棄舊資料'); return; }
+  raw = data;
+  render();
 }
 
 async function fetchAll() {
@@ -67,24 +83,39 @@ async function compute() {
   const result = evaluate(facts, rulesPack.rules, { asOf: todayISO() });
   const niisMeta = niis?.meta;
   if (niisMeta?.unmapped?.length) lastNotice = { tone: 'wait', text: `NIIS 有未對應的疫苗:${niisMeta.unmapped.join('、')}` };
-  return { facts, result, niisMeta };
+  return { facts, result, niisMeta, idHash: session.idHash };
 }
 
 function closePanel() { panel?.host.remove(); panel = null; }
 
-async function render() {
-  if (!panel) return;
+function mountHost() {
+  if (panel) return;
+  const host = document.createElement('div'); host.id = 'vaxcheck-panel'; document.documentElement.append(host);
+  panel = { host, ...mountPanel(host) };
+}
+
+/** 未登入等情況:只顯示訊息的面板 */
+function showMessage(text) {
+  mountHost();
+  renderPanel(panel.wrap, { user: { name: '疫苗檢核' }, error: text, appVersion: APP_VERSION }, { close: closePanel });
+}
+
+/** recompute = false:沿用上次判定,只更新提示(例如 NIIS 未讀到健保卡) */
+async function render({ recompute = true } = {}) {
+  if (!panel || !session) return;
   const u = session.user;
-  const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice: lastNotice, appVersion: APP_VERSION };
+  const notice = niisNoIdentity ? NOTICE_NO_ID : lastNotice;
+  const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice, appVersion: APP_VERSION };
   if (!raw) { renderPanel(panel.wrap, { ...base, loading: true }, { close: closePanel }); return; }
   try {
-    const { facts, result, niisMeta } = await compute();
+    if (recompute || computed?.idHash !== session.idHash) computed = await compute();
+    const { facts, result, niisMeta } = computed;
     const manualLabels = Object.fromEntries((rulesPack.rules.manualConditions || []).map((m) => [m.key, m.label]));
-    renderPanel(panel.wrap, { ...base, notice: lastNotice, result, sourceStatus: facts.sourceStatus, manual: facts.manual, manualLabels }, {
+    renderPanel(panel.wrap, { ...base, notice: niisNoIdentity ? NOTICE_NO_ID : lastNotice, result, sourceStatus: facts.sourceStatus, manual: facts.manual, manualLabels }, {
       close: closePanel,
       manual: async (key, value) => { await send({ type: 'manual:set', idHash: session.idHash, key, value }); render(); },
       niis: () => send({ type: 'niis:open' }),
-      refresh: async () => { raw = null; render(); raw = await fetchAll(); render(); },
+      refresh: async () => { raw = null; render(); await load(); },
       export: () => exportDiag(facts, result, niisMeta),
     });
   } catch (e) {
@@ -102,13 +133,54 @@ function exportDiag(facts, result, niisMeta) {
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
 
-async function openPanel() {
+async function openPanel({ quiet = false } = {}) {
   await checkSession();
-  if (!session) { alert('疫苗檢核:尚未讀到健保卡(請先插卡登入健保雲端)'); return; }
-  if (!rulesPack) { rulesPack = await send({ type: 'rules:get' }); if (!rulesPack?.ok) { alert('疫苗檢核:規則載入失敗'); return; } }
-  if (!panel) { const host = document.createElement('div'); host.id = 'vaxcheck-panel'; document.documentElement.append(host); panel = { host, ...mountPanel(host) }; }
+  if (!session) { if (quiet) showMessage('尚未登入健保雲端'); else alert('疫苗檢核:尚未讀到健保卡(請先插卡登入健保雲端)'); return; }
+  if (!rulesPack) { rulesPack = await send({ type: 'rules:get' }); if (!rulesPack?.ok) { rulesPack = null; if (quiet) showMessage('規則載入失敗'); else alert('疫苗檢核:規則載入失敗'); return; } }
+  if (panel && !panel.host.isConnected) panel = null;
+  mountHost();
   render();
-  if (!raw) { raw = await fetchAll(); render(); }
+  if (!raw) await load();
+}
+
+/** 面板已開(同一病患)→ 重新讀取並計算;否則開面板 */
+async function openOrRefresh() {
+  if (panel && raw && session) { raw = null; render(); await load(); return; }
+  await openPanel({ quiet: true });
+}
+
+const tokenHash = async () => {
+  const t = sessionStorage.getItem('token');
+  const id = t ? userFromPayload(decodeJwt(t))?.userId : null;
+  return id ? sha256Hex(id) : null;
+};
+
+/** 工作區自動執行(標題列 icon):op = { opId, ts, switchCard } */
+async function autorun(op) {
+  if (!op?.opId || autorunOp === op.opId) return;
+  autorunOp = op.opId;
+  try {
+    const deps = { url: () => location.href, findLink: () => findSwitchLink(document), idHash: tokenHash, token: () => sessionStorage.getItem('token') };
+    let sw = null;
+    if (op.switchCard) {
+      await send({ type: 'autorun:switching', opId: op.opId });
+      sw = await switchCard(deps);
+      log({ switched: '已代按「請換卡再按我」,偵測到新病患', same: '已代按「請換卡再按我」,30 秒內未偵測到換卡', nolink: '找不到換卡連結,用目前病患計算', login: '在登入頁,等待登入' }[sw.result]);
+    }
+    const ok = await waitForToken(deps, { deadline: (op.ts || Date.now()) + AUTORUN_TIMEOUT_MS });
+    if (ok) await checkSession();
+    if (!ok || !session) {
+      await send({ type: 'autorun:done', opId: op.opId });
+      log('尚未登入健保雲端(等待 120 秒逾時)');
+      showMessage('尚未登入健保雲端');
+      return;
+    }
+    await send({ type: 'workspace:ready', opId: op.opId, idHash: session.idHash });
+    if (sw?.result === 'same') lastNotice = { tone: 'wait', text: '仍為同一位病患(未偵測到換卡)' };
+    await openOrRefresh();
+  } finally {
+    autorunOp = null;
+  }
 }
 
 function addButton() {
@@ -116,16 +188,19 @@ function addButton() {
   const host = document.createElement('div'); host.id = 'vaxcheck-fab';
   const root = host.attachShadow({ mode: 'open' });
   root.innerHTML = `<style>button{position:fixed;right:18px;bottom:18px;z-index:2147483645;font:600 15px "Microsoft JhengHei",system-ui,sans-serif;padding:10px 16px;border-radius:24px;border:0;background:#1C2B3A;color:#fff;box-shadow:0 4px 14px rgba(28,43,58,.3);cursor:pointer}button:focus-visible{outline:3px solid #2B6CB0;outline-offset:2px}</style><button type="button">疫苗檢核</button>`;
-  root.querySelector('button').addEventListener('click', openPanel);
+  root.querySelector('button').addEventListener('click', () => openPanel());
   document.documentElement.append(host);
 }
 
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg.type === 'niis:updated') { lastNotice = { tone: 'info', text: '已併入 NIIS 接種史' }; render(); }
+chrome.runtime.onMessage.addListener((msg, sender, reply) => {
+  if (msg.type === 'niis:updated') { niisNoIdentity = false; lastNotice = { tone: 'info', text: '已併入 NIIS 接種史' }; render(); }
   if (msg.type === 'niis:mismatch') { lastNotice = { tone: 'stop', text: 'NIIS 查的不是同一位病患,已忽略該結果' }; render(); }
+  if (msg.type === 'niis:no_identity') { niisNoIdentity = true; log('NIIS 未讀到健保卡,接種史未更新'); render({ recompute: false }); }
+  if (msg.type === 'workspace:run') { reply({ ok: true }); autorun(msg); }
 });
 
 addButton();
 checkSession();
 setInterval(checkSession, 2000);
-log(`已載入 v${APP_VERSION}`);
+log(`已載入 v${APP_VERSION}${isLoginUrl(location.href) ? '(登入頁)' : ''}`);
+send({ type: 'autorun:get' }).then((r) => { if (r?.pending) autorun(r.pending); }).catch(() => {});

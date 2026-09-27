@@ -8,13 +8,18 @@ select,input[type=text]{font:inherit;padding:6px 8px;border:1px solid #D9DEE4;bo
 .row{display:flex;gap:8px;align-items:center;font-weight:400} .row input{width:18px;height:18px}
 button{font:inherit;padding:8px 16px;border:0;border-radius:4px;background:#1C2B3A;color:#fff;margin-top:24px;cursor:pointer}
 #msg{color:#1E7B4F;margin-left:12px}
+#problem{background:#FFF4D6;color:#7A5B00;padding:8px 10px;border-radius:4px;margin:0 0 8px}
+input.bad{border-color:#B3261E}
 </style></head><body>
 <h1>VaxCheck 疫苗檢核 設定 <small id="ver" style="display:inline;font-size:14px;color:#5B6775"></small></h1>
 <p class="lead">每台門診電腦設定一次。病患資料不存在這裡。</p>
 <label for="jur">適用縣市規則<small>決定載入中央規則,或中央加上縣市擴大對象</small></label>
 <select id="jur"></select>
-<label class="row"><input type="checkbox" id="auto"> 開啟 NIIS 後自動按「查詢」<small>(需先在院內確認讀卡流程可被觸發;預設關閉)</small></label>
-<label for="niis">NIIS 查詢頁網址</label><input type="text" id="niis">
+<p id="problem" role="alert" hidden></p>
+<label for="medcloud">健保雲端入口網址<small>按標題列 VaxCheck 圖示時,沒有健保雲端分頁就開這個網址。請改成插卡後網址列顯示的實際路徑</small></label><input type="text" id="medcloud">
+<label for="niis">NIIS 查詢頁網址<small>按圖示時在健保雲端右側開背景分頁</small></label><input type="text" id="niis">
+<label class="row"><input type="checkbox" id="switch"> 按圖示時自動按健保雲端「請換卡再按我」<small>(實驗功能,預設開;院內發現副作用可關)</small></label>
+<label class="row"><input type="checkbox" id="auto"> 按圖示後自動按 NIIS「讀取健保卡及醫事人員卡」<small>(健保雲端讀到本次病患後才按,每次按圖示最多一次;需先在院內確認;預設關閉)</small></label>
 <label for="remote">線上規則位址(選填)<small>GitHub Pages 的 rules 目錄,例 https://帳號.github.io/VaxCheck/rules/ 。留空 = 只用外掛內建規則</small></label>
 <input type="text" id="remote" placeholder="留空">
 <label class="row"><input type="checkbox" id="pin"> 暫時只用內建規則(緊急時鎖定版本)</label>

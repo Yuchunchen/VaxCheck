@@ -56,7 +56,7 @@ fs.writeFileSync(path.join(EXT, 'manifest.json'), JSON.stringify({
     { matches: ['https://10.241.219.35/*'], js: ['content-niis.js'], run_at: 'document_idle' },
   ],
   options_page: 'options.html',
-  action: { default_title: 'VaxCheck 設定', default_icon: icons },
+  action: { default_title: 'VaxCheck:開啟健保雲端與 NIIS 並檢核', default_icon: icons },   // 不可設 default_popup(否則 onClicked 不觸發)
   icons,
 }, null, 2));
 

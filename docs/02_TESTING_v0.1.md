@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 規則引擎 + FHIR | `npm test` | 年齡邊界、代碼比對、三值邏輯、adapters、臨床情境、NIIS 解析、FHIR Bundle 往返與合併 | 46/46 |
 | 規則檔 | `npm run validate-rules` | schema、引用完整性、疫苗代碼白名單、葉條件單一 key | ✓ |
-| 端對端 | `npm run e2e` | Chromium 載入外掛,路由攔截偽造 medcloud2 與 NIIS,跑「按鍵 → 第一層 → 勾人工條件 → 開 NIIS → 過卡 → 回寫 → 身分不符 → 換卡」 | 13/13 |
+| 端對端 | `node e2e/run.mjs` | Chromium 載入外掛,本機 HTTPS 代理偽造 medcloud2 與 NIIS(v0.4.9 起;外掛自己開的分頁不經 Playwright 路由),含標題列工作區、換卡、NIIS 代按、空身分;跑「按鍵 → 第一層 → 勾人工條件 → 開 NIIS → 過卡 → 回寫 → 身分不符 → 換卡」 | 33/33(v0.4.9)|
 
 **2026-09-15 院內實地探勘已結案**:JWT UserID 完整 10 碼 ✓;lftp 回傳結構已取得 ✓;NIIS 結果表結構已取得,解析器在 7 位真實病患頁面上全數成功 ✓(細節見 `docs/internal/03_FIELD_NOTES_2026-09-15.md`)。
 

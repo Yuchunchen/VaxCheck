@@ -76,6 +76,7 @@ export function renderPanel(wrap, state, on) {
   };
   if (state.error) { wrap.append(h('div', { class: 'vx-notice vx-stop' }, state.error)); }
   if (state.loading) { wrap.append(h('div', { class: 'vx-loading' }, '讀取健保雲端資料…'), footer(null) || ''); return; }
+  if (state.error && !state.result && !state.sourceStatus) { const f = footer(null); if (f) wrap.append(f); return; }   // 只有訊息(例如尚未登入)
 
   const ss = state.sourceStatus || {};
   wrap.append(h('ul', { class: 'vx-sources', 'aria-label': '資料來源' },

@@ -1,11 +1,17 @@
-// Service worker:跨分頁身分核對、NIIS 結果中繼、人工條件暫存、規則載入。
+// Service worker:工作區(標題列 icon)、跨分頁身分核對、NIIS 結果中繼、人工條件暫存、規則載入。
 // 病患資料只放 chrome.storage.session(關瀏覽器即清);規則快取放 local(非病患資料)。
-const S = chrome.storage.session;
-const NIIS_ORIGIN = 'https://10.241.219.35';
-const DEFAULTS = { jurisdiction: 'TW', niisUrl: `${NIIS_ORIGIN}/`, autoClickNiis: false, remoteRulesBase: '', pinBundled: false };
+import { NIIS_ORIGIN, readOptions } from './workspace/options.js';
+import { createWorkspace } from './workspace/workspace.js';
 
+const S = chrome.storage.session;
 const get = async (k) => (await S.get(k))[k];
-const opts = async () => ({ ...DEFAULTS, ...(await chrome.storage.sync.get(Object.keys(DEFAULTS))) });
+const opts = () => readOptions(chrome.storage.sync);
+const workspace = createWorkspace({
+  chrome, getOptions: opts, getCurrentIdHash: async () => (await get('current'))?.idHash || null,
+  newId: () => crypto.randomUUID(),
+});
+// workspace:open 只接受外掛自己的頁面(e2e 觸發用),不接受 content script
+const fromExtensionPage = (sender) => sender.id === chrome.runtime.id && String(sender.url || '').startsWith(chrome.runtime.getURL(''));
 
 async function notifyMedcloud(msg) {
   const tabs = await chrome.tabs.query({ url: 'https://medcloud2.nhi.gov.tw/*' });
@@ -68,6 +74,7 @@ async function handle(msg, sender) {
       return { ok: true, manual: m };
     }
     case 'niis:result': {
+      await workspace.niisParsed(sender.tab?.id, msg.idHash || null);
       const cur = await get('current');
       if (!cur) return { ok: false, reason: 'no_session' };
       if (!msg.idHash) return { ok: false, reason: 'no_id' };
@@ -76,13 +83,27 @@ async function handle(msg, sender) {
       notifyMedcloud({ type: 'niis:updated' });
       return { ok: true, count: msg.records.length };
     }
+    case 'niis:no_identity': {
+      // 未讀到健保卡:不寫入接種史、不觸發重算,只通知面板
+      await workspace.niisParsed(sender.tab?.id, null);
+      notifyMedcloud({ type: 'niis:no_identity' });
+      return { ok: true };
+    }
+    case 'niis:page': return workspace.niisPage(sender.tab?.id, { url: sender.url || msg.url, hasResult: msg.hasResult });
     case 'niis:open': {
       const o = await opts();
       const [tab] = await chrome.tabs.query({ url: `${NIIS_ORIGIN}/*` });
       if (tab) { await chrome.tabs.update(tab.id, { active: true }); await chrome.windows.update(tab.windowId, { focused: true }); }
-      else await chrome.tabs.create({ url: o.niisUrl + (o.niisUrl.includes('#') ? '' : '#vaxcheck') });
+      else await chrome.tabs.create({ url: o.niisQueryUrl });
       return { ok: true };
     }
+    case 'workspace:open':
+      if (!fromExtensionPage(sender)) return { ok: false, reason: 'forbidden' };
+      return workspace.open();
+    case 'autorun:get': return { ok: true, pending: await workspace.autorunGet(sender.tab?.id) };
+    case 'autorun:switching': return workspace.autorunSwitching(msg.opId);
+    case 'autorun:done': return workspace.autorunDone(msg.opId);
+    case 'workspace:ready': return workspace.medcloudReady(sender.tab?.id, msg.opId, msg.idHash);
     case 'options:get': return { ok: true, options: await opts() };
     case 'rules:get': return loadRules();
     default: return { ok: false, reason: 'unknown_message' };
@@ -90,4 +111,6 @@ async function handle(msg, sender) {
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, send) => { handle(msg, sender).then(send, (e) => send({ ok: false, error: String(e) })); return true; });
-chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
+// 標題列 icon → 開啟工作區(manifest 的 action 不可設 default_popup,否則不會觸發)
+chrome.action.onClicked.addListener(() => { workspace.open().catch((e) => console.error('[疫苗檢核] 開啟工作區失敗', e)); });
+chrome.tabs.onRemoved.addListener((tabId) => { workspace.tabRemoved(tabId).catch(() => {}); });

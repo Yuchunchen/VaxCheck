@@ -7,6 +7,7 @@ Portions derived from NHITW_cloud_analyzer_react_MUI (https://github.com/leescot
 Apache License 2.0:
   - 健保雲端 API 路徑與 JWT 解析方式(src/adapters/nhi/token.js 參考其 tokenUtils.js / userInfoUtils.js 重寫)
   - fixtures/nhi/fake_patient.json 衍生自其 tests/test_data/Fake_Data_250402.json(假資料)
+  - 健保雲端換卡按鈕文字(「請換卡再按我」「請掃描再按我」)與登入頁網址判斷(src/workspace/switch.js 參考其 legacyContent.js 作法重寫)
 
 rules/codelists/ipd-highrisk.cdc-1140310.json 解析自衛生福利部疾病管制署公開文件
 「19-64歲侵襲性肺炎鏈球菌感染症(IPD)高風險對象定義ICD code參考表(114.03.10製)」。

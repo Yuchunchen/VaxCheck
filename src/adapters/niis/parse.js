@@ -52,6 +52,21 @@ function pickTable(doc) {
   return root.querySelector('table');
 }
 
+/**
+ * 解析結果 → 接種史。PostBack 後 #tb_RocID 為空(讀卡失敗頁面仍會送出)或無法算出雜湊時,
+ * 一律 error/niis_no_identity:不可當成「查無紀錄」(0 筆會讓規則誤判為從未接種)。
+ * hash = 非同步雜湊函式(sha256Hex)。回傳 { status, reason?, records, idHash }
+ */
+export async function niisVaccinations(parsed, hash) {
+  const noId = { status: 'error', reason: 'niis_no_identity', records: [], idHash: null };
+  if (!parsed?.found) return null;
+  if (!parsed.rocId) return noId;
+  let idHash = null;
+  try { idHash = await hash(parsed.rocId); } catch { idHash = null; }
+  if (!idHash) return noId;
+  return { status: 'ok', records: parsed.records, idHash };
+}
+
 /** 解析結果頁。回傳 { found, records, meta, rocId }(rocId 只供雜湊比對,呼叫端不可保存) */
 export function parseNiisDocument(doc, table) {
   const t = pickTable(doc);
