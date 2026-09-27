@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(2026-09-17)
+# 疫苗檢核程式 — 進度(v0.4.0)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -12,15 +12,17 @@
 - 2026-09-17:GitHub repo 建立(private 先起);v0.3.0 原始碼未保存,src/ 待重建。
 
 ## 已完成
+- **v0.4.0**:src/ 依 docs/01、05–11 重建。引擎(三值邏輯、ageByYear、cases 待定機制、曆法間隔、時間窗與分階段 scheduled/not_open/out_of_season、人工條件 evidence 預勾、只問決定性條件、縣市 overlay 合併與來源標註)、adapters(健保雲端 5 個 API、NIIS 劑別代號最長前綴)、background、content scripts、面板、設定頁、示範頁。IPD 高風險證據改用疾管署官方 ICD 表(1,847 碼,rules/codelists/)。scripts/validate-rules.mjs 併入 build-rules.mjs --check;CI 改為 ci.yml(驗證 + 測試 + 建置)。單元與情境 32/32、端對端 15/15(真 Chromium + 偽造頁面)。FHIR Bundle 轉換尚未重建(引擎直接吃 facts)。
 - 2026-09-17:NIIS 疫苗代碼表(81 碼 + Stool;31 碼註記刪除但保留;38 碼自費標記;canonical 對照);validate-rules 加疫苗代碼白名單;build-rules 產出 dist/rules/。
 - v0.3.0(2026-09-15):公費肺炎鏈球菌 PCV20/21 規則正式轉譯;引擎 `ageByYear`、`dosing.mode: cases`、曆法間隔、含公/自費的接種史述詞、待定 case、verdict `not_funded`/`needs_review`。單元 46/46、端對端 13/13(原始碼遺失)。
 - 院內探勘 7 位病患(docs/internal/03_FIELD_NOTES);解析器 7/7 真實頁面成功。
 
-## 程式待辦(v0.3.1)
-1. 依 docs/01_ARCHITECTURE 重建 src/(engine 先,純函式 + tests)。
-2. `parseTable.js`:劑別代號最長前綴比對 → niisCode/canonical/dose;Booster 正規化;Stool 排除;批號類型 → funding。
-3. 單元測試:22 種已見劑別代號快照 + 含 `-`/`/` 的碼、無劑次、Booster2 邊界。
-4. e2e 重建(Playwright + 偽造 medcloud2 / NIIS 路由)。
+## 程式待辦(v0.4.x)
+1. 院內實測(docs/TESTING_v0.4.md):NIIS 查詢頁網址、肺鏈判定與臨床一致性、IMUE0190 可讀性。
+2. FHIR to/from Bundle(04 契約)重建為匯出與模組邊界。
+3. 規則管線(05):監看、PDF 確定性解析、歸檔腳本(07 §5)、黃金案例目錄。
+4. 流感、COVID-19 正式規則(Claude 依 08 產出,YC 核准)。
+5. docs/11 §7 四項待決定後更新 codeLists。
 
 ## FHIR 待補
 - HL7 Validator + TW Core package 驗證;健保醫令/特材 CodeSystem URI 待核;CVX 對照待校對。

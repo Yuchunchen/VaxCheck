@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VaxCheck 判定示範</title>
+<style>
+:root { --ink:#1C2B3A; --muted:#5B6775; --rule:#D9DEE4; --bg:#EEF1F4; --card:#FFFFFF; --accent:#1C2B3A;
+  box-sizing:border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ink:#E6EBF0; --muted:#9AA6B2; --rule:#34414F; --bg:#141B22; --card:#1D2731; --accent:#E6EBF0; } }
+:root[data-theme="dark"] { --ink:#E6EBF0; --muted:#9AA6B2; --rule:#34414F; --bg:#141B22; --card:#1D2731; --accent:#E6EBF0; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 "Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif; }
+.page { max-width: 1080px; margin: 0 auto; padding: 20px 16px 40px; display:grid; gap: 20px; grid-template-columns: minmax(0,1fr) minmax(0,440px); align-items:start; }
+@media (max-width: 860px) { .page { grid-template-columns: minmax(0,1fr); } }
+h1 { font-size: 22px; margin: 0; letter-spacing: .02em; }
+.lead { color: var(--muted); margin: 4px 0 16px; max-width: 60ch; }
+fieldset { border: 0; padding: 0; margin: 0 0 18px; }
+legend { font-weight: 700; margin-bottom: 8px; }
+#samples { display:flex; flex-direction:column; gap: 6px; }
+#samples button { text-align:left; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 8px 12px; cursor: pointer; }
+#samples button[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 4px 0 0 var(--accent); font-weight: 700; }
+.ctl { display:flex; flex-wrap:wrap; gap: 16px; align-items:center; margin-bottom: 18px; }
+.ctl input[type=date] { font: inherit; padding: 4px 8px; border:1px solid var(--rule); border-radius:4px; background: var(--card); color: var(--ink); }
+.ctl label { display:flex; gap:6px; align-items:center; }
+details { background: var(--card); border:1px solid var(--rule); border-radius:4px; padding: 8px 12px; }
+details summary { cursor:pointer; color: var(--muted); }
+textarea { width:100%; min-height: 260px; font: 12px/1.45 ui-monospace, Consolas, monospace; border:1px solid var(--rule); border-radius:4px; padding:8px; background: var(--bg); color: var(--ink); }
+#apply { font: inherit; margin-top: 8px; padding: 6px 12px; border-radius: 4px; border:1px solid var(--rule); background: var(--card); color: var(--ink); cursor:pointer; }
+#facts-msg { margin-left: 8px; color: var(--muted); font-size: 13px; }
+.panel-col { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+#panel-host { display:block; border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); background:#fff; }
+.foot { color: var(--muted); font-size: 13px; margin-top: 24px; }
+:focus-visible { outline: 2px solid #2B6CB0; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main class="page">
+  <section>
+    <h1>VaxCheck 判定示範</h1>
+    <p class="lead">外掛面板的離線版本:用虛構病患跑同一套判定引擎與正式規則。勾選「若符合」的條件、改檢核日期,看結論怎麼變。</p>
+    <div class="ctl">
+      <label>檢核日期 <input type="date" id="asof"></label>
+      <label><input type="checkbox" id="niis" checked> 已查 NIIS 接種史</label>
+    </div>
+    <fieldset><legend>選一位病患</legend><div id="samples"></div></fieldset>
+    <details><summary>事實資料(可修改後套用)</summary>
+      <textarea id="facts" spellcheck="false" aria-label="病患事實 JSON"></textarea>
+      <button id="apply" type="button">套用</button><span id="facts-msg"></span>
+    </details>
+    <p class="foot">規則版本 <span id="rulever"></span>。肺炎鏈球菌為正式規則;流感為示範規則,日期與對象非正式公告。</p>
+  </section>
+  <aside class="panel-col"><div id="panel-host"></div></aside>
+</main>
+<script>/*__BUNDLE__*/</script>
+</body>
+</html>

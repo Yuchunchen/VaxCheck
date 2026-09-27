@@ -1,1034 +1,1153 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://vaxcheck.local/rules/schema.json",
-  "title": "疫苗檢核規則集 (Vaccine Eligibility RuleSet)",
-  "description": "描述『疫苗 × 年齡 × 高風險條件 × 劑次與間隔 × 排除條件』。規則引擎 evaluate(facts, ruleSet) 只讀這個結構,不碰 DOM / chrome API。",
-  "type": "object",
-  "required": [
-    "ruleSetVersion",
-    "effectiveFrom",
-    "vaccines"
-  ],
-  "additionalProperties": false,
-  "properties": {
-    "$schema": {
-      "type": "string"
-    },
-    "ruleSetVersion": {
-      "type": "string",
-      "description": "規則集版本,例 2026.10.0;每次規則變動遞增"
-    },
-    "effectiveFrom": {
-      "$ref": "#/definitions/isoDate"
-    },
-    "effectiveTo": {
-      "$ref": "#/definitions/isoDate"
-    },
-    "sources": {
-      "type": "array",
-      "description": "規則依據的官方文件(CDC 接種計畫、公文文號等),供 UI 顯示與稽核",
-      "items": {
-        "$ref": "#/definitions/sourceRef"
-      }
-    },
-    "codeLists": {
-      "type": "object",
-      "description": "可重用的代碼清單(ICD-10 / ATC / 特材 / 特殊給付項目),規則內以 { \"$list\": \"名稱\" } 引用,避免同一組慢性病 ICD 在多支疫苗重複貼",
-      "additionalProperties": {
-        "$ref": "#/definitions/codeList"
-      }
-    },
-    "manualConditions": {
-      "type": "array",
-      "description": "三個資料來源都拿不到、需醫師在面板勾選的條件(原住民、孕婦、長照機構住民、醫事人員…)。規則內以 { \"manual\": key } 引用",
-      "items": {
-        "$ref": "#/definitions/manualCondition"
-      }
-    },
-    "vaccines": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/definitions/vaccine"
-      }
-    }
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "$id": "https://vaxcheck.local/rules/schema.json",
+ "title": "疫苗檢核規則集 v0.4.0(中央 + 縣市 overlay)",
+ "description": "中央規則集與縣市 overlay 共用。overlay 可用 vaccineExtension(extends);建置後合併為每管轄一份完整規則集。見 docs/06、07、10。",
+ "type": "object",
+ "required": [
+  "ruleSetVersion",
+  "effectiveFrom",
+  "jurisdiction",
+  "vaccines"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {
+   "type": "string"
   },
-  "definitions": {
-    "isoDate": {
-      "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+  "ruleSetVersion": {
+   "type": "string"
+  },
+  "effectiveFrom": {
+   "$ref": "#/definitions/isoDate"
+  },
+  "effectiveTo": {
+   "$ref": "#/definitions/isoDate"
+  },
+  "jurisdiction": {
+   "type": "object",
+   "required": [
+    "code",
+    "level"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "code": {
+     "type": "string",
+     "pattern": "^TW(-[A-Z]{3})?$"
     },
-    "sourceRef": {
-      "type": "object",
-      "required": [
-        "id",
-        "title"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "issuer": {
-          "type": "string",
-          "description": "CDC / 衛生局 / 院內"
-        },
-        "docNo": {
-          "type": "string",
-          "description": "公文字號或版本"
-        },
-        "url": {
-          "type": "string"
-        },
-        "date": {
-          "$ref": "#/definitions/isoDate"
-        }
-      }
+    "level": {
+     "enum": [
+      "central",
+      "county"
+     ]
     },
-    "codeList": {
-      "type": "object",
-      "required": [
-        "system",
-        "codes"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "label": {
-          "type": "string"
-        },
-        "system": {
-          "type": "string",
-          "enum": [
-            "ICD-10-CM",
-            "ATC",
-            "NHI-ORDER",
-            "NHI-MATERIAL",
-            "NHI-LFTP",
-            "NIIS-VACCINE"
-          ],
-          "description": "ICD-10-CM=診斷;ATC=藥品;NHI-ORDER=醫令碼;NHI-MATERIAL=特材代碼;NHI-LFTP=特殊給付限制項目(結構待定);NIIS-VACCINE=接種史疫苗 canonical 代碼(NIIS VaccID → canonical 對照見 rules/niis-vaccine-codes.json,規則檔一律寫 canonical,不寫 NIIS 原碼)"
-        },
-        "codes": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "description": "支援三種寫法:完整碼 'E11.9';前綴 'E11*';區間 'E10-E14'(區間只比對字母+前三碼)"
-        }
-      }
+    "name": {
+     "type": "string"
     },
-    "manualCondition": {
-      "type": "object",
-      "required": [
-        "key",
-        "label"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "key": {
-          "type": "string",
-          "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
-        },
-        "label": {
-          "type": "string"
-        },
-        "hint": {
-          "type": "string",
-          "description": "給醫師看的補充說明,例:『原住民身分以戶籍註記為準』"
-        },
-        "askWhen": {
-          "$ref": "#/definitions/criteria",
-          "description": "只有在符合這個條件時才問(例:孕婦只問女性 15–49 歲),減少面板雜訊"
-        }
-      }
+    "central": {
+     "type": "object",
+     "description": "建置時寫入:合併所依據的中央規則集管轄"
+    }
+   }
+  },
+  "build": {
+   "type": "object"
+  },
+  "sources": {
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/sourceRef"
+   }
+  },
+  "codeLists": {
+   "type": "object",
+   "additionalProperties": {
+    "$ref": "#/definitions/codeList"
+   }
+  },
+  "manualConditions": {
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/manualCondition"
+   }
+  },
+  "vaccines": {
+   "type": "array",
+   "items": {
+    "oneOf": [
+     {
+      "$ref": "#/definitions/vaccine"
+     },
+     {
+      "$ref": "#/definitions/vaccineExtension"
+     }
+    ]
+   }
+  }
+ },
+ "definitions": {
+  "isoDate": {
+   "type": "string",
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+  },
+  "ageValue": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "years": {
+     "type": "integer",
+     "minimum": 0
     },
-    "vaccine": {
-      "type": "object",
-      "required": [
-        "vaccineId",
-        "name",
-        "eligibilityGroups",
-        "dosing"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "vaccineId": {
-          "type": "string",
-          "pattern": "^[A-Z][A-Z0-9_]*$"
-        },
-        "name": {
-          "type": "object",
-          "required": [
-            "zh"
-          ],
-          "properties": {
-            "zh": {
-              "type": "string"
-            },
-            "en": {
-              "type": "string"
-            }
-          }
-        },
-        "historyMatch": {
-          "type": "object",
-          "description": "NIIS 接種史中哪些紀錄算這支疫苗。值為 canonical 代碼(PCV13、PPV23、FLU…);NIIS 劑別代號(VaccID-劑次)→ canonical 的對照由引擎載入 rules/niis-vaccine-codes.json 完成(方案 a,2026-09-17 決定)",
-          "required": [
-            "vaccineCodes"
-          ],
-          "properties": {
-            "vaccineCodes": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
-            }
-          }
-        },
-        "season": {
-          "type": "object",
-          "description": "季節性疫苗的公費施打窗口;缺省 = 全年",
-          "required": [
-            "start",
-            "end"
-          ],
-          "properties": {
-            "start": {
-              "$ref": "#/definitions/isoDate"
-            },
-            "end": {
-              "$ref": "#/definitions/isoDate"
-            }
-          }
-        },
-        "eligibilityGroups": {
-          "type": "array",
-          "minItems": 1,
-          "description": "任一 group 符合即具公費資格。每個 group 對應 CDC 公告的一個對象類別,方便向病患解釋『你是以哪個身分符合』",
-          "items": {
-            "$ref": "#/definitions/eligibilityGroup"
-          }
-        },
-        "dosing": {
-          "$ref": "#/definitions/dosing"
-        },
-        "contraindications": {
-          "type": "array",
-          "description": "排除條件。type=manual 的由醫師勾選;其他由 facts 自動判定",
-          "items": {
-            "$ref": "#/definitions/contraindication"
-          }
-        },
-        "explain": {
-          "type": "object",
-          "description": "解釋模板;{age}、{groupLabels}、{missing} 由引擎代入",
-          "properties": {
-            "eligible": {
-              "type": "string"
-            },
-            "ineligible": {
-              "type": "string"
-            },
-            "completed": {
-              "type": "string",
-              "description": "已完成建議劑次時的說法"
-            },
-            "eligiblePending": {
-              "type": "string",
-              "description": "符合對象但接種史尚未查詢時的說法"
-            },
-            "not_funded": {
-              "type": "string"
-            },
-            "needs_review": {
-              "type": "string"
-            }
-          }
-        },
-        "sourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "notes": {
-          "type": "string"
-        }
-      }
+    "months": {
+     "type": "integer",
+     "minimum": 0
     },
-    "eligibilityGroup": {
-      "type": "object",
-      "required": [
-        "groupId",
-        "label",
-        "criteria"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "groupId": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string",
-          "description": "CDC 公告的對象名稱,原文照抄,例『65歲以上長者』"
-        },
-        "priorityPhase": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "分階段開打時的階段(流感疫苗第一階段/第二階段)"
-        },
-        "criteria": {
-          "$ref": "#/definitions/criteria"
-        },
-        "dosingOverride": {
-          "$ref": "#/definitions/dosing",
-          "description": "此對象的劑次規則與預設不同時覆寫(例:8 歲以下初次接種流感兩劑)"
-        }
-      }
+    "days": {
+     "type": "integer",
+     "minimum": 0
+    }
+   }
+  },
+  "codeMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "$list": {
+     "type": "string"
     },
-    "criteria": {
-      "description": "布林組合樹。葉節點是單一條件;all/any/not 為組合。",
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "all"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "all": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/criteria"
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "any"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "any": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/criteria"
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "not"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "not": {
-              "$ref": "#/definitions/criteria"
-            }
-          }
-        },
-        {
-          "$ref": "#/definitions/condition"
-        }
-      ]
+    "codes": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
     },
-    "condition": {
-      "description": "葉條件,每個物件只能有一個 key。所有『自動判定』條件在資料來源不可用時回 unknown 而非 false。",
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "age"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "age": {
-              "$ref": "#/definitions/ageRange"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "ageByYear"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "ageByYear": {
-              "type": "object",
-              "additionalProperties": false,
-              "description": "疾管署算法:接種年 − 出生年(不看生日)。「65歲以上」= min 65;「55–64 歲」= min 55, max 64",
-              "properties": {
-                "min": {
-                  "type": "integer",
-                  "minimum": 0
-                },
-                "max": {
-                  "type": "integer",
-                  "minimum": 0
-                }
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "birthDate"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "birthDate": {
-              "$ref": "#/definitions/birthDateRange"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "sex"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "sex": {
-              "type": "string",
-              "enum": [
-                "M",
-                "F"
-              ]
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "diagnosis"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "diagnosis": {
-              "$ref": "#/definitions/codeMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "medication"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "medication": {
-              "$ref": "#/definitions/codeMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "specialPayment"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "specialPayment": {
-              "$ref": "#/definitions/specialPaymentMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "specialMaterial"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "specialMaterial": {
-              "$ref": "#/definitions/codeMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "lab"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "lab": {
-              "$ref": "#/definitions/labMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "vaccination"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "vaccination": {
-              "$ref": "#/definitions/vaccinationMatch"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "flag"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "flag": {
-              "type": "string",
-              "enum": [
-                "homeCare",
-                "dialysis",
-                "ckd",
-                "hospice",
-                "longTermCare"
-              ],
-              "description": "病人資訊(IMUE2000)摘要句自動偵測的旗標"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "manual"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "manual": {
-              "type": "string",
-              "description": "manualConditions 的 key"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "inSeason"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "inSeason": {
-              "type": "boolean",
-              "description": "今天是否在 vaccine.season 內"
-            }
-          }
-        }
-      ]
+    "withinDays": {
+     "type": "integer",
+     "minimum": 1
     },
-    "ageRange": {
-      "type": "object",
-      "description": "以檢核當日計算的實足年齡。『年滿 65 歲』寫 min.years=65;『未滿 6 個月』寫 max.months=5(含)。min/max 皆含端點。",
-      "additionalProperties": false,
-      "properties": {
+    "minRecords": {
+     "type": "integer",
+     "minimum": 1
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "$list"
+     ]
+    },
+    {
+     "required": [
+      "codes"
+     ]
+    }
+   ]
+  },
+  "condition": {
+   "oneOf": [
+    {
+     "type": "object",
+     "required": [
+      "age"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "age": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
         "min": {
-          "$ref": "#/definitions/ageValue"
+         "$ref": "#/definitions/ageValue"
         },
         "max": {
-          "$ref": "#/definitions/ageValue"
+         "$ref": "#/definitions/ageValue"
         }
+       }
       }
+     }
     },
-    "ageValue": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "years": {
-          "type": "integer",
-          "minimum": 0
+    {
+     "type": "object",
+     "required": [
+      "ageByYear"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "ageByYear": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "min": {
+         "type": "integer",
+         "minimum": 0
         },
-        "months": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "days": {
-          "type": "integer",
-          "minimum": 0
+        "max": {
+         "type": "integer",
+         "minimum": 0
         }
+       }
       }
+     }
     },
-    "birthDateRange": {
-      "type": "object",
-      "description": "CDC 常用『民國 xx 年 xx 月 xx 日(含)以前出生』的世代寫法;與 age 二擇一,有公告出生日切點時優先用這個",
-      "additionalProperties": false,
-      "properties": {
+    {
+     "type": "object",
+     "required": [
+      "birthDate"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "birthDate": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
         "onOrBefore": {
-          "$ref": "#/definitions/isoDate"
+         "$ref": "#/definitions/isoDate"
         },
         "onOrAfter": {
-          "$ref": "#/definitions/isoDate"
+         "$ref": "#/definitions/isoDate"
         }
+       }
       }
+     }
     },
-    "codeMatch": {
-      "type": "object",
-      "description": "比對診斷/藥品/特材代碼。codes 或 $list 二擇一。withinDays 限定近 N 天內有紀錄;minRecords 要求至少 N 筆(避免單次誤打 ICD)",
-      "additionalProperties": false,
-      "properties": {
-        "$list": {
-          "type": "string"
-        },
-        "codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1
-        },
-        "withinDays": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "minRecords": {
-          "type": "integer",
-          "minimum": 1,
-          "default": 1
-        }
-      },
-      "oneOf": [
-        {
-          "required": [
-            "$list"
-          ]
-        },
-        {
-          "required": [
-            "codes"
-          ]
-        }
-      ]
+    {
+     "type": "object",
+     "required": [
+      "sex"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "sex": {
+       "enum": [
+        "M",
+        "F"
+       ]
+      }
+     }
     },
-    "specialPaymentMatch": {
-      "type": "object",
-      "description": "特殊給付限制 (IMUE0190 lftp) 三區。回傳欄位結構尚未取得 → 目前只允許以 category + codes/$list 描述,欄位對應留給 adapter",
-      "required": [
+    {
+     "type": "object",
+     "required": [
+      "diagnosis"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "diagnosis": {
+       "$ref": "#/definitions/codeMatch"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "medication"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "medication": {
+       "$ref": "#/definitions/codeMatch"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "specialMaterial"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "specialMaterial": {
+       "$ref": "#/definitions/codeMatch"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "specialPayment"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "specialPayment": {
+       "type": "object",
+       "required": [
         "category"
-      ],
-      "additionalProperties": false,
-      "properties": {
+       ],
+       "additionalProperties": false,
+       "properties": {
         "category": {
-          "type": "string",
-          "enum": [
-            "service",
-            "drug",
-            "material"
-          ]
+         "enum": [
+          "service",
+          "drug",
+          "material"
+         ]
         },
         "$list": {
-          "type": "string"
+         "type": "string"
         },
         "codes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
         },
         "withinDays": {
-          "type": "integer",
-          "minimum": 1
+         "type": "integer",
+         "minimum": 1
         }
+       }
       }
+     }
     },
-    "labMatch": {
-      "type": "object",
-      "required": [
+    {
+     "type": "object",
+     "required": [
+      "lab"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "lab": {
+       "type": "object",
+       "required": [
         "item",
         "op",
         "value"
-      ],
-      "additionalProperties": false,
-      "properties": {
+       ],
+       "additionalProperties": false,
+       "properties": {
         "item": {
-          "type": "string",
-          "description": "標準化檢驗項目名,例 eGFR、HbA1c、CD4;對照 adapter 的 lab 名稱正規化表"
+         "type": "string"
         },
         "op": {
-          "type": "string",
-          "enum": [
-            "<",
-            "<=",
-            ">",
-            ">=",
-            "=="
-          ]
+         "enum": [
+          "<",
+          "<=",
+          ">",
+          ">=",
+          "=="
+         ]
         },
         "value": {
-          "type": "number"
-        },
-        "latestOnly": {
-          "type": "boolean",
-          "default": true
+         "type": "number"
         },
         "withinDays": {
-          "type": "integer",
-          "minimum": 1
+         "type": "integer",
+         "minimum": 1
         }
+       }
       }
+     }
     },
-    "vaccinationMatch": {
-      "type": "object",
-      "description": "查 NIIS 接種史。用於『已完成 → 不再建議』或『需先打過 A 才能公費打 B』",
-      "required": [
+    {
+     "type": "object",
+     "required": [
+      "vaccination"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "vaccination": {
+       "type": "object",
+       "required": [
         "vaccineCodes"
-      ],
-      "additionalProperties": false,
-      "properties": {
+       ],
+       "additionalProperties": false,
+       "properties": {
         "vaccineCodes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string"
+         }
         },
         "minDoses": {
-          "type": "integer",
-          "minimum": 0
+         "type": "integer",
+         "minimum": 0
         },
         "maxDoses": {
-          "type": "integer",
-          "minimum": 0
+         "type": "integer",
+         "minimum": 0
         },
         "withinDays": {
-          "type": "integer",
-          "minimum": 1
+         "type": "integer",
+         "minimum": 1
         },
         "minDaysSinceLast": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "flag"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "flag": {
+       "enum": [
+        "homeCare",
+        "dialysis",
+        "ckd",
+        "hospice",
+        "longTermCare"
+       ]
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "manual"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "manual": {
+       "type": "string"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "inSeason"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "inSeason": {
+       "type": "boolean"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "residentOf"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "residentOf": {
+       "type": "string",
+       "pattern": "^TW-[A-Z]{3}$"
+      }
+     }
+    }
+   ]
+  },
+  "criteria": {
+   "oneOf": [
+    {
+     "type": "object",
+     "required": [
+      "all"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "all": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "$ref": "#/definitions/criteria"
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "any"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "any": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "$ref": "#/definitions/criteria"
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "not"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "not": {
+       "$ref": "#/definitions/criteria"
+      }
+     }
+    },
+    {
+     "$ref": "#/definitions/condition"
+    }
+   ]
+  },
+  "historyPredicate": {
+   "oneOf": [
+    {
+     "type": "object",
+     "required": [
+      "all"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "all": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "$ref": "#/definitions/historyPredicate"
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "any"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "any": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "$ref": "#/definitions/historyPredicate"
+       }
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "not"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "not": {
+       "$ref": "#/definitions/historyPredicate"
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "has"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "has": {
+       "oneOf": [
+        {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string"
+         }
+        },
+        {
+         "type": "object",
+         "required": [
+          "codes"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "codes": {
+           "type": "array",
+           "minItems": 1,
+           "items": {
+            "type": "string"
+           }
+          },
+          "funding": {
+           "enum": [
+            "公費",
+            "自費"
+           ]
+          },
+          "minDoses": {
+           "type": "integer",
+           "minimum": 1
+          }
+         }
+        }
+       ]
+      }
+     }
+    },
+    {
+     "type": "object",
+     "required": [
+      "none"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "none": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   ]
+  },
+  "dosing": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "seasonal": {
+     "type": "boolean"
+    },
+    "lifetimeMaxDoses": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "series": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "dose"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "dose": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "minAge": {
+        "$ref": "#/definitions/ageValue"
+       },
+       "minIntervalDays": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "requiresPrior": {
+        "type": "object",
+        "required": [
+         "vaccineCodes",
+         "minIntervalDays"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "vaccineCodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "string"
+          }
+         },
+         "minIntervalDays": {
           "type": "integer",
           "minimum": 0
+         }
         }
+       },
+       "label": {
+        "type": "string"
+       }
       }
+     }
+    },
+    "mode": {
+     "enum": [
+      "series",
+      "cases"
+     ]
+    },
+    "unknownTypeCodes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "cases": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "label",
+       "when",
+       "then"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "label": {
+        "type": "string"
+       },
+       "sourceRef": {
+        "type": "string"
+       },
+       "when": {
+        "$ref": "#/definitions/historyPredicate"
+       },
+       "criteria": {
+        "$ref": "#/definitions/criteria"
+       },
+       "then": {
+        "type": "object",
+        "required": [
+         "action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "action": {
+          "enum": [
+           "give",
+           "complete",
+           "notFunded",
+           "review"
+          ]
+         },
+         "dose": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "minInterval": {
+          "$ref": "#/definitions/ageValue"
+         },
+         "minIntervalDays": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "intervalFrom": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "series"
+     ]
+    },
+    {
+     "required": [
+      "mode",
+      "cases"
+     ],
+     "properties": {
+      "mode": {
+       "const": "cases"
+      }
+     }
+    }
+   ]
+  },
+  "window": {
+   "type": "object",
+   "required": [
+    "from"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "from": {
+     "$ref": "#/definitions/isoDate"
+    },
+    "to": {
+     "$ref": "#/definitions/isoDate"
+    }
+   }
+  },
+  "season": {
+   "type": "object",
+   "required": [
+    "start",
+    "end"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "start": {
+     "$ref": "#/definitions/isoDate"
+    },
+    "end": {
+     "$ref": "#/definitions/isoDate"
+    },
+    "phases": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "phase",
+       "start"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "phase": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "start": {
+        "$ref": "#/definitions/isoDate"
+       },
+       "label": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  },
+  "eligibilityGroup": {
+   "type": "object",
+   "required": [
+    "groupId",
+    "label",
+    "criteria"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "groupId": {
+     "type": "string",
+     "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "label": {
+     "type": "string"
+    },
+    "priorityPhase": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "effective": {
+     "$ref": "#/definitions/window"
+    },
+    "providedBy": {
+     "enum": [
+      "central",
+      "county"
+     ]
+    },
+    "jurisdiction": {
+     "type": "string"
+    },
+    "sourceIds": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "criteria": {
+     "$ref": "#/definitions/criteria"
+    },
+    "dosingOverride": {
+     "$ref": "#/definitions/dosing"
+    }
+   }
+  },
+  "vaccine": {
+   "type": "object",
+   "required": [
+    "vaccineId",
+    "name",
+    "eligibilityGroups",
+    "dosing"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "vaccineId": {
+     "type": "string",
+     "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "name": {
+     "type": "object",
+     "required": [
+      "zh"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "zh": {
+       "type": "string"
+      },
+      "en": {
+       "type": "string"
+      }
+     }
+    },
+    "historyMatch": {
+     "type": "object",
+     "required": [
+      "vaccineCodes"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "vaccineCodes": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "season": {
+     "$ref": "#/definitions/season"
+    },
+    "eligibilityGroups": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "$ref": "#/definitions/eligibilityGroup"
+     }
     },
     "dosing": {
+     "$ref": "#/definitions/dosing"
+    },
+    "contraindications": {
+     "type": "array",
+     "items": {
       "type": "object",
-      "description": "劑次。mode=series(預設):固定劑次序列;mode=cases:依既往接種史組合逐案決定(第一個命中者為準),適用肺鏈這類「不同疫苗史 → 不同下一步」的政策",
-      "required": [],
+      "required": [
+       "id",
+       "label",
+       "severity"
+      ],
       "additionalProperties": false,
       "properties": {
-        "seasonal": {
-          "type": "boolean",
-          "default": false,
-          "description": "true = 每季重算,series 只算本季內的劑次"
-        },
-        "lifetimeMaxDoses": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "公費終身最多幾劑(例 PPV23 公費 1 劑)"
-        },
-        "series": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": [
-              "dose"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "dose": {
-                "type": "integer",
-                "minimum": 1
-              },
-              "minAge": {
-                "$ref": "#/definitions/ageValue"
-              },
-              "minIntervalDays": {
-                "type": "integer",
-                "minimum": 0,
-                "description": "距前一劑最少天數"
-              },
-              "requiresPrior": {
-                "type": "object",
-                "description": "序貫接種:本劑之前必須先打過另一支疫苗(例 PPV23 前先 PCV13 滿 1 年)",
-                "required": [
-                  "vaccineCodes",
-                  "minIntervalDays"
-                ],
-                "properties": {
-                  "vaccineCodes": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "minItems": 1
-                  },
-                  "minIntervalDays": {
-                    "type": "integer",
-                    "minimum": 0
-                  }
-                }
-              },
-              "label": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "series",
-            "cases"
-          ],
-          "default": "series"
-        },
-        "unknownTypeCodes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "接種史中若出現這些代碼(例 PNEUMO_UNKNOWN=型別不明),標 NEED_HISTORY_CONFIRMATION。有官方劑別代號後只在名稱備援路徑產生"
-        },
-        "cases": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/historyCase"
-          }
-        }
+       "id": {
+        "type": "string"
+       },
+       "label": {
+        "type": "string"
+       },
+       "severity": {
+        "enum": [
+         "absolute",
+         "precaution"
+        ]
+       },
+       "criteria": {
+        "$ref": "#/definitions/criteria"
+       },
+       "manual": {
+        "type": "string"
+       }
       },
-      "oneOf": [
-        {
-          "required": [
-            "series"
-          ]
-        },
-        {
-          "required": [
-            "mode",
-            "cases"
-          ]
-        }
+      "anyOf": [
+       {
+        "required": [
+         "criteria"
+        ]
+       },
+       {
+        "required": [
+         "manual"
+        ]
+       }
       ]
+     }
     },
-    "contraindication": {
-      "type": "object",
-      "required": [
-        "id",
-        "label",
-        "severity"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        },
-        "severity": {
-          "type": "string",
-          "enum": [
-            "absolute",
-            "precaution"
-          ],
-          "description": "absolute=不可打;precaution=可打但要註明"
-        },
-        "criteria": {
-          "$ref": "#/definitions/criteria",
-          "description": "自動判定用;若省略則視為純人工勾選項"
-        },
-        "manual": {
-          "type": "string",
-          "description": "對應 manualConditions.key;與 criteria 可並存(自動偵測到 或 醫師勾選)"
-        }
+    "explain": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "eligible": {
+       "type": "string"
+      },
+      "ineligible": {
+       "type": "string"
+      },
+      "completed": {
+       "type": "string"
+      },
+      "eligiblePending": {
+       "type": "string"
+      },
+      "not_funded": {
+       "type": "string"
+      },
+      "needs_review": {
+       "type": "string"
+      },
+      "scheduled": {
+       "type": "string"
+      },
+      "out_of_season": {
+       "type": "string"
       }
+     }
     },
-    "historyPredicate": {
-      "description": "接種史述詞。has=至少一劑(可加 funding=公費/自費、minDoses);none=完全沒有;all/any/not 組合",
-      "oneOf": [
-        {
-          "type": "object",
-          "required": [
-            "all"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "all": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/historyPredicate"
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "any"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "any": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/definitions/historyPredicate"
-              }
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "not"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "not": {
-              "$ref": "#/definitions/historyPredicate"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "has"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "has": {
-              "oneOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minItems": 1
-                },
-                {
-                  "type": "object",
-                  "required": [
-                    "codes"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "codes": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "minItems": 1
-                    },
-                    "funding": {
-                      "type": "string",
-                      "enum": [
-                        "公費",
-                        "自費"
-                      ],
-                      "description": "來自 NIIS 批號類型(查詢 API BatchType:公費/自費/臨床試驗);臨床試驗不匹配任一值"
-                    },
-                    "minDoses": {
-                      "type": "integer",
-                      "minimum": 1
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "none"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "none": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1
-            }
-          }
-        }
-      ]
+    "sourceIds": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
     },
-    "historyCase": {
-      "type": "object",
-      "required": [
-        "id",
-        "label",
-        "when",
-        "then"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string",
-          "description": "政策原文的案別名稱,例『僅接種 PPV23』"
-        },
-        "when": {
-          "$ref": "#/definitions/historyPredicate"
-        },
-        "criteria": {
-          "$ref": "#/definitions/criteria",
-          "description": "除接種史外的附加條件(例:IPD 高風險才適用 8 週);unknown 時整支疫苗回需確認"
-        },
-        "then": {
-          "type": "object",
-          "required": [
-            "action"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "action": {
-              "type": "string",
-              "enum": [
-                "give",
-                "complete",
-                "notFunded",
-                "review"
-              ]
-            },
-            "dose": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "minInterval": {
-              "$ref": "#/definitions/ageValue",
-              "description": "曆法間隔(1 年 = 回推 1 個曆年)"
-            },
-            "minIntervalDays": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "固定天數(8 週 = 56)"
-            },
-            "intervalFrom": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "以哪些代碼的最後一劑起算;缺省 = 述詞範圍內最後一劑"
-            },
-            "note": {
-              "type": "string"
-            }
-          }
-        },
-        "sourceRef": {
-          "type": "string",
-          "description": "對應 Canonical 的 Rule/MCB 編號"
-        }
-      }
+    "notes": {
+     "type": "string"
     }
+   }
+  },
+  "vaccineExtension": {
+   "type": "object",
+   "required": [
+    "extends",
+    "eligibilityGroups"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "extends": {
+     "type": "string",
+     "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "eligibilityGroups": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "$ref": "#/definitions/eligibilityGroup"
+     }
+    },
+    "sourceIds": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "notes": {
+     "type": "string"
+    }
+   }
+  },
+  "codeList": {
+   "type": "object",
+   "required": [
+    "system"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "label": {
+     "type": "string"
+    },
+    "system": {
+     "enum": [
+      "ICD-10-CM",
+      "ATC",
+      "NHI-ORDER",
+      "NHI-MATERIAL",
+      "NHI-LFTP",
+      "NIIS-VACCINE"
+     ]
+    },
+    "codes": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    "file": {
+     "type": "string",
+     "pattern": "^[\\w./-]+\\.json#\\w+$",
+     "description": "建置時由 JSON 檔的 sections.<name>.codes 內嵌"
+    },
+    "source": {
+     "type": "object",
+     "description": "建置時寫入:官方清單來源與雜湊"
+    }
+   },
+   "oneOf": [
+    {
+     "required": [
+      "codes"
+     ]
+    },
+    {
+     "required": [
+      "file"
+     ]
+    }
+   ]
+  },
+  "manualCondition": {
+   "type": "object",
+   "required": [
+    "key",
+    "label"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "key": {
+     "type": "string",
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
+    },
+    "label": {
+     "type": "string"
+    },
+    "hint": {
+     "type": "string"
+    },
+    "askWhen": {
+     "$ref": "#/definitions/criteria"
+    },
+    "evidence": {
+     "$ref": "#/definitions/criteria",
+     "description": "病歷證據;命中即自動勾選、標依據、醫師可取消。只能用自動葉條件(不可含 manual)"
+    }
+   }
+  },
+  "sourceRef": {
+   "type": "object",
+   "required": [
+    "id",
+    "title"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    },
+    "issuer": {
+     "type": "string"
+    },
+    "docNo": {
+     "type": "string"
+    },
+    "url": {
+     "type": "string"
+    },
+    "date": {
+     "$ref": "#/definitions/isoDate"
+    },
+    "watch": {
+     "type": "boolean"
+    },
+    "kind": {
+     "enum": [
+      "plan",
+      "qa",
+      "letter",
+      "bulletin",
+      "other"
+     ]
+    }
+   }
   }
+ }
 }

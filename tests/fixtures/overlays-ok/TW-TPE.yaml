@@ -1,0 +1,20 @@
+# 【測試用假想 overlay,非真實政策】某市自購 PCV20/21 給 50–60 歲設籍市民
+ruleSetVersion: TPE.test.0
+effectiveFrom: "2026-08-10"
+jurisdiction: { code: TW-TPE, level: county, name: 臺北市(測試) }
+sources:
+  - { id: SRC_TPE_TEST, title: 【假想】臺北市自購肺炎鏈球菌疫苗計畫, issuer: 測試 }
+manualConditions:
+  - key: resident_TW_TPE
+    label: 設籍臺北市
+    askWhen: { ageByYear: { min: 50, max: 60 } }
+vaccines:
+  - extends: PNEUMO_PCV20_21
+    sourceIds: [SRC_TPE_TEST]
+    eligibilityGroups:
+      - groupId: TPE_PNEUMO_50_60
+        label: 50–60 歲設籍本市市民
+        criteria:
+          all:
+            - residentOf: TW-TPE
+            - ageByYear: { min: 50, max: 60 }

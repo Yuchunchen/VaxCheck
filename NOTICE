@@ -1,11 +1,13 @@
-VaxCheck
+VaxCheck 疫苗檢核程式
 Copyright 2026 Yu Chun Chen
 
-This product is licensed under the Apache License, Version 2.0.
+Licensed under the Apache License, Version 2.0.
 
-Portions of the NHI MediCloud adapter (planned: src/adapters/nhi/tokenUtils.js,
-src/adapters/nhi/userInfoUtils.js) are derived from
-leescot/NHITW_cloud_analyzer_react_MUI
-(https://github.com/leescot/NHITW_cloud_analyzer_react_MUI),
-licensed under the Apache License, Version 2.0.
-Update this NOTICE when those files are actually added to src/.
+Portions derived from NHITW_cloud_analyzer_react_MUI (https://github.com/leescot/NHITW_cloud_analyzer_react_MUI),
+Apache License 2.0:
+  - 健保雲端 API 路徑與 JWT 解析方式(src/adapters/nhi/token.js 參考其 tokenUtils.js / userInfoUtils.js 重寫)
+  - fixtures/nhi/fake_patient.json 衍生自其 tests/test_data/Fake_Data_250402.json(假資料)
+
+rules/codelists/ipd-highrisk.cdc-1140310.json 解析自衛生福利部疾病管制署公開文件
+「19-64歲侵襲性肺炎鏈球菌感染症(IPD)高風險對象定義ICD code參考表(114.03.10製)」。
+rules/niis-vaccine-codes.json 整理自疾病管制署疫苗接種紀錄 API 規格書附錄二。

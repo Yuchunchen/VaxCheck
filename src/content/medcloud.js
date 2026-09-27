@@ -1,0 +1,130 @@
+// 健保雲端(medcloud2)content script:浮動鈕 → 讀資料 → 組 facts → 引擎判定 → 面板
+import { evaluate } from '../engine/index.js';
+import { ageYears, todayISO } from '../engine/dates.js';
+import { decodeJwt, userFromPayload, sha256Hex } from '../adapters/nhi/token.js';
+import { buildFacts } from '../adapters/nhi/facts.js';
+import { mountPanel, renderPanel } from '../panel/panel.js';
+
+const API = 'https://medcloud2.nhi.gov.tw/imu/api/';
+const ENDPOINTS = {
+  med: 'imue0008/imue0008s02/get-data',
+  lab: 'imue0060/imue0060s02/get-data',
+  allergy: 'imue0040/imue0040s02/get-data',
+  lftp: 'imue0190/imue0190s01/lftp-data',
+  summary: 'imue2000/imue2000s01/get-summary',
+};
+const log = (...a) => console.info('[疫苗檢核]', ...a);
+const send = (msg) => chrome.runtime.sendMessage(msg);
+
+let session = null;         // { token, user, idHash }
+let raw = null;             // 雲端回傳原始資料(僅記憶體)
+let rulesPack = null;
+let panel = null;           // { host, wrap }
+let lastNotice = null;
+
+function apiUrl(path) {
+  const t = encodeURIComponent(new Date().toISOString().slice(0, 19));
+  return path.startsWith('imue2000')
+    ? `${API}${path}?drug_phet=false&drug_hemo=false&ctmri_assay=false&ctmri_dent=true&cli_datetime=${t}`
+    : `${API}${path}?cli_datetime=${t}&insert_log=true`;
+}
+async function getJson(path, token) {
+  const r = await fetch(apiUrl(path), { credentials: 'include', cache: 'no-store', headers: { Authorization: 'Bearer ' + token, Accept: 'application/json, text/plain, */*', 'X-Requested-With': 'XMLHttpRequest' } });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function checkSession() {
+  const token = sessionStorage.getItem('token');
+  if (!token) { if (session) { session = null; raw = null; closePanel(); send({ type: 'session:end' }); } return; }
+  if (session?.token === token) return;
+  const user = userFromPayload(decodeJwt(token));
+  if (!user?.userId) return;
+  const idHash = await sha256Hex(user.userId);
+  const changed = session?.idHash !== idHash;
+  session = { token, user: { ...user, userId: undefined }, idHash };
+  if (changed) { raw = null; lastNotice = null; closePanel(); await send({ type: 'session:start', idHash }); log('新病患 session'); }
+}
+
+async function fetchAll() {
+  const out = { status: {} };
+  await Promise.all(Object.entries(ENDPOINTS).map(async ([k, path]) => {
+    try { out[k] = await getJson(path, session.token); }
+    catch (e) { out[k] = null; out.status[k === 'med' ? 'medication' : k] = 'error'; log(`${k} 讀取失敗`, e.message); }
+  }));
+  return out;
+}
+
+async function compute() {
+  const s = await send({ type: 'session:get', idHash: session.idHash });
+  const niis = s?.ok ? s.niis : null;
+  const facts = buildFacts({
+    user: session.user, med: raw.med, lab: raw.lab, allergy: raw.allergy, lftp: raw.lftp, summary: raw.summary, status: raw.status,
+    vaccinations: niis ? { status: 'ok', records: niis.records } : { status: 'not_queried', records: [] },
+    manual: s?.ok ? s.manual : {},
+  });
+  const result = evaluate(facts, rulesPack.rules, { asOf: todayISO() });
+  const niisMeta = niis?.meta;
+  if (niisMeta?.unmapped?.length) lastNotice = { tone: 'wait', text: `NIIS 有未對應的疫苗:${niisMeta.unmapped.join('、')}` };
+  return { facts, result, niisMeta };
+}
+
+function closePanel() { panel?.host.remove(); panel = null; }
+
+async function render() {
+  if (!panel) return;
+  const u = session.user;
+  const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice: lastNotice };
+  if (!raw) { renderPanel(panel.wrap, { ...base, loading: true }, { close: closePanel }); return; }
+  try {
+    const { facts, result, niisMeta } = await compute();
+    const manualLabels = Object.fromEntries((rulesPack.rules.manualConditions || []).map((m) => [m.key, m.label]));
+    renderPanel(panel.wrap, { ...base, notice: lastNotice, result, sourceStatus: facts.sourceStatus, manual: facts.manual, manualLabels }, {
+      close: closePanel,
+      manual: async (key, value) => { await send({ type: 'manual:set', idHash: session.idHash, key, value }); render(); },
+      niis: () => send({ type: 'niis:open' }),
+      refresh: async () => { raw = null; render(); raw = await fetchAll(); render(); },
+      export: () => exportDiag(facts, result, niisMeta),
+    });
+  } catch (e) {
+    renderPanel(panel.wrap, { ...base, error: `判定失敗:${e.message}` }, { close: closePanel });
+    console.error('[疫苗檢核]', e);
+  }
+}
+
+function exportDiag(facts, result, niisMeta) {
+  const diag = { exportedAt: new Date().toISOString(), note: '已排除姓名與身分證;仍含病歷資料,傳出前請去識別', facts, result, niisMeta, rawLftp: facts.sourceStatus.lftp === 'unknown_shape' ? raw.lftp : undefined };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(diag, null, 1)], { type: 'application/json' }));
+  a.download = `vaxcheck-diag-${Date.now()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+
+async function openPanel() {
+  await checkSession();
+  if (!session) { alert('疫苗檢核:尚未讀到健保卡(請先插卡登入健保雲端)'); return; }
+  if (!rulesPack) { rulesPack = await send({ type: 'rules:get' }); if (!rulesPack?.ok) { alert('疫苗檢核:規則載入失敗'); return; } }
+  if (!panel) { const host = document.createElement('div'); host.id = 'vaxcheck-panel'; document.documentElement.append(host); panel = { host, ...mountPanel(host) }; }
+  render();
+  if (!raw) { raw = await fetchAll(); render(); }
+}
+
+function addButton() {
+  if (document.getElementById('vaxcheck-fab')) return;
+  const host = document.createElement('div'); host.id = 'vaxcheck-fab';
+  const root = host.attachShadow({ mode: 'open' });
+  root.innerHTML = `<style>button{position:fixed;right:18px;bottom:18px;z-index:2147483645;font:600 15px "Microsoft JhengHei",system-ui,sans-serif;padding:10px 16px;border-radius:24px;border:0;background:#1C2B3A;color:#fff;box-shadow:0 4px 14px rgba(28,43,58,.3);cursor:pointer}button:focus-visible{outline:3px solid #2B6CB0;outline-offset:2px}</style><button type="button">疫苗檢核</button>`;
+  root.querySelector('button').addEventListener('click', openPanel);
+  document.documentElement.append(host);
+}
+
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === 'niis:updated') { lastNotice = { tone: 'info', text: '已併入 NIIS 接種史' }; render(); }
+  if (msg.type === 'niis:mismatch') { lastNotice = { tone: 'stop', text: 'NIIS 查的不是同一位病患,已忽略該結果' }; render(); }
+});
+
+addButton();
+checkSession();
+setInterval(checkSession, 2000);
+log('已載入');

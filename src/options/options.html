@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>VaxCheck 設定</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font:15px/1.6 "Microsoft JhengHei","PingFang TC",system-ui,sans-serif;color:#1C2B3A;max-width:640px;margin:32px auto;padding:0 20px}
+h1{font-size:22px;margin:0 0 4px} p.lead{color:#5B6775;margin:0 0 24px}
+label{display:block;margin:18px 0 4px;font-weight:700} small{display:block;color:#5B6775;font-weight:400}
+select,input[type=text]{font:inherit;padding:6px 8px;border:1px solid #D9DEE4;border-radius:4px;width:100%;box-sizing:border-box}
+.row{display:flex;gap:8px;align-items:center;font-weight:400} .row input{width:18px;height:18px}
+button{font:inherit;padding:8px 16px;border:0;border-radius:4px;background:#1C2B3A;color:#fff;margin-top:24px;cursor:pointer}
+#msg{color:#1E7B4F;margin-left:12px}
+</style></head><body>
+<h1>VaxCheck 疫苗檢核 設定</h1>
+<p class="lead">每台門診電腦設定一次。病患資料不存在這裡。</p>
+<label for="jur">適用縣市規則<small>決定載入中央規則,或中央加上縣市擴大對象</small></label>
+<select id="jur"></select>
+<label class="row"><input type="checkbox" id="auto"> 開啟 NIIS 後自動按「查詢」<small>(需先在院內確認讀卡流程可被觸發;預設關閉)</small></label>
+<label for="niis">NIIS 查詢頁網址</label><input type="text" id="niis">
+<label for="remote">線上規則位址(選填)<small>GitHub Pages 的 rules 目錄,例 https://帳號.github.io/VaxCheck/rules/ 。留空 = 只用外掛內建規則</small></label>
+<input type="text" id="remote" placeholder="留空">
+<label class="row"><input type="checkbox" id="pin"> 暫時只用內建規則(緊急時鎖定版本)</label>
+<button id="save">儲存設定</button><span id="msg"></span>
+<script src="options.js"></script>
+</body></html>

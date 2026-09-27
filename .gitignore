@@ -9,3 +9,5 @@ Thumbs.db
 vaccine-checker-diag-*.json
 # 任何未去識別的原始擷取
 fixtures/raw/
+# 外掛匯出的診斷檔
+vaxcheck-diag-*.json

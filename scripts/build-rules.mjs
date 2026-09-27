@@ -1,17 +1,11 @@
-#!/usr/bin/env node
-// rules/vaccines.yaml → dist/rules/vaccines.json(註解在此丟掉),
-// 並複製 rules/niis-vaccine-codes.json → dist/rules/。
-// 外掛執行期讀 dist/rules/*.json;日後由 GitHub raw / Release 發佈同一組檔案。
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import yaml from 'js-yaml';
-
-const src = resolve(process.argv[2] ?? 'rules/vaccines.yaml');
-const outDir = resolve('dist/rules');
-mkdirSync(outDir, { recursive: true });
-
-const rules = yaml.load(readFileSync(src, 'utf8'));
-const out = { ...rules, builtAt: new Date().toISOString(), sourceFile: 'rules/vaccines.yaml' };
-writeFileSync(resolve(outDir, 'vaccines.json'), JSON.stringify(out, null, 2) + '\n');
-copyFileSync(resolve('rules/niis-vaccine-codes.json'), resolve(outDir, 'niis-vaccine-codes.json'));
-console.log(`built dist/rules/vaccines.json (ruleSetVersion=${rules.ruleSetVersion}) + niis-vaccine-codes.json`);
+import path from 'node:path';
+import fs from 'node:fs';
+import { buildAll, writeDist, ROOT } from './lib/rules.mjs';
+const check = process.argv.includes('--check');
+const { outputs, errors, niis } = buildAll();
+if (errors.length) { console.error(`✗ 規則驗證失敗(${errors.length})`); errors.forEach((e) => console.error('  - ' + e)); process.exit(1); }
+if (check) { console.log(`✓ 規則驗證通過:${Object.keys(outputs).join(', ')}`); process.exit(0); }
+const dist = path.join(ROOT, 'dist', 'rules');
+const m = writeDist(outputs, dist);
+fs.copyFileSync(path.join(ROOT, 'rules', 'niis-vaccine-codes.json'), path.join(dist, 'niis-vaccine-codes.json'));
+console.log(`✓ 規則建置完成 → dist/rules/(${Object.keys(m.latest).join(', ')};${niis.codes.length} 個 NIIS 代碼)`);

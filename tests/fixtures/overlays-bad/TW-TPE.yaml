@@ -1,0 +1,10 @@
+ruleSetVersion: TPE.bad.0
+effectiveFrom: "2026-08-10"
+jurisdiction: { code: TW-TPE, level: county }
+vaccines:
+  - extends: PNEUMO_PCV20_21
+    dosing: { series: [ { dose: 1 } ] }
+    eligibilityGroups:
+      - groupId: PNEUMO_TPE_WRONG_PREFIX
+        label: 缺來源、前綴錯、改劑次
+        criteria: { residentOf: TW-TPE }
