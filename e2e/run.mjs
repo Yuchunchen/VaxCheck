@@ -25,13 +25,18 @@ async function until(fn, timeout = 15000, interval = 250) {
 
 const sites = await startFakeSites({ fake });
 const { mc, niis: ni } = sites.state;
-const ctx = await chromium.launchPersistentContext(fs.mkdtempSync('/tmp/vx-'), {
-  headless: true, channel: 'chromium', viewport: { width: 1280, height: 860 }, locale: 'zh-TW',
-  args: [`--disable-extensions-except=${EXT}`, `--load-extension=${EXT}`, `--proxy-server=${sites.proxyUrl}`, '--ignore-certificate-errors'],
-});
-ctx.on('page', (p) => p.on('console', (m) => { if (/疫苗檢核|Error/.test(m.text())) console.log('   [console]', m.text()); }));
+const USER_DIR = fs.mkdtempSync('/tmp/vx-');
+async function launch() {
+  const c = await chromium.launchPersistentContext(USER_DIR, {
+    headless: true, channel: 'chromium', viewport: { width: 1280, height: 860 }, locale: 'zh-TW',
+    args: [`--disable-extensions-except=${EXT}`, `--load-extension=${EXT}`, `--proxy-server=${sites.proxyUrl}`, '--ignore-certificate-errors'],
+  });
+  c.on('page', (p) => p.on('console', (m) => { if (/疫苗檢核|Error/.test(m.text())) console.log('   [console]', m.text()); }));
+  return c;
+}
+let ctx = await launch();
 
-const sw = ctx.serviceWorkers()[0] || await ctx.waitForEvent('serviceworker');
+let sw = ctx.serviceWorkers()[0] || await ctx.waitForEvent('serviceworker');
 const EXT_ID = sw.url().split('/')[2];
 check('外掛 service worker 啟動', !!sw, EXT_ID);
 const PKG_VER = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
@@ -42,6 +47,20 @@ const verdictOf = async (page, name) => {
   return shadow(page, (n) => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; const li = [...r.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n)); return li?.querySelector('.vx-verdict').textContent; }, name);
 };
 const panelText = (page, sel) => shadow(page, (s) => document.querySelector('#vaxcheck-panel')?.shadowRoot?.querySelector(s)?.textContent || '', sel);
+// 面板排序:可接種 → 待確認 → 不符合,小標題筆數 = 該組卡片數;判定依據 ✓ → 未確認 → ✗
+const ORDER = ['可接種', '待確認', '不符合'];
+const RANK = { 'g-y': 0, 'g-u': 1, 'g-n': 2 };
+async function checkLayout(pg, need = 2) {
+  const layout = await shadow(pg, () => {
+    const r = document.querySelector('#vaxcheck-panel').shadowRoot;
+    return { heads: [...r.querySelectorAll('.vx-grp')].map((h) => [h.firstChild.textContent, Number(h.querySelector('.vx-grp-n').textContent), h.nextElementSibling.querySelectorAll(':scope > .vx-v').length]),
+      traces: [...r.querySelectorAll('.vx-why ul')].map((ul) => [...ul.children].map((li) => li.className)) };
+  });
+  const idx = layout.heads.map(([t]) => ORDER.indexOf(t));
+  const groupsOk = layout.heads.length >= need && idx.every((x, i) => x >= 0 && (i === 0 || x > idx[i - 1])) && layout.heads.every(([, n, c]) => n === c && n > 0);
+  const traceOk = layout.traces.length > 0 && layout.traces.every((cls) => cls.map((c) => RANK[c]).every((x, i, a) => i === 0 || x >= a[i - 1]));
+  return [groupsOk && traceOk, `${JSON.stringify(layout.heads)};判定依據 ${layout.traces.length} 支`];
+}
 const toastText = (page) => page.evaluate(() => document.querySelector('#vaxcheck-toast')?.shadowRoot?.textContent || '');
 
 // ───────── A. 浮動鈕(備援入口,行為不變)─────────
@@ -80,6 +99,9 @@ await page.screenshot({ path: path.join(SHOTS, '3-merged-needs-input.png') });
 await shadow(page, () => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; [...r.querySelectorAll('.vx-check')].find((l) => l.textContent.includes('IPD 高風險')).querySelector('input').click(); });
 await sleep(600);
 check('勾 IPD 高風險 → 8 週路徑 → 可打', (await verdictOf(page, '肺炎鏈球菌')) === '可打');
+check('面板分組(可接種在前)、判定依據 ✓ → 未確認 → ✗', ...(await checkLayout(page)));
+await shadow(page, () => document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-why').forEach((d, i) => { if (i < 2) d.open = true; }));
+await page.screenshot({ path: path.join(SHOTS, '4-panel-groups.png') });
 
 // 身分不符
 ni.card = 'Z999999999';
@@ -131,7 +153,7 @@ await sw.evaluate(() => chrome.storage.sync.remove('medcloudEntryUrl'));
 
 // B2 全新:兩分頁、NIIS 背景、token 出現後才開面板與代按
 await sw.evaluate(() => chrome.storage.sync.set({ autoClickNiis: true }));
-mc.current = P1; mc.tokenDelayMs = 3000; mc.tokenAt = []; ni.card = P1.UserID; ni.posts = []; ni.gets = 0;
+mc.current = P1; mc.iccDelayMs = 3000; mc.tokenAt = []; mc.loginHits = []; ni.card = P1.UserID; ni.posts = []; ni.gets = 0;
 const t0 = Date.now();
 const r1 = await openWs();
 check('workspace:open → 健保雲端新開、NIIS 新開', r1?.ok && r1.medcloud === 'create' && r1.niis === 'create', JSON.stringify(r1));
@@ -142,22 +164,26 @@ await sleep(Math.max(0, 1500 - (Date.now() - t0)));
 check('token 出現前:不開面板、不按 NIIS 讀卡鈕', (await mcPage.locator('#vaxcheck-panel').count()) === 0 && ni.posts.length === 0 && mc.tokenAt.length === 0);
 const opened = await until(async () => (await mcPage.locator('#vaxcheck-panel').count()) > 0, 15000);
 check('token 出現後面板自動開啟', !!opened && mc.tokenAt.length > 0);
+check('新開健保雲端 → ?type=icc 自動登入,不需按「實體健保卡」', mc.loginHits.join() === 'icc' && mc.loginBtnClicks === 0 && mcPage.url().endsWith('/imu/IMUE1000/IMUE2000'), `${mc.loginHits.join()};${mcPage.url()}`);
 const merged = await until(async () => (await verdictOf(mcPage, '肺炎鏈球菌')) === '需確認', 20000);
 check('autoClickNiis:token 出現後才代按,結果自動併回', !!merged && ni.posts.length === 1 && ni.posts[0].at > mc.tokenAt[0] && ni.posts[0].rocId === P1.UserID, `post-token ${ni.posts[0] ? ni.posts[0].at - mc.tokenAt[0] : '-'} ms`);
 await sleep(2500);
 check('同一次操作只代按一次', ni.posts.length === 1, `POST ${ni.posts.length}`);
+check('B2 面板分組:順序正確、小標題筆數相符', ...(await checkLayout(mcPage)));
+await shadow(mcPage, () => document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-why').forEach((d, i) => { if (i < 2) d.open = true; }));
 await mcPage.screenshot({ path: path.join(SHOTS, '7-workspace-auto.png') });
 
 // B3 再按 icon(同一病患、無換卡連結)→ 重新計算、不重複開面板、NIIS 不 reload
 const niisPage = await pageOf(NIIS);
 await niisPage.evaluate(() => { window.__marker = 1; });
 await mcPage.evaluate(() => { document.getElementById('sw').textContent = '(無)'; });
-const [g0, p0] = [ni.gets, ni.posts.length];
+const [g0, p0, l0] = [ni.gets, ni.posts.length, mc.loginHits.length];
 const r2 = await openWs();
 await sleep(3500);
 const marker = await niisPage.evaluate(() => window.__marker).catch(() => null);
 check('再按 icon:健保雲端切換、面板只有一個', r2?.medcloud === 'focus' && (await mcPage.locator('#vaxcheck-panel').count()) === 1 && (await verdictOf(mcPage, '肺炎鏈球菌')) === '需確認');
 check('NIIS 同一病患 → 不 reload、不再代按', marker === 1 && ni.gets === g0 && ni.posts.length === p0, `GET +${ni.gets - g0}, POST +${ni.posts.length - p0}`);
+check('已有 token → 不導向登入入口', mc.loginHits.length === l0);
 
 // B4 換卡:代按「請換卡再按我」,2 秒後 token 換成新病患 → 面板換人;NIIS 不同病患 → 導回根網址
 await mcPage.evaluate(() => { document.getElementById('sw').textContent = '請換卡再按我'; });
@@ -180,13 +206,49 @@ const noIdNotice = await until(async () => { const t = await panelText(mcPage, '
 check('空身分 → 健保雲端面板黃色提示「NIIS 未讀到健保卡」', !!noIdNotice && ni.posts.at(-1).rocId === '', noIdNotice || '');
 const noticeTone = await shadow(mcPage, () => document.querySelector('#vaxcheck-panel').shadowRoot.querySelector('.vx-notice')?.className || '');
 const pv = await verdictOf(mcPage, '肺炎鏈球菌');
-const allText = await panelText(mcPage, '.vx-list');
+const allText = await shadow(mcPage, () => [...document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-list')].map((l) => l.textContent).join(''));
 check('空身分 → 肺鏈不可為可打/建議接種', pv === '待查接種史' && !/建議接種/.test(allText) && /vx-wait/.test(noticeTone), `${pv}(${noticeTone})`);
 const niisToast = await until(async () => { const t = await toastText(niisPage); return /未讀到健保卡/.test(t) ? t : null; }, 5000);
 check('NIIS 頁 toast 顯示「未讀到健保卡」', !!niisToast, niisToast || '');
 const stored = await sw.evaluate(async () => (await chrome.storage.session.get('niis')).niis);
 check('空身分結果未寫入 storage.session', !stored);
 await mcPage.screenshot({ path: path.join(SHOTS, '9-no-identity.png') });
+
+// B6 既有分頁停在登入頁 → 導向 ?type=icc;type=icc 無效 → 15 秒後代按「實體健保卡」一次 → 登入成功
+ni.card = P1.UserID; mc.iccWorks = false; mc.loginBtnClicks = 0;
+await mcPage.goto(`${MC}/imu/IMUE1000/`);   // 登入頁會清空 sessionStorage
+mc.loginHits = [];
+const tB6 = Date.now();
+await openWs();
+const toIcc = await until(async () => mc.loginHits.includes('icc'), 10000);
+check('登入頁 → 導向 ?type=icc', !!toIcc, mc.loginHits.join());
+await sleep(10000);
+check('15 秒內不代按登入按鈕', mc.loginBtnClicks === 0);
+const loggedIn = await until(async () => (await panelText(mcPage, '.vx-who')).includes('測試甲'), 30000);
+check('type=icc 無效 → 15 秒後代按「實體健保卡」一次 → 面板開啟', !!loggedIn && mc.loginBtnClicks === 1, `${((Date.now() - tB6) / 1000).toFixed(1)} 秒`);
+await sleep(1500);
+check('備援只點一次', mc.loginBtnClicks === 1);
+await mcPage.screenshot({ path: path.join(SHOTS, '10-login-fallback.png') });
+mc.iccWorks = true;
+
+// B7 設定升級遷移(重啟瀏覽器 = service worker 重新啟動):舊預設值換新,自訂值保留
+const OLD_ENTRY = `${MC}/imu/IMUE1000/IMUE2000`;
+const NEW_ENTRY = `${MC}/imu/IMUE1000/?type=icc`;
+const CUSTOM = `${MC}/imu/IMUE1000/IMUE0008`;
+const entryAfterRestart = async (value) => {
+  await sw.evaluate((v) => chrome.storage.sync.set({ medcloudEntryUrl: v }), value);
+  await ctx.close();
+  ctx = await launch();
+  sw = ctx.serviceWorkers()[0] || await ctx.waitForEvent('serviceworker');
+  let v = null;
+  const end = Date.now() + 5000;
+  do { v = await sw.evaluate(async () => (await chrome.storage.sync.get('medcloudEntryUrl')).medcloudEntryUrl); if (v !== value) break; await sleep(250); } while (Date.now() < end);
+  return v;
+};
+const migrated = await entryAfterRestart(OLD_ENTRY);
+check('設定遷移:舊預設 IMUE2000 → ?type=icc', migrated === NEW_ENTRY, migrated);
+const kept = await entryAfterRestart(CUSTOM);
+check('設定遷移:自訂值保留', kept === CUSTOM, kept);
 
 await ctx.close();
 sites.close();

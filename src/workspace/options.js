@@ -4,8 +4,8 @@ export const NIIS_ORIGIN = 'https://10.241.219.35';
 
 export const DEFAULTS = {
   jurisdiction: 'TW',
-  // 待院內確認插卡後的實際路徑(參考 repo 寫 /imu/IMUE2000/IMUE2000)
-  medcloudEntryUrl: `${MEDCLOUD_ORIGIN}/imu/IMUE1000/IMUE2000`,
+  // 登入頁 + type=icc → 實體健保卡自動登入(健保署未公開參數,備援見 login.js)
+  medcloudEntryUrl: `${MEDCLOUD_ORIGIN}/imu/IMUE1000/?type=icc`,
   niisQueryUrl: `${NIIS_ORIGIN}/`,
   autoClickNiis: false,
   autoSwitchCard: true,
@@ -13,12 +13,24 @@ export const DEFAULTS = {
   pinBundled: false,
 };
 
-/** 讀設定;舊版欄位 niisUrl 沿用為 niisQueryUrl */
+/** v0.4.9 的預設入口(未登入會停在 /imu/IMUE1000/);升級時換成新預設,使用者自訂值不動 */
+export const OLD_DEFAULT_ENTRY = `${MEDCLOUD_ORIGIN}/imu/IMUE1000/IMUE2000`;
+
+/** 讀設定;舊版欄位 niisUrl 沿用為 niisQueryUrl;舊預設入口視同新預設 */
 export async function readOptions(sync) {
   const stored = await sync.get([...Object.keys(DEFAULTS), 'niisUrl']);
   if (stored.niisQueryUrl === undefined && stored.niisUrl) stored.niisQueryUrl = stored.niisUrl;
   delete stored.niisUrl;
+  if (stored.medcloudEntryUrl === OLD_DEFAULT_ENTRY) stored.medcloudEntryUrl = DEFAULTS.medcloudEntryUrl;
   return { ...DEFAULTS, ...stored };
+}
+
+/** 升級遷移(寫回 storage):只換掉舊預設值。回傳是否有變更 */
+export async function migrateOptions(sync) {
+  const { medcloudEntryUrl } = await sync.get('medcloudEntryUrl');
+  if (medcloudEntryUrl !== OLD_DEFAULT_ENTRY) return false;
+  await sync.set({ medcloudEntryUrl: DEFAULTS.medcloudEntryUrl });
+  return true;
 }
 
 /** 空白 → 'empty';無法解析或不在外掛可存取的主機 → 'invalid';正確 → null */

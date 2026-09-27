@@ -17,7 +17,7 @@ v0.4.9 起(標題列 icon = 一鍵工作區):
 ```
 插健保卡 → 按標題列 VaxCheck 圖示
    ↓
-健保雲端分頁:有 → 切過去(並代按「請換卡再按我」);沒有 → 開設定頁的「健保雲端入口網址」
+健保雲端分頁:有且已登入 → 切過去(並代按「請換卡再按我」);沒有或未登入 → 開「健保雲端入口網址」(預設 /imu/IMUE1000/?type=icc 自動登入;失效則 15 秒後代按「實體健保卡」)
 NIIS 分頁:沒有 → 在健保雲端右側開背景分頁;同一病患 → 不動;不同病患/未查詢 → 導回查詢頁
    ↓ 健保雲端取得本次病患 token(最多等 120 秒)
 結果面板自動開啟(第一層):身分/年齡 + 雲端資料能判的每支疫苗
@@ -28,9 +28,10 @@ PostBack 完成 → 外掛自動解析 → 面板自動更新:劑次、間隔、
 - 第二層需按一次讀卡鈕(可由外掛代按);PIN 推定不需要(NIIS 頁面程式中簽章與 PIN 相關程式碼已被註解),待院內確認。
 - 代按條件(全部成立才按,每次按圖示最多一次):來自按圖示、健保雲端已取得本次病患 token(避免兩個讀卡元件同時搶健保卡)、NIIS 在查詢頁且無 `#div_result`、本次尚未按過。
 - NIIS 讀卡失敗時頁面仍會送出表單(`#tb_RocID` 為空)。此時的「本個案查無接種紀錄」一律視為 `error/niis_no_identity`,不寫入接種史,面板顯示「NIIS 未讀到健保卡,接種史未更新」(否則 0 筆會讓肺鏈誤判為從未接種)。
+- 面板分三組:可接種 → 待確認 → 不符合(只在渲染層排序,engine Result 維持規則順序;src/panel/order.js)。
 - 健保雲端右下浮動鈕「疫苗檢核」保留為備援入口;面板內「查接種史」按鈕仍可開/切到 NIIS 分頁(不代按)。
 - 設定:`medcloudEntryUrl`、`niisQueryUrl`(空白或主機不符 → 按圖示改開設定頁)、`autoSwitchCard`(預設開)、`autoClickNiis`(預設關)。
-- 實作:`src/workspace/`(workspace.js 分頁決策與代按條件、switch.js 換卡與等 token、options.js 設定);background 的 `openWorkspace` 由 `chrome.action.onClicked` 與 runtime 訊息 `{type:"workspace:open"}`(e2e 用,只接受外掛自己的頁面)觸發。manifest 的 action 不可設 `default_popup`。
+- 實作:`src/workspace/`(workspace.js 分頁決策與代按條件、login.js 自動登入與備援、switch.js 換卡與等 token、options.js 設定與遷移);background 的 `openWorkspace` 由 `chrome.action.onClicked` 與 runtime 訊息 `{type:"workspace:open"}`(e2e 用,只接受外掛自己的頁面)觸發。manifest 的 action 不可設 `default_popup`。
 
 ## 2. 目錄結構
 

@@ -1,5 +1,6 @@
 // 結果面板:原生 DOM + Shadow DOM,外掛與示範頁共用。只負責畫,不做判定。
 import { CSS } from './panel.css.js';
+import { groupVaccines, sortTrace } from './order.js';
 
 const SRC_NAMES = { medication: '用藥', lab: '檢驗', allergy: '過敏', lftp: '特殊給付', summary: '病人資訊', niis: '接種史' };
 const SRC_STATE = { ok: '已取得', nodata: '無資料', not_queried: '未查詢', error: '讀取失敗', unknown_shape: '格式不符', unavailable: '未實作', loading: '讀取中' };
@@ -85,63 +86,67 @@ export function renderPanel(wrap, state, on) {
   const res = state.result;
   if (!res) { const f = footer(null); if (f) wrap.append(f); return; }
   const manual = state.manual || {};
-  const list = h('ol', { class: 'vx-list' });
-  for (const v of res.vaccines) {
-    const [word, tone, line] = head(v, fmtDate);
-    const providers = [...new Set(v.matchedGroups.map((g) => PROVIDER(g, names)))];
-    const li = h('li', { class: `vx-v t-${tone}` },
-      h('div', { class: 'vx-verdict' }, word),
-      h('div', { class: 'vx-body' },
-        h('div', { class: 'vx-name' }, v.name, providers.map((p) => h('span', { class: 'vx-badge' }, p))),
-        h('p', { class: 'vx-line' }, line),
-        v.explanation && v.verdict !== 'ineligible' && h('p', { class: 'vx-sub' }, v.explanation),
-        v.verdict === 'ineligible' && v.reasons.length > 0 && h('p', { class: 'vx-sub' }, v.reasons[0].split(':')[1] || v.reasons[0]),
-      ));
-    const body = li.querySelector('.vx-body');
+  // 分組顯示:可接種 → 待確認 → 不符合(組內維持規則順序;Result 本身不改順序)
+  for (const grp of groupVaccines(res.vaccines)) {
+    const list = h('ol', { class: `vx-list vx-list-${grp.key}`, 'aria-label': grp.label });
+    wrap.append(h('h3', { class: `vx-grp vx-grp-${grp.key}` }, grp.label, ' ', h('span', { class: 'vx-grp-n' }, String(grp.items.length))));
+    for (const v of grp.items) {
+      const [word, tone, line] = head(v, fmtDate);
+      const providers = [...new Set(v.matchedGroups.map((g) => PROVIDER(g, names)))];
+      const li = h('li', { class: `vx-v t-${tone}` },
+        h('div', { class: 'vx-verdict' }, word),
+        h('div', { class: 'vx-body' },
+          h('div', { class: 'vx-name' }, v.name, providers.map((p) => h('span', { class: 'vx-badge' }, p))),
+          h('p', { class: 'vx-line' }, line),
+          v.explanation && v.verdict !== 'ineligible' && h('p', { class: 'vx-sub' }, v.explanation),
+          v.verdict === 'ineligible' && v.reasons.length > 0 && h('p', { class: 'vx-sub' }, v.reasons[0].split(':')[1] || v.reasons[0]),
+        ));
+      const body = li.querySelector('.vx-body');
 
-    // 病歷自動判定(可取消)
-    for (const e of v.evidence) {
-      body.append(h('div', { class: 'vx-evid' },
-        h('span', {}, `依病歷判定「${e.label}」:${e.why.join(';')}`),
-        h('button', { class: 'vx-link', onclick: () => on.manual(e.key, false) }, '不符合,取消')));
+      // 病歷自動判定(可取消)
+      for (const e of v.evidence) {
+        body.append(h('div', { class: 'vx-evid' },
+          h('span', {}, `依病歷判定「${e.label}」:${e.why.join(';')}`),
+          h('button', { class: 'vx-link', onclick: () => on.manual(e.key, false) }, '不符合,取消')));
+      }
+      // 決定性條件:只列勾了會改變結果的
+      if (v.decisiveManual.length) {
+        body.append(h('fieldset', { class: 'vx-ask' },
+          h('legend', {}, '若符合下列任一,可能改為可打'),
+          v.decisiveManual.map((m) => h('label', { class: 'vx-check' },
+            h('input', { type: 'checkbox', checked: manual[m.key] === true, onchange: (ev) => on.manual(m.key, ev.target.checked ? true : null) }),
+            h('span', {}, m.label, m.hint && h('small', {}, m.hint))))));
+      }
+      // 已被醫師排除的條件可還原
+      const ml = state.manualLabels || {};
+      const excluded = Object.entries(manual).filter(([k, val]) => val === false && v.groupTrace.some((g) => g.why.some((w) => w.startsWith(`${ml[k] || k}:醫師排除`))));
+      if (excluded.length) {
+        body.append(h('div', { class: 'vx-evid' }, h('span', {}, `已排除:${excluded.map(([k]) => ml[k] || k).join('、')}`),
+          h('button', { class: 'vx-link', onclick: () => excluded.forEach(([k]) => on.manual(k, null)) }, '還原')));
+      }
+      // 禁忌提醒(一行,不擋)
+      for (const r of v.reminders) {
+        body.append(h('label', { class: 'vx-remind' },
+          h('input', { type: 'checkbox', checked: manual[r.key] === true, onchange: (ev) => on.manual(r.key, ev.target.checked ? true : null) }),
+          h('span', {}, `施打前確認:${r.label}`)));
+      }
+      for (const p of v.precautions) body.append(h('p', { class: 'vx-sub vx-warn' }, `注意:${p.label}`));
+      for (const f of v.dosing?.flags || []) body.append(h('p', { class: 'vx-sub vx-warn' }, f === 'NEED_DATE_CONFIRMATION' ? '接種紀錄缺日期,請確認' : '接種史有型別不明紀錄,請確認'));
+      if (v.upcoming?.length && !['eligible', 'scheduled'].includes(v.verdict)) {
+        body.append(h('p', { class: 'vx-sub' }, v.upcoming.map((g) => `${fmtDate(g.window.from)} 起:${g.label}${g.value === null ? '(需確認)' : ''}`).join(';')));
+      }
+      // 判定依據
+      body.append(h('details', { class: 'vx-why' }, h('summary', {}, '判定依據'),
+        h('ul', {}, sortTrace(v.groupTrace).map((g) => h('li', { class: `g-${g.value === true ? 'y' : g.value === false ? 'n' : 'u'}` },
+          h('b', {}, g.value === true ? '符合' : g.value === false ? '不符' : '未確認'),
+          ` ${g.label}`, g.providedBy === 'county' ? `(${PROVIDER(g, names)})` : '', g.state !== 'active' ? `〔${g.state === 'scheduled' ? `${fmtDate(g.window.from)} 起` : '已結束'}〕` : '',
+          h('small', {}, g.why.join(';'))))),
+        v.dosing?.case && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.case.label}(${v.dosing.case.sourceRef || ''})`),
+        v.dosing?.variant && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.variant.label};本季應接種 ${v.dosing.dosesRequired} 劑,季前累計 ${v.dosing.variant.priorDoses} 劑`)));
+      list.append(li);
     }
-    // 決定性條件:只列勾了會改變結果的
-    if (v.decisiveManual.length) {
-      body.append(h('fieldset', { class: 'vx-ask' },
-        h('legend', {}, '若符合下列任一,可能改為可打'),
-        v.decisiveManual.map((m) => h('label', { class: 'vx-check' },
-          h('input', { type: 'checkbox', checked: manual[m.key] === true, onchange: (ev) => on.manual(m.key, ev.target.checked ? true : null) }),
-          h('span', {}, m.label, m.hint && h('small', {}, m.hint))))));
-    }
-    // 已被醫師排除的條件可還原
-    const ml = state.manualLabels || {};
-    const excluded = Object.entries(manual).filter(([k, val]) => val === false && v.groupTrace.some((g) => g.why.some((w) => w.startsWith(`${ml[k] || k}:醫師排除`))));
-    if (excluded.length) {
-      body.append(h('div', { class: 'vx-evid' }, h('span', {}, `已排除:${excluded.map(([k]) => ml[k] || k).join('、')}`),
-        h('button', { class: 'vx-link', onclick: () => excluded.forEach(([k]) => on.manual(k, null)) }, '還原')));
-    }
-    // 禁忌提醒(一行,不擋)
-    for (const r of v.reminders) {
-      body.append(h('label', { class: 'vx-remind' },
-        h('input', { type: 'checkbox', checked: manual[r.key] === true, onchange: (ev) => on.manual(r.key, ev.target.checked ? true : null) }),
-        h('span', {}, `施打前確認:${r.label}`)));
-    }
-    for (const p of v.precautions) body.append(h('p', { class: 'vx-sub vx-warn' }, `注意:${p.label}`));
-    for (const f of v.dosing?.flags || []) body.append(h('p', { class: 'vx-sub vx-warn' }, f === 'NEED_DATE_CONFIRMATION' ? '接種紀錄缺日期,請確認' : '接種史有型別不明紀錄,請確認'));
-    if (v.upcoming?.length && !['eligible', 'scheduled'].includes(v.verdict)) {
-      body.append(h('p', { class: 'vx-sub' }, v.upcoming.map((g) => `${fmtDate(g.window.from)} 起:${g.label}${g.value === null ? '(需確認)' : ''}`).join(';')));
-    }
-    // 判定依據
-    body.append(h('details', { class: 'vx-why' }, h('summary', {}, '判定依據'),
-      h('ul', {}, v.groupTrace.map((g) => h('li', { class: `g-${g.value === true ? 'y' : g.value === false ? 'n' : 'u'}` },
-        h('b', {}, g.value === true ? '符合' : g.value === false ? '不符' : '未確認'),
-        ` ${g.label}`, g.providedBy === 'county' ? `(${PROVIDER(g, names)})` : '', g.state !== 'active' ? `〔${g.state === 'scheduled' ? `${fmtDate(g.window.from)} 起` : '已結束'}〕` : '',
-        h('small', {}, g.why.join(';'))))),
-      v.dosing?.case && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.case.label}(${v.dosing.case.sourceRef || ''})`),
-      v.dosing?.variant && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.variant.label};本季應接種 ${v.dosing.dosesRequired} 劑,季前累計 ${v.dosing.variant.priorDoses} 劑`)));
-    list.append(li);
+    wrap.append(list);
   }
-  wrap.append(list);
 
   wrap.append(h('div', { class: 'vx-actions' },
     on.niis && h('button', { class: 'vx-btn vx-primary', onclick: on.niis }, ss.niis === 'ok' ? '重查接種史(NIIS)' : '查接種史(NIIS 需過卡)'),

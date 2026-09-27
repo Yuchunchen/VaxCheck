@@ -4,7 +4,8 @@ import { ageYears, todayISO } from '../engine/dates.js';
 import { decodeJwt, userFromPayload, sha256Hex } from '../adapters/nhi/token.js';
 import { buildFacts } from '../adapters/nhi/facts.js';
 import { mountPanel, renderPanel } from '../panel/panel.js';
-import { findSwitchLink, isLoginUrl, switchCard, waitForToken } from '../workspace/switch.js';
+import { POLL_MS, findSwitchLink, isLoginUrl, switchCard } from '../workspace/switch.js';
+import { LOGIN_INCOMPLETE, findLoginButton, loginStep } from '../workspace/login.js';
 import { AUTORUN_TIMEOUT_MS } from '../workspace/workspace.js';
 
 const API = 'https://medcloud2.nhi.gov.tw/imu/api/';
@@ -155,24 +156,54 @@ const tokenHash = async () => {
   return id ? sha256Hex(id) : null;
 };
 
+/** 目前頁面狀態回報 background;回 true = background 已導向登入入口(本頁即將離開) */
+async function reportState(op, extra = {}) {
+  const r = await send({ type: 'workspace:medcloud', opId: op.opId, hasToken: !!sessionStorage.getItem('token'), url: location.href, ...extra }).catch(() => null);
+  return r?.action === 'navigate';
+}
+
+/**
+ * 等登入完成(最多到 deadline)。導向登入入口後 15 秒仍在登入頁 → 點一次「實體健保卡」登入按鈕(每次按 icon 一次);
+ * 再 30 秒仍無 token → 提示。外掛狀態都在 chrome.storage.session(登入頁會清空頁面的 sessionStorage)。
+ */
+async function waitForLogin(op, deadline) {
+  let messageShown = false;
+  for (;;) {
+    const p = (await send({ type: 'autorun:get' }).catch(() => null))?.pending;
+    const hasToken = !!sessionStorage.getItem('token');
+    const btn = findLoginButton(document);
+    const step = loginStep({ now: Date.now(), url: location.href, hasToken, loginAt: p?.loginAt, fallbackClickedAt: p?.fallbackClickedAt, buttonFound: !!btn, messageShown });
+    if (step === 'done') return true;
+    if (step === 'click' && (await send({ type: 'autorun:login_fallback', opId: op.opId }))?.ok) { log('登入頁未自動登入,代按「實體健保卡」登入'); btn.click(); }
+    if (step === 'message') { messageShown = true; log(LOGIN_INCOMPLETE); showMessage(LOGIN_INCOMPLETE); }
+    if (Date.now() >= deadline) return false;
+    await new Promise((r) => setTimeout(r, POLL_MS));
+  }
+}
+
 /** 工作區自動執行(標題列 icon):op = { opId, ts, switchCard } */
 async function autorun(op) {
   if (!op?.opId || autorunOp === op.opId) return;
   autorunOp = op.opId;
   try {
     const deps = { url: () => location.href, findLink: () => findSwitchLink(document), idHash: tokenHash, token: () => sessionStorage.getItem('token') };
+    // 未登入或在登入頁 → background 導向 medcloudEntryUrl(?type=icc);已有 token 不導向
+    if (await reportState(op)) return;
     let sw = null;
-    if (op.switchCard) {
+    if (op.switchCard && sessionStorage.getItem('token')) {
       await send({ type: 'autorun:switching', opId: op.opId });
       sw = await switchCard(deps);
       log({ switched: '已代按「請換卡再按我」,偵測到新病患', same: '已代按「請換卡再按我」,30 秒內未偵測到換卡', nolink: '找不到換卡連結,用目前病患計算', login: '在登入頁,等待登入' }[sw.result]);
+      if (sw.result === 'same' && (await reportState(op, { switchTimedOut: true, linkFound: !!findSwitchLink(document) }))) return;
     }
-    const ok = await waitForToken(deps, { deadline: (op.ts || Date.now()) + AUTORUN_TIMEOUT_MS });
+    const ok = await waitForLogin(op, (op.ts || Date.now()) + AUTORUN_TIMEOUT_MS);
     if (ok) await checkSession();
     if (!ok || !session) {
+      const loginAt = (await send({ type: 'autorun:get' }).catch(() => null))?.pending?.loginAt || op.loginAt;
       await send({ type: 'autorun:done', opId: op.opId });
-      log('尚未登入健保雲端(等待 120 秒逾時)');
-      showMessage('尚未登入健保雲端');
+      const text = loginAt ? LOGIN_INCOMPLETE : '尚未登入健保雲端';
+      log(`${text}(等待 120 秒逾時)`);
+      showMessage(text);
       return;
     }
     await send({ type: 'workspace:ready', opId: op.opId, idHash: session.idHash });

@@ -311,3 +311,110 @@ test('無法算出身分雜湊 → error;有身分 → ok', async () => {
   assert.deepEqual(await niisVaccinations(parsed, hash), { status: 'ok', records: [], idHash: 'h:B223456789' });
   assert.equal(await niisVaccinations(parseNiisDocument(parseHTML('<html><body><input id="tb_RocID" value=""></body></html>').document, table), hash), null, '沒有結果表 → 不處理');
 });
+
+// ── v0.4.10 健保雲端自動登入 ──
+import { decideMedcloud, loginStep, findLoginButton, onLoginPage, LOGIN_FALLBACK_MS, LOGIN_MESSAGE_MS } from '../src/workspace/login.js';
+import { migrateOptions, OLD_DEFAULT_ENTRY } from '../src/workspace/options.js';
+
+test('預設入口 = /imu/IMUE1000/?type=icc', () => {
+  assert.equal(DEFAULTS.medcloudEntryUrl, `${MC}/imu/IMUE1000/?type=icc`);
+});
+
+test('decideMedcloud:登入頁/無 token → 導向;已有 token → 不導向;換卡逾時且無連結 → 導向;每次最多一次', () => {
+  const main = `${MC}/imu/IMUE1000/IMUE2000`;
+  assert.equal(decideMedcloud({ hasToken: false, url: `${MC}/imu/IMUE1000/` }), 'navigate', '停在 /imu/IMUE1000/ 無 token');
+  assert.equal(decideMedcloud({ hasToken: true, url: `${MC}/imu/login` }), 'navigate', '/imu/login');
+  assert.equal(decideMedcloud({ hasToken: false, url: `${MC}/imu/IMUE1000/IMUE0001` }), 'navigate', 'IMUE0001');
+  assert.equal(decideMedcloud({ hasToken: false, url: main }), 'navigate', '主畫面但無 token');
+  assert.equal(decideMedcloud({ hasToken: true, url: main }), 'stay', '已登入不可導向 ?type=icc');
+  assert.equal(decideMedcloud({ hasToken: true, url: `${MC}/imu/IMUE1000/` }), 'stay', 'base 但有 token');
+  assert.equal(decideMedcloud({ hasToken: true, url: main, switchTimedOut: true, linkFound: true }), 'stay', '換卡逾時但仍有連結');
+  assert.equal(decideMedcloud({ hasToken: true, url: main, switchTimedOut: true, linkFound: false }), 'navigate', '換卡逾時且找不到連結');
+  assert.equal(decideMedcloud({ hasToken: false, url: `${MC}/imu/login`, loginNavigated: true }), 'stay', '本次已導向過');
+  assert.equal(onLoginPage(`${MC}/imu/IMUE1000/?type=icc`, false), true);
+});
+
+test('分頁決策:既有分頁在登入頁 → 導向 ?type=icc 一次', async () => {
+  const { chrome, ws } = setup({ tabs: [{ ...MC_TAB, url: `${MC}/imu/IMUE1000/` }] });
+  const r = await ws.open();
+  const a = await ws.medcloudState(1, { opId: r.opId, hasToken: false, url: `${MC}/imu/IMUE1000/` });
+  assert.equal(a.action, 'navigate');
+  assert.deepEqual(chrome.calls.update.filter(([id, p]) => id === 1 && p.url), [[1, { url: DEFAULTS.medcloudEntryUrl }]]);
+  const p = chrome.mem.pendingAutoRun;
+  assert.deepEqual([p.loginNavigated, typeof p.loginAt, p.switchCard], [true, 'number', false], '導向後不再代按換卡');
+  assert.equal((await ws.medcloudState(1, { opId: r.opId, hasToken: false, url: `${MC}/imu/IMUE1000/?type=icc` })).action, 'stay', '導向後的新頁不再導向');
+  assert.equal(chrome.calls.update.filter(([id, p2]) => id === 1 && p2.url).length, 1);
+});
+
+test('分頁決策:既有分頁已有 token → 不導向,走換卡', async () => {
+  const { chrome, ws } = setup({ tabs: [MC_TAB] });
+  const r = await ws.open();
+  assert.equal((await ws.medcloudState(1, { opId: r.opId, hasToken: true, url: MC_TAB.url })).action, 'stay');
+  assert.equal(chrome.calls.update.filter(([, p]) => p.url).length, 0);
+  assert.equal(chrome.mem.pendingAutoRun.switchCard, true);
+});
+
+test('分頁決策:換卡逾時且無連結 → 導向一次;再逾時不再導向', async () => {
+  const { chrome, ws } = setup({ tabs: [MC_TAB] });
+  const r = await ws.open();
+  const st = { opId: r.opId, hasToken: true, url: MC_TAB.url, switchTimedOut: true, linkFound: false };
+  assert.equal((await ws.medcloudState(1, st)).action, 'navigate');
+  assert.equal((await ws.medcloudState(1, st)).action, 'stay');
+  assert.equal(chrome.calls.update.filter(([, p]) => p.url).length, 1);
+});
+
+test('分頁決策:新開的健保雲端視為已導向(登入頁不再導向)、opId 不符忽略', async () => {
+  const { chrome, ws } = setup();
+  const r = await ws.open();
+  assert.equal(chrome.mem.pendingAutoRun.loginNavigated, true);
+  assert.equal((await ws.medcloudState(r.medcloudTabId, { opId: r.opId, hasToken: false, url: DEFAULTS.medcloudEntryUrl })).action, 'stay');
+  assert.equal((await ws.medcloudState(r.medcloudTabId, { opId: 'x', hasToken: false, url: `${MC}/imu/login` })).action, 'stay');
+});
+
+test('登入備援:每次按 icon 最多點一次', async () => {
+  const { ws } = setup();
+  const r = await ws.open();
+  assert.equal((await ws.loginFallback(r.medcloudTabId, r.opId)).ok, true);
+  assert.equal((await ws.loginFallback(r.medcloudTabId, r.opId)).ok, false);
+  assert.equal((await ws.autorunGet(r.medcloudTabId)).fallbackClickedAt > 0, true);
+  const r2 = await ws.open();   // 再按一次 icon → 新的一次機會
+  assert.equal((await ws.loginFallback(r2.medcloudTabId, r2.opId)).ok, true);
+});
+
+test('loginStep:15 秒後點登入按鈕,再 30 秒提示;有 token 即完成', () => {
+  const login = `${MC}/imu/IMUE1000/?type=icc`;
+  const base = { url: login, hasToken: false, loginAt: 0, fallbackClickedAt: null, buttonFound: true, messageShown: false };
+  assert.equal(loginStep({ ...base, now: LOGIN_FALLBACK_MS - 1 }), 'wait');
+  assert.equal(loginStep({ ...base, now: LOGIN_FALLBACK_MS }), 'click');
+  assert.equal(loginStep({ ...base, now: LOGIN_FALLBACK_MS, buttonFound: false }), 'wait', '找不到按鈕不點');
+  const clicked = { ...base, fallbackClickedAt: 16000 };
+  assert.equal(loginStep({ ...clicked, now: 16000 + LOGIN_MESSAGE_MS - 1 }), 'wait', '已點過不再點');
+  assert.equal(loginStep({ ...clicked, now: 16000 + LOGIN_MESSAGE_MS }), 'message');
+  assert.equal(loginStep({ ...clicked, now: 99999, messageShown: true }), 'wait');
+  assert.equal(loginStep({ ...base, now: LOGIN_FALLBACK_MS + LOGIN_MESSAGE_MS, buttonFound: false }), 'message', '沒有按鈕也在 45 秒提示');
+  assert.equal(loginStep({ ...base, now: 1, hasToken: true, url: `${MC}/imu/IMUE1000/IMUE2000` }), 'done');
+  assert.equal(loginStep({ ...base, now: 99999, loginAt: null }), 'wait', '未導向登入頁 → 不做備援');
+});
+
+test('findLoginButton:a.login-btn,全形或半形括號皆可', () => {
+  const d = (h) => parseHTML(`<html><body>${h}</body></html>`).document;
+  assert.ok(findLoginButton(d('<a class="login-btn">虛擬健保卡</a><a class="login-btn"> 健保雲端系統2.0 (實體健保卡) </a>')));
+  assert.ok(findLoginButton(d('<a class="login-btn">健保雲端系統2.0(實體健保卡)</a>')));
+  assert.equal(findLoginButton(d('<a>健保雲端系統2.0(實體健保卡)</a>')), null, '需為 a.login-btn');
+  assert.equal(findLoginButton(d('<a class="login-btn">健保雲端系統2.0(虛擬健保卡)</a>')), null);
+});
+
+test('設定升級遷移:舊預設值換成新值,自訂值與未設定不動', async () => {
+  const mk = (v) => { const box = v === undefined ? {} : { medcloudEntryUrl: v }; return { box, get: async () => ({ ...box }), set: async (o) => Object.assign(box, o) }; };
+  const a = mk(OLD_DEFAULT_ENTRY);
+  assert.equal(await migrateOptions(a), true);
+  assert.equal(a.box.medcloudEntryUrl, DEFAULTS.medcloudEntryUrl);
+  const custom = `${MC}/imu/IMUE1000/IMUE0008`;
+  const b = mk(custom);
+  assert.equal(await migrateOptions(b), false);
+  assert.equal(b.box.medcloudEntryUrl, custom);
+  const c = mk(undefined);
+  assert.equal(await migrateOptions(c), false);
+  assert.deepEqual(c.box, {});
+  assert.equal((await readOptions({ get: async () => ({ medcloudEntryUrl: OLD_DEFAULT_ENTRY }) })).medcloudEntryUrl, DEFAULTS.medcloudEntryUrl, '讀取時也視同新預設');
+});

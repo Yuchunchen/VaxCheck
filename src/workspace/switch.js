@@ -3,10 +3,9 @@ export const SWITCH_LINK_TEXTS = ['請換卡再按我', '請掃描再按我'];
 export const SWITCH_TIMEOUT_MS = 30e3;
 export const POLL_MS = 500;
 
-export function isLoginUrl(url) {
-  const u = String(url || '');
-  return u.includes('/imu/login') || u.includes('/imu/IMUE1000/IMUE0001');
-}
+import { isLoginUrl } from './login.js';
+
+export { isLoginUrl };
 
 export function findSwitchLink(doc) {
   return [...doc.querySelectorAll('a')].find((a) => SWITCH_LINK_TEXTS.some((t) => (a.textContent || '').includes(t))) || null;

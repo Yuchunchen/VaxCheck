@@ -1,6 +1,6 @@
 // Service worker:工作區(標題列 icon)、跨分頁身分核對、NIIS 結果中繼、人工條件暫存、規則載入。
 // 病患資料只放 chrome.storage.session(關瀏覽器即清);規則快取放 local(非病患資料)。
-import { NIIS_ORIGIN, readOptions } from './workspace/options.js';
+import { NIIS_ORIGIN, migrateOptions, readOptions } from './workspace/options.js';
 import { createWorkspace } from './workspace/workspace.js';
 
 const S = chrome.storage.session;
@@ -101,6 +101,8 @@ async function handle(msg, sender) {
       if (!fromExtensionPage(sender)) return { ok: false, reason: 'forbidden' };
       return workspace.open();
     case 'autorun:get': return { ok: true, pending: await workspace.autorunGet(sender.tab?.id) };
+    case 'workspace:medcloud': return workspace.medcloudState(sender.tab?.id, { ...msg, url: sender.url || msg.url });
+    case 'autorun:login_fallback': return workspace.loginFallback(sender.tab?.id, msg.opId);
     case 'autorun:switching': return workspace.autorunSwitching(msg.opId);
     case 'autorun:done': return workspace.autorunDone(msg.opId);
     case 'workspace:ready': return workspace.medcloudReady(sender.tab?.id, msg.opId, msg.idHash);
@@ -113,4 +115,8 @@ async function handle(msg, sender) {
 chrome.runtime.onMessage.addListener((msg, sender, send) => { handle(msg, sender).then(send, (e) => send({ ok: false, error: String(e) })); return true; });
 // 標題列 icon → 開啟工作區(manifest 的 action 不可設 default_popup,否則不會觸發)
 chrome.action.onClicked.addListener(() => { workspace.open().catch((e) => console.error('[疫苗檢核] 開啟工作區失敗', e)); });
+// 設定升級遷移:舊預設入口 → ?type=icc(自訂值不動)。每次 service worker 啟動都檢查,冪等
+const migrate = () => migrateOptions(chrome.storage.sync).then((changed) => { if (changed) console.info('[疫苗檢核] 健保雲端入口已更新為新預設'); }).catch(() => {});
+chrome.runtime.onInstalled.addListener(migrate);
+migrate();
 chrome.tabs.onRemoved.addListener((tabId) => { workspace.tabRemoved(tabId).catch(() => {}); });

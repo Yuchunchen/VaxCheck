@@ -16,7 +16,7 @@ input.bad{border-color:#B3261E}
 <label for="jur">適用縣市規則<small>決定載入中央規則,或中央加上縣市擴大對象</small></label>
 <select id="jur"></select>
 <p id="problem" role="alert" hidden></p>
-<label for="medcloud">健保雲端入口網址<small>按標題列 VaxCheck 圖示時,沒有健保雲端分頁就開這個網址。請改成插卡後網址列顯示的實際路徑</small></label><input type="text" id="medcloud">
+<label for="medcloud">健保雲端入口網址<small>按標題列圖示時,沒有健保雲端分頁或尚未登入就開這個網址。預設 …/imu/IMUE1000/?type=icc = 實體健保卡自動登入;失效時 15 秒後外掛會代按「實體健保卡」登入鈕</small></label><input type="text" id="medcloud">
 <label for="niis">NIIS 查詢頁網址<small>按圖示時在健保雲端右側開背景分頁</small></label><input type="text" id="niis">
 <label class="row"><input type="checkbox" id="switch"> 按圖示時自動按健保雲端「請換卡再按我」<small>(實驗功能,預設開;院內發現副作用可關)</small></label>
 <label class="row"><input type="checkbox" id="auto"> 按圖示後自動按 NIIS「讀取健保卡及醫事人員卡」<small>(健保雲端讀到本次病患後才按,每次按圖示最多一次;需先在院內確認;預設關閉)</small></label>

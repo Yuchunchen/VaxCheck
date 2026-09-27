@@ -1,6 +1,7 @@
 // 工作區(background):按標題列 icon → 健保雲端 + NIIS 兩分頁 → 健保雲端自動開面板;NIIS 分頁決策與代按讀卡鈕。
 // chrome API 以參數注入,可在 Node 用 mock 測試。storage.session 只放分頁 id、時間與身分雜湊,不放明文。
 import { MEDCLOUD_ORIGIN, NIIS_ORIGIN, samePage, validateWorkspaceOptions } from './options.js';
+import { decideMedcloud } from './login.js';
 
 export const AUTORUN_TIMEOUT_MS = 120e3;
 export const OP_TTL_MS = 5 * 60e3;   // 一次按 icon 的操作有效期(代按 NIIS 讀卡鈕只在此期間內)
@@ -74,7 +75,8 @@ export function createWorkspace(deps) {
       mc = await chrome.tabs.create({ url: o.medcloudEntryUrl, active: true });
     }
     const switchCard = existing && o.autoSwitchCard !== false;
-    await S.set({ pendingAutoRun: { tabId: mc.id, ts, opId, switchCard } });
+    // 新開 = 已導向入口(登入頁)一次;既有分頁由 content script 回報 token 狀態後再決定(medcloudState)
+    await S.set({ pendingAutoRun: { tabId: mc.id, ts, opId, switchCard, loginNavigated: !existing, loginAt: existing ? null : ts, fallbackClickedAt: null } });
 
     const op = { opId, ts, medcloudTabId: mc.id, niisTabId: null, niis: null, medcloudIdHash: null, clicked: false };
     const niis = pickTab(await chrome.tabs.query({ url: `${NIIS_ORIGIN}/*` }));
@@ -102,6 +104,31 @@ export function createWorkspace(deps) {
   async function autorunSwitching(opId) {
     const p = await get('pendingAutoRun');
     if (p?.opId === opId) await S.set({ pendingAutoRun: { ...p, switchCard: false } });
+    return { ok: true };
+  }
+
+  /**
+   * 健保雲端 content script 回報狀態(開始時,或換卡逾時後):未登入/在登入頁 → 導向 medcloudEntryUrl;
+   * 已有 token 不導向;換卡逾時且找不到換卡連結 → 導向。每次按 icon 最多導向一次。
+   */
+  async function medcloudState(tabId, { opId, hasToken, url, switchTimedOut = false, linkFound = true }) {
+    const p = await get('pendingAutoRun');
+    if (!p || p.opId !== opId || p.tabId !== tabId) return { action: 'stay' };
+    const action = decideMedcloud({ hasToken, url, switchTimedOut, linkFound, loginNavigated: p.loginNavigated });
+    if (action === 'navigate') {
+      const o = await deps.getOptions();
+      await S.set({ pendingAutoRun: { ...p, loginNavigated: true, loginAt: now(), switchCard: false } });
+      await chrome.tabs.update(tabId, { url: o.medcloudEntryUrl });
+      log(`健保雲端${switchTimedOut ? '換卡逾時且無換卡連結' : '未登入'},導向登入入口`);
+    }
+    return { action };
+  }
+
+  /** 登入備援:每次按 icon 最多點一次登入按鈕;第一個要求者取得許可 */
+  async function loginFallback(tabId, opId) {
+    const p = await get('pendingAutoRun');
+    if (!p || p.opId !== opId || p.tabId !== tabId || p.fallbackClickedAt) return { ok: false };
+    await S.set({ pendingAutoRun: { ...p, fallbackClickedAt: now() } });
     return { ok: true };
   }
 
@@ -167,7 +194,8 @@ export function createWorkspace(deps) {
   }
 
   return {
-    open: serial(open), autorunGet: serial(autorunGet), autorunSwitching: serial(autorunSwitching), autorunDone: serial(autorunDone), medcloudReady: serial(medcloudReady),
+    open: serial(open), autorunGet: serial(autorunGet), autorunSwitching: serial(autorunSwitching), autorunDone: serial(autorunDone),
+    medcloudState: serial(medcloudState), loginFallback: serial(loginFallback), medcloudReady: serial(medcloudReady),
     niisPage: serial(niisPage), niisParsed: serial(niisParsed), tabRemoved: serial(tabRemoved), tryAutoClick: serial(tryAutoClick),
   };
 }

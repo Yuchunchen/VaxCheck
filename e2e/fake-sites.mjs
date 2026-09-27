@@ -24,12 +24,12 @@ const NIIS_RECORDS = {
 };
 
 /**
- * state.mc: { current, next, tokenDelayMs, switchDelayMs, tokenAt[] }
+ * state.mc: { current, next, tokenDelayMs, switchDelayMs, tokenAt[], iccWorks, iccDelayMs, loginHits[type], loginBtnClicks }
  * state.niis: { card(身分證或 null=未插卡), gets, posts[{ at, rocId }] }
  */
 export async function startFakeSites({ fake }) {
   const state = {
-    mc: { current: null, next: null, tokenDelayMs: 0, switchDelayMs: 2000, tokenAt: [] },
+    mc: { current: null, next: null, tokenDelayMs: 0, switchDelayMs: 2000, tokenAt: [], iccWorks: true, iccDelayMs: 2000, loginHits: [], loginBtnClicks: 0 },
     niis: { card: null, gets: 0, posts: [] },
   };
 
@@ -41,6 +41,30 @@ const TOKEN = ${JSON.stringify(p ? jwt(p) : '')};
 const mark = () => fetch('/imu/__token_set', { method: 'POST' });
 function setToken(t) { if (!t) return; sessionStorage.setItem('token', t); mark(); }
 ${state.mc.tokenDelayMs ? `setTimeout(() => setToken(TOKEN), ${state.mc.tokenDelayMs});` : 'setToken(TOKEN);'}
+document.getElementById('sw').addEventListener('click', () => {
+  fetch('/imu/__switch', { method: 'POST' }).then((r) => r.text()).then((t) => { if (t) setTimeout(() => setToken(t), ${state.mc.switchDelayMs}); });
+});
+</script></body></html>`;
+
+  // 登入頁(/imu/IMUE1000/,history mode):mounted() 清空 sessionStorage;type=icc → 模擬實體健保卡登入;
+  // 登入成功 → 寫 token、pushState 到 IMUE2000(同一份文件,content script 不重載)。只模擬結構,不含健保署程式碼。
+  const loginHtml = (type) => `<!doctype html><html><head><meta charset="utf-8"><title>健保雲端登入(偽)</title></head><body style="font-family:sans-serif">
+<div id="login"><h2>健保醫療資訊雲端查詢系統 登入</h2>
+<a class="login-btn" href="javascript:void(0)" id="icc">健保雲端系統2.0(實體健保卡)</a> <a class="login-btn" href="javascript:void(0)">健保雲端系統2.0(虛擬健保卡)</a></div>
+<div id="main" hidden><p>病患:<span id="who"></span></p><p><a id="sw" href="javascript:void(0)">請換卡再按我</a></p></div>
+<script>
+sessionStorage.clear();
+const mark = () => fetch('/imu/__token_set', { method: 'POST' });
+function setToken(t) { if (!t) return; sessionStorage.setItem('token', t); mark(); }
+function login() {
+  fetch('/imu/__login', { method: 'POST' }).then((r) => r.text()).then((t) => {
+    setToken(t);
+    history.pushState({}, '', '/imu/IMUE1000/IMUE2000');
+    document.getElementById('login').hidden = true; document.getElementById('main').hidden = false;
+  });
+}
+${type === 'icc' && state.mc.iccWorks ? `setTimeout(login, ${state.mc.iccDelayMs});` : ''}
+document.getElementById('icc').addEventListener('click', () => { fetch('/imu/__login_btn', { method: 'POST' }); setTimeout(login, 1000); });
 document.getElementById('sw').addEventListener('click', () => {
   fetch('/imu/__switch', { method: 'POST' }).then((r) => r.text()).then((t) => { if (t) setTimeout(() => setToken(t), ${state.mc.switchDelayMs}); });
 });
@@ -76,6 +100,13 @@ ${result.length ? result.map(([l, n, d], i) => `<tr><td>${i + 1}</td><td>${l}</t
     const u = new URL(req.url, `https://${host}`);
     if (host === 'medcloud2.nhi.gov.tw') {
       if (u.pathname === '/imu/__token_set') { state.mc.tokenAt.push(Date.now()); res.end(); return; }
+      if (u.pathname === '/imu/__login') { res.end(state.mc.current ? jwt(state.mc.current) : ''); return; }
+      if (u.pathname === '/imu/__login_btn') { state.mc.loginBtnClicks++; res.end(); return; }
+      if (u.pathname === '/imu/IMUE1000/' || u.pathname === '/imu/IMUE1000') {
+        const type = u.searchParams.get('type') || '';
+        state.mc.loginHits.push(type);
+        return html(res, loginHtml(type));
+      }
       if (u.pathname === '/imu/__switch') { const n = state.mc.next; state.mc.next = null; if (n) state.mc.current = n; res.end(n ? jwt(n) : ''); return; }
       if (u.pathname.startsWith('/imu/api/')) {
         if (!(req.headers.authorization || '').startsWith('Bearer ')) { res.writeHead(401); res.end(); return; }
