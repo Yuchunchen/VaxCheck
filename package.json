@@ -1,6 +1,6 @@
 {
   "name": "vaxcheck",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "private": true,
   "type": "module",
   "description": "疫苗檢核程式 VaxCheck — 插卡一鍵檢核公費疫苗資格(Chrome 外掛)",
