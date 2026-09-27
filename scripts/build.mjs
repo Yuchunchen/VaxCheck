@@ -61,7 +61,7 @@ fs.writeFileSync(path.join(EXT, 'manifest.json'), JSON.stringify({
 }, null, 2));
 
 // 示範頁(單檔 HTML)
-const web = await esbuild.build({ ...common, entryPoints: ['src/web/demo.js'], write: false, target: 'es2020', minify: true, absWorkingDir: ROOT });
+const web = await esbuild.build({ ...common, define: { __VAXCHECK_VERSION__: JSON.stringify(pkg.version) }, entryPoints: ['src/web/demo.js'], write: false, target: 'es2020', minify: true, absWorkingDir: ROOT });
 const js = web.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
 fs.mkdirSync(D('web'), { recursive: true });
 fs.writeFileSync(D('web', 'index.html'), fs.readFileSync(path.join(ROOT, 'src/web/index.template.html'), 'utf8').replace('/*__BUNDLE__*/', () => js));

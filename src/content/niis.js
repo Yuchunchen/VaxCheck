@@ -39,5 +39,6 @@ async function maybeAutoClick() {
 }
 
 new MutationObserver(() => { clearTimeout(scan.t); scan.t = setTimeout(scan, 300); }).observe(document.documentElement, { childList: true, subtree: true });
+console.info('[疫苗檢核]', `NIIS 已載入 v${chrome.runtime.getManifest().version}`);
 scan();
 maybeAutoClick();

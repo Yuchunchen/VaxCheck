@@ -59,6 +59,9 @@ const verdictOf = async (name) => {
 check('第一層:肺鏈 68 歲 → 待查接種史', (await verdictOf('肺炎鏈球菌')) === '待查接種史');
 const srcText = await page.evaluate(() => document.querySelector('#vaxcheck-panel').shadowRoot.querySelector('.vx-sources').textContent);
 check('來源列:用藥/病人資訊已取得、接種史未查', /用藥 已取得/.test(srcText) && /接種史 未查詢/.test(srcText), srcText);
+const PKG_VER = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
+const footText = await page.evaluate(() => document.querySelector('#vaxcheck-panel').shadowRoot.querySelector('.vx-foot')?.textContent || '');
+check('面板頁尾顯示外掛版號', footText.includes(`VaxCheck v${PKG_VER}`), footText);
 await page.screenshot({ path: path.join(SHOTS, '1-first-layer.png') });
 
 // 查接種史 → NIIS 分頁 → 過卡(按查詢)→ 回寫
@@ -115,6 +118,7 @@ const opt = await ctx.newPage();
 await opt.goto(`chrome-extension://${sw.url().split('/')[2]}/options.html`);
 await opt.waitForTimeout(500);
 check('設定頁載入縣市選單', (await opt.locator('#jur option').count()) >= 1);
+check('設定頁顯示外掛版號', (await opt.locator('#ver').textContent()) === `v${PKG_VER}`);
 
 await ctx.close();
 const fail = results.filter(([, ok]) => !ok).length;

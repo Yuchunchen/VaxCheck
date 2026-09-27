@@ -15,6 +15,7 @@ const ENDPOINTS = {
 };
 const log = (...a) => console.info('[疫苗檢核]', ...a);
 const send = (msg) => chrome.runtime.sendMessage(msg);
+const APP_VERSION = chrome.runtime.getManifest().version;
 
 let session = null;         // { token, user, idHash }
 let raw = null;             // 雲端回傳原始資料(僅記憶體)
@@ -74,7 +75,7 @@ function closePanel() { panel?.host.remove(); panel = null; }
 async function render() {
   if (!panel) return;
   const u = session.user;
-  const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice: lastNotice };
+  const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice: lastNotice, appVersion: APP_VERSION };
   if (!raw) { renderPanel(panel.wrap, { ...base, loading: true }, { close: closePanel }); return; }
   try {
     const { facts, result, niisMeta } = await compute();
@@ -127,4 +128,4 @@ chrome.runtime.onMessage.addListener((msg) => {
 addButton();
 checkSession();
 setInterval(checkSession, 2000);
-log('已載入');
+log(`已載入 v${APP_VERSION}`);

@@ -6,6 +6,7 @@ import { mountPanel, renderPanel } from '../panel/panel.js';
 import { SAMPLES, toFacts } from './samples.js';
 
 const $ = (s) => document.querySelector(s);
+const APP_VERSION = typeof __VAXCHECK_VERSION__ === 'string' ? __VAXCHECK_VERSION__ : 'dev'; // build.mjs 以 define 注入
 const manualLabels = Object.fromEntries(rules.manualConditions.map((m) => [m.key, m.label]));
 let current = SAMPLES[0];
 let manual = {};
@@ -23,7 +24,7 @@ function render() {
   try { result = evaluate(f, rules, { asOf }); } catch (e) { error = `判定失敗:${e.message}`; }
   renderPanel(wrap, {
     user: { name: factsOverride ? '自訂病患' : `示範病患 ${current.id}`, sex: f.patient.sex, age: f.patient.birthDate ? ageYears(f.patient.birthDate, asOf) : null },
-    result, error, sourceStatus: f.sourceStatus, manual, manualLabels, jurisdictionNames: { TW: '中央' }, rulesMeta: { source: 'bundled' },
+    result, error, sourceStatus: f.sourceStatus, manual, manualLabels, jurisdictionNames: { TW: '中央' }, rulesMeta: { source: 'bundled' }, appVersion: APP_VERSION,
     notice: niisQueried ? null : { tone: 'wait', text: '模擬接種史尚未查詢' },
   }, {
     manual: (k, v) => { if (v === null) delete manual[k]; else manual[k] = v; render(); },
@@ -51,5 +52,6 @@ $('#apply').onclick = () => {
   catch (e) { $('#facts-msg').textContent = `JSON 格式錯誤:${e.message}`; }
 };
 $('#rulever').textContent = rules.ruleSetVersion;
+$('#appver').textContent = `v${APP_VERSION}`;
 syncControls();
 render();

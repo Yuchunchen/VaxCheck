@@ -52,7 +52,7 @@ export function mountPanel(host, { floating = true } = {}) {
 }
 
 /**
- * state: { user:{name,age,sex}, result, sourceStatus, manual, loading, error, notice, jurisdictionNames, rulesMeta }
+ * state: { user:{name,age,sex}, result, sourceStatus, manual, loading, error, notice, jurisdictionNames, rulesMeta, appVersion }
  * on: { manual(key, value), niis(), refresh(), export(), close() }
  */
 export function renderPanel(wrap, state, on) {
@@ -65,15 +65,24 @@ export function renderPanel(wrap, state, on) {
     on.close && h('button', { class: 'vx-x', 'aria-label': '關閉', onclick: on.close }, '×')));
 
   if (state.notice) wrap.append(h('div', { class: `vx-notice vx-${state.notice.tone || 'info'}` }, state.notice.text));
+  // 頁尾:外掛版號永遠顯示(讀取中、出錯時也要看得到,回報問題用)
+  const footer = (res) => {
+    const rm = state.rulesMeta || {};
+    const parts = [state.appVersion && `VaxCheck v${state.appVersion}`];
+    if (res) parts.push(`判定日 ${fmtDate(res.asOf)}`, `規則 ${res.ruleSetVersion}`, `適用 ${names[res.jurisdiction] || res.jurisdiction}`,
+      rm.source && `來源 ${rm.source === 'bundled' ? '內建' : rm.source === 'cache' ? '快取' : '線上'}`);
+    const text = parts.filter(Boolean).join(';');
+    return text && h('footer', { class: 'vx-foot' }, text);
+  };
   if (state.error) { wrap.append(h('div', { class: 'vx-notice vx-stop' }, state.error)); }
-  if (state.loading) { wrap.append(h('div', { class: 'vx-loading' }, '讀取健保雲端資料…')); return; }
+  if (state.loading) { wrap.append(h('div', { class: 'vx-loading' }, '讀取健保雲端資料…'), footer(null) || ''); return; }
 
   const ss = state.sourceStatus || {};
   wrap.append(h('ul', { class: 'vx-sources', 'aria-label': '資料來源' },
     Object.keys(SRC_NAMES).map((k) => h('li', { class: `s-${ss[k] || 'loading'}` }, `${SRC_NAMES[k]} ${SRC_STATE[ss[k]] || ss[k] || ''}`))));
 
   const res = state.result;
-  if (!res) return;
+  if (!res) { const f = footer(null); if (f) wrap.append(f); return; }
   const manual = state.manual || {};
   const list = h('ol', { class: 'vx-list' });
   for (const v of res.vaccines) {
@@ -136,7 +145,5 @@ export function renderPanel(wrap, state, on) {
     on.niis && h('button', { class: 'vx-btn vx-primary', onclick: on.niis }, ss.niis === 'ok' ? '重查接種史(NIIS)' : '查接種史(NIIS 需過卡)'),
     on.refresh && h('button', { class: 'vx-btn', onclick: on.refresh }, '重新讀取'),
     on.export && h('button', { class: 'vx-btn', onclick: on.export }, '匯出診斷檔')));
-  const rm = state.rulesMeta || {};
-  wrap.append(h('footer', { class: 'vx-foot' },
-    `判定日 ${fmtDate(res.asOf)};規則 ${res.ruleSetVersion};適用 ${names[res.jurisdiction] || res.jurisdiction}${rm.source ? `;來源 ${rm.source === 'bundled' ? '內建' : rm.source === 'cache' ? '快取' : '線上'}` : ''}`));
+  wrap.append(footer(res));
 }

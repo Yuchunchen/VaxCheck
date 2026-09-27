@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.0)
+# 疫苗檢核程式 — 進度(v0.4.1)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -12,6 +12,7 @@
 - 2026-09-17:GitHub repo 建立(private 先起);v0.3.0 原始碼未保存,src/ 待重建。
 
 ## 已完成
+- **v0.4.1**(2026-09-27):顯示外掛版號——面板頁尾(讀取中、出錯時也顯示)、浮動鈕滑鼠提示、設定頁標題、示範頁頁尾、Console「[疫苗檢核] 已載入 vX」(健保雲端與 NIIS 兩頁)。e2e 加 2 項檢查,17/17。
 - **v0.4.0**:src/ 依 docs/01、05–11 重建。引擎(三值邏輯、ageByYear、cases 待定機制、曆法間隔、時間窗與分階段 scheduled/not_open/out_of_season、人工條件 evidence 預勾、只問決定性條件、縣市 overlay 合併與來源標註)、adapters(健保雲端 5 個 API、NIIS 劑別代號最長前綴)、background、content scripts、面板、設定頁、示範頁。IPD 高風險證據改用疾管署官方 ICD 表(1,847 碼,rules/codelists/)。scripts/validate-rules.mjs 併入 build-rules.mjs --check;CI 改為 ci.yml(驗證 + 測試 + 建置)。單元與情境 32/32、端對端 15/15(真 Chromium + 偽造頁面)。FHIR Bundle 轉換尚未重建(引擎直接吃 facts)。
 - 2026-09-17:NIIS 疫苗代碼表(81 碼 + Stool;31 碼註記刪除但保留;38 碼自費標記;canonical 對照);validate-rules 加疫苗代碼白名單;build-rules 產出 dist/rules/。
 - v0.3.0(2026-09-15):公費肺炎鏈球菌 PCV20/21 規則正式轉譯;引擎 `ageByYear`、`dosing.mode: cases`、曆法間隔、含公/自費的接種史述詞、待定 case、verdict `not_funded`/`needs_review`。單元 46/46、端對端 13/13(原始碼遺失)。

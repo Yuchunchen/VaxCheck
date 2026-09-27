@@ -1,5 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const DEFAULTS = { jurisdiction: 'TW', niisUrl: 'https://10.241.219.35/', autoClickNiis: false, remoteRulesBase: '', pinBundled: false };
+$('ver').textContent = `v${chrome.runtime.getManifest().version}`;
 (async () => {
   const o = { ...DEFAULTS, ...(await chrome.storage.sync.get(Object.keys(DEFAULTS))) };
   const m = await (await fetch(chrome.runtime.getURL('rules/manifest.json'))).json();
