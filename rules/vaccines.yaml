@@ -7,10 +7,10 @@
 #   - 肺炎鏈球菌 PCV20/21:正式(Policy 2026-08-10);IPD 高風險證據改用疾管署官方 ICD 參考表(docs/11)
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
 #     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 國健署罕見疾病 ICD(115-07-23,推估)+ 透析/CKD 旗標
-#   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,待 YC 核准
+#   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
 # =====================================================================
 
-ruleSetVersion: 2026.09.27-v048
+ruleSetVersion: 2026.09.28-v0411
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -115,8 +115,12 @@ codeLists:
   IPD_CSF_LEAK_DX:   { label: 腦脊髓液滲漏, system: ICD-10-CM, file: codelists/ipd-highrisk.cdc-1140310.json#csf_leak }
   IPD_MALIGNANCY_DX: { label: 惡性腫瘤, system: ICD-10-CM, file: codelists/ipd-highrisk.cdc-1140310.json#malignancy }
   IPD_TRANSPLANT_DX: { label: 器官移植, system: ICD-10-CM, file: codelists/ipd-highrisk.cdc-1140310.json#transplant }
-  ANTINEOPLASTIC_ATC:
-    label: 抗癌藥物(L01;是否含 L02 荷爾蒙療法待 YC 決定)
+  ANTINEOPLASTIC_ATC:                             # IPD 惡性腫瘤「一年內接受抗癌藥物」;YC 2026-09-28 決定含 L02(通函「任何治療癌症之藥物」)
+    label: 抗癌藥物(L01 抗腫瘤藥、L02 內分泌治療)
+    system: ATC
+    codes: ["L01*", "L02*"]
+  COVID_CANCER_TX_ATC:                            # COVID 計畫原文為「接受免疫抑制治療之癌症患者」;L02 荷爾蒙療法非免疫抑制,不列
+    label: 抗腫瘤藥物(L01;COVID 免疫低下證據用)
     system: ATC
     codes: ["L01*"]
   # --- 流感 115 附件1 高風險慢性病人(逐類轉錄;門/住診紀錄 1 筆即可)---
@@ -127,7 +131,7 @@ codeLists:
   NHI_CATASTROPHIC_6M_DX:   { label: "重大傷病項目診斷碼(六個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within183 }
   NHI_CATASTROPHIC_1M_DX:   { label: "重大傷病項目診斷碼(急性一個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within31 }
   # --- COVID-19 計畫第二章壹五(二):結核病、失能、精神疾病、失智症「經醫師評估」— 病歷證據只預勾,醫師可取消 ---
-  # 計畫未附代碼表;以下為 Claude 依病名轉錄(ICD-10-CM),待 YC 核准
+  # 計畫未附代碼表;以下為 Claude 依病名轉錄(ICD-10-CM),YC 2026-09-28 核准
   COVID_TB_DX:
     label: 結核病(一年內)
     system: ICD-10-CM
@@ -243,9 +247,9 @@ manualConditions:
         - diagnosis: { $list: IPD_TRANSPLANT_DX }
         - flag: dialysis
         - diagnosis: { $list: DIALYSIS_DX }
-        - all:                                                         # 癌症 + 一年內抗癌藥
+        - all:                                                         # 癌症 + 一年內抗腫瘤藥(L01;不含 L02)
             - diagnosis: { $list: IPD_MALIGNANCY_DX }
-            - medication: { $list: ANTINEOPLASTIC_ATC, withinDays: 365 }
+            - medication: { $list: COVID_CANCER_TX_ATC, withinDays: 365 }
         - medication: { $list: IMMUNOSUPPRESSANT_ATC, withinDays: 90 }  # 「目前使用」以 90 天內處方推估;高劑量類固醇雲端無法判劑量 → 靠醫師
   - key: ipdHighRisk
     label: IPD 高風險對象
@@ -259,7 +263,7 @@ manualConditions:
         - all:                                   # 惡性腫瘤:ICD + 一年內抗癌藥(放射治療雲端看不到 → 靠醫師)
             - diagnosis: { $list: IPD_MALIGNANCY_DX }
             - medication: { $list: ANTINEOPLASTIC_ATC, withinDays: 365 }
-        - diagnosis: { $list: IPD_TRANSPLANT_DX } # 官方表列 Z94 全章;是否排除皮膚/骨/角膜待 YC 決定
+        - diagnosis: { $list: IPD_TRANSPLANT_DX } # 官方表列 Z94 全章,含皮膚/骨/角膜(YC 2026-09-28 決定不排除)
   - key: dialysis
     label: 洗腎患者
     evidence:

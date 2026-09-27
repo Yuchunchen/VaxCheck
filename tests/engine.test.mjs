@@ -116,6 +116,24 @@ test('IPD 惡性腫瘤需一年內抗癌藥;只有診斷 → 仍要問', () => {
   assert.equal(withDrug.verdict, 'eligible');
 });
 
+test('抗癌藥範圍(YC 2026-09-28):IPD 含 L02;COVID 免疫低下只認 L01', () => {
+  const at = '2026-10-05';
+  const tam = { birth: '1980-01-01', sex: 'F', dx: [['C50911', '2025-06-01']], meds: [['L02BA01', '2026-08-01']], vacc: [] };
+  const ipd = V(run(patient(tam), at), 'PNEUMO_PCV20_21');
+  assert.equal(ipd.verdict, 'eligible', '乳癌 + tamoxifen(L02)→ IPD 高風險預勾');
+  assert.equal(ipd.evidence[0].key, 'ipdHighRisk');
+  const cv = V(run(patient(tam), at), 'COVID');
+  assert.ok(!cv.matchedGroups.some((g) => g.groupId === 'COVID_IMMUNOCOMPROMISED'), 'L02 不作 COVID 免疫低下證據');
+  const chemo = V(run(patient({ ...tam, meds: [['L01CD01', '2026-08-01']] }), at), 'COVID');
+  assert.ok(chemo.matchedGroups.some((g) => g.groupId === 'COVID_IMMUNOCOMPROMISED'), 'L01 → COVID 免疫低下預勾');
+});
+
+test('移植 Z94 全章預勾(YC 2026-09-28 不排除角膜/皮膚/骨)', () => {
+  const v = V(run(patient({ birth: '1980-01-01', dx: [['Z947', '2026-03-01']], vacc: [] }), D), 'PNEUMO_PCV20_21');
+  assert.equal(v.verdict, 'eligible');
+  assert.equal(v.evidence[0].key, 'ipdHighRisk');
+});
+
 test('25 歲無病史:只問決定性條件,同一條件只問一次', () => {
   const res = run(patient({ birth: '2001-01-01' }), D);
   const p = V(res, 'PNEUMO_PCV20_21');
