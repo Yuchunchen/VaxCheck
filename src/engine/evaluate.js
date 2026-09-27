@@ -3,7 +3,7 @@ import { evalCond } from './conditions.js';
 import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 
-export const ENGINE_VERSION = '0.4.0';
+export const ENGINE_VERSION = '0.4.2';
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -106,7 +106,7 @@ function finish(out, vaccine, ctx) {
     name: out.name, groupLabels: out.matchedGroups.map((g) => g.label).join('、'),
     caseLabel: d.case?.label || '', caseReason: d.case?.note || d.note || '',
     age: ctx.facts.patient?.birthDate ? `${ageYears(ctx.facts.patient.birthDate, ctx.asOf)} 歲` : '年齡不明',
-    missing: out.reasons.join(';'), nextDose: d.dose || '', lastDate: d.lastDate || '', opensOn: out.opensOn || '',
+    missing: out.reasons.join(';'), nextDose: d.dose || '', dosesRequired: d.dosesRequired || '', variantLabel: d.variant?.label || '', lastDate: d.lastDate || '', opensOn: out.opensOn || '',
   };
   const key = { eligible: 'eligible', wait: 'eligible', ineligible: 'ineligible', completed: 'completed', not_funded: 'not_funded', needs_review: 'needs_review', pending_history: 'eligiblePending' }[out.verdict];
   const tpl = key && vaccine.explain?.[key];

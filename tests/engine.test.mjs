@@ -125,25 +125,87 @@ test('25 歲無病史:只問決定性條件,同一條件只問一次', () => {
   assert.equal(res.ask.filter((a) => a.key === 'ipdHighRisk').length, 1);
 });
 
-test('流感分階段:68 歲開打前 → 已符合,10/1 起可打', () => {
+test('流感 115:68 歲開打前 → 已符合,10/1 起可打;10/5 → 可打第 1 劑', () => {
   const v = V(run(patient({ birth: '1958-03-02' }), D), 'FLU');
   assert.equal(v.verdict, 'scheduled');
   assert.equal(v.opensOn, '2026-10-01');
+  const w = V(run(patient({ birth: '1958-03-02', vacc: [] }), '2026-10-05'), 'FLU');
+  assert.equal(w.verdict, 'eligible');
+  assert.equal(w.dosing.dose, 1);
+  assert.equal(w.dosing.dosesRequired, 1);
 });
 
-test('流感分階段:58 歲慢性病,第一階段期間 → 11/1 起;第二階段 → 可打;已打 → 完成', () => {
-  const dx = [['E119', '2026-01-10'], ['E119', '2026-04-10']];
-  assert.equal(V(run(patient({ birth: '1968-05-05', dx }), '2026-10-15'), 'FLU').verdict, 'scheduled');
-  assert.equal(V(run(patient({ birth: '1968-05-05', dx }), '2026-10-15'), 'FLU').opensOn, '2026-11-01');
-  assert.equal(V(run(patient({ birth: '1968-05-05', dx, vacc: [] }), '2026-11-05'), 'FLU').verdict, 'eligible');
-  assert.equal(V(run(patient({ birth: '1968-05-05', dx, vacc: [['FLU', '2026-11-02']] }), '2026-11-05'), 'FLU').verdict, 'completed');
+test('流感 115:年次算法 — 1961-12-31 生於 2026-10-05 算 65 歲(第一階段)', () => {
+  const v = V(run(patient({ birth: '1961-12-31', vacc: [] }), '2026-10-05'), 'FLU');
+  assert.equal(v.verdict, 'eligible');
+  assert.ok(v.matchedGroups.some((g) => g.groupId === 'FLU_ELDER_65'));
 });
 
-test('流感季後 → 非公費期間;25 歲男性開打前 → 尚未開打、只問機構住民', () => {
-  assert.equal(V(run(patient({ birth: '1958-03-02' }), '2027-04-20'), 'FLU').verdict, 'out_of_season');
+test('流感 115:58 歲無勾選 → 第一階段期間排 11/2;第二階段 → 可打;已打 → 完成', () => {
+  assert.equal(V(run(patient({ birth: '1968-05-05' }), '2026-10-15'), 'FLU').verdict, 'scheduled');
+  assert.equal(V(run(patient({ birth: '1968-05-05' }), '2026-10-15'), 'FLU').opensOn, '2026-11-02');
+  assert.equal(V(run(patient({ birth: '1968-05-05', vacc: [] }), '2026-11-01'), 'FLU').verdict, 'scheduled', '11/1 尚未開放');
+  assert.equal(V(run(patient({ birth: '1968-05-05', vacc: [] }), '2026-11-02'), 'FLU').verdict, 'eligible');
+  assert.equal(V(run(patient({ birth: '1968-05-05', vacc: [['FLU', '2026-11-02']] }), '2026-11-05'), 'FLU').verdict, 'completed');
+  // 去年那劑不算本季
+  assert.equal(V(run(patient({ birth: '1968-05-05', vacc: [['FLU', '2025-10-20']] }), '2026-11-05'), 'FLU').verdict, 'eligible');
+});
+
+test('流感 115:40 歲具潛在疾病(醫師勾)→ 第一階段可打;透析旗標 → 自動預勾', () => {
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], manual: { fluUnderlyingCondition: true } }), '2026-10-05'), 'FLU');
+  assert.equal(v.verdict, 'eligible');
+  assert.equal(v.matchedGroups[0].groupId, 'FLU_UNDERLYING_19_64');
+  const w = V(run(patient({ birth: '1986-01-01', vacc: [], flags: ['dialysis'] }), '2026-10-05'), 'FLU');
+  assert.equal(w.verdict, 'eligible');
+  assert.equal(w.evidence[0].key, 'fluUnderlyingCondition');
+});
+
+test('流感 115:25 歲男性開打前 → 尚未開打,只問決定性條件(不問孕婦、學生、原住民、幼兒)', () => {
+  assert.equal(V(run(patient({ birth: '1958-03-02' }), '2027-07-01'), 'FLU').verdict, 'out_of_season');
   const v = V(run(patient({ birth: '2001-01-01' }), D), 'FLU');
   assert.equal(v.verdict, 'not_open');
-  assert.deepEqual(v.decisiveManual.map((m) => m.key), ['ltcResident'], '男性不問孕婦');
+  const keys = v.decisiveManual.map((m) => m.key).sort();
+  assert.deepEqual(keys, ['animalWorker', 'childcareWorker', 'fluUnderlyingCondition', 'healthcareWorker', 'infantCaregiver', 'ltcResident'].sort());
+  const f = V(run(patient({ birth: '2001-01-01', sex: 'F' }), D), 'FLU');
+  assert.ok(f.decisiveManual.some((m) => m.key === 'pregnant'), '女性問孕婦');
+  const s = V(run(patient({ birth: '2010-01-01' }), D), 'FLU');
+  assert.ok(s.decisiveManual.some((m) => m.key === 'fluStudent'), '16 歲問學生');
+  assert.ok(!s.decisiveManual.some((m) => m.key === 'fluUnderlyingCondition'), '未滿 19 歲不走潛在疾病群');
+});
+
+test('流感 115 幼兒:未滿 6 個月不符;2 歲首次 → 本季 2 劑、第 2 劑間隔 4 週', () => {
+  const baby = V(run(patient({ birth: '2026-05-01', vacc: [] }), '2026-10-05'), 'FLU');
+  assert.notEqual(baby.verdict, 'eligible', '5 個月大');
+  const t = V(run(patient({ birth: '2024-06-01', vacc: [] }), '2026-10-05'), 'FLU');
+  assert.equal(t.verdict, 'eligible');
+  assert.equal(t.evidence[0].key, 'preschoolChild', '未滿 6 歲自動預勾入學前');
+  assert.equal(t.dosing.variant.id, 'FLU_UNDER3_2DOSE');
+  assert.equal(t.dosing.dosesRequired, 2);
+  const t2 = V(run(patient({ birth: '2024-06-01', vacc: [['FLU', '2026-10-05']] }), '2026-10-20'), 'FLU');
+  assert.equal(t2.verdict, 'wait');
+  assert.equal(t2.dosing.dose, 2);
+  assert.equal(t2.dosing.earliestDate, '2026-11-02');
+  const t3 = V(run(patient({ birth: '2024-06-01', vacc: [['FLU', '2026-10-05'], ['FLU', '2026-11-02']] }), '2026-11-10'), 'FLU');
+  assert.equal(t3.verdict, 'completed');
+});
+
+test('流感 115 幼兒劑次:未滿 3 歲曾打 1 劑仍 2 劑、曾打 2 劑 → 1 劑;3–8 歲曾打 1 劑 → 1 劑、首次 → 2 劑', () => {
+  const under3one = V(run(patient({ birth: '2024-06-01', vacc: [['FLU', '2025-12-01']] }), '2026-10-05'), 'FLU');
+  assert.equal(under3one.dosing.dosesRequired, 2);
+  const under3two = V(run(patient({ birth: '2024-06-01', vacc: [['FLU', '2025-12-01'], ['FLU', '2026-01-02']] }), '2026-10-05'), 'FLU');
+  assert.equal(under3two.dosing.dosesRequired, 1);
+  const five = V(run(patient({ birth: '2021-03-01', vacc: [['FLU', '2023-11-01']] }), '2026-10-05'), 'FLU');
+  assert.equal(five.dosing.dosesRequired, 1);
+  const fiveNaive = V(run(patient({ birth: '2021-03-01', vacc: [] }), '2026-10-05'), 'FLU');
+  assert.equal(fiveNaive.dosing.dosesRequired, 2);
+  // 7 歲學生首次 → 2 劑
+  const seven = V(run(patient({ birth: '2019-03-01', vacc: [], manual: { fluStudent: true } }), '2026-10-05'), 'FLU');
+  assert.equal(seven.verdict, 'eligible');
+  assert.equal(seven.dosing.dosesRequired, 2);
+  // 年齡以本季第 1 劑日計:第 1 劑時 8 歲、現在已 9 歲 → 仍需 2 劑
+  const turn9 = V(run(patient({ birth: '2017-10-20', vacc: [['FLU', '2026-10-05']], manual: { fluStudent: true } }), '2026-11-05'), 'FLU');
+  assert.equal(turn9.dosing.dosesRequired, 2);
+  assert.equal(turn9.verdict, 'eligible');
 });
 
 test('禁忌:醫師勾嚴重過敏 → 不可打;未勾 → 只提醒', () => {

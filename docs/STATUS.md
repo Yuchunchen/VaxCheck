@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.1)
+# 疫苗檢核程式 — 進度(v0.4.2)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -12,6 +12,7 @@
 - 2026-09-17:GitHub repo 建立(private 先起);v0.3.0 原始碼未保存,src/ 待重建。
 
 ## 已完成
+- **v0.4.2**(2026-09-27):流感改為 115 年度正式規則(取代示範)。第一階段 10/1 起 11 類對象、第二階段 11/2 起 50–64 歲;年齡 65/55/50–64/19–64 用年次算法,幼兒以足月 6 個月計;潛在疾病合併為一個人工條件(透析/CKD 旗標預勾,附件1 ICD 表待補)。引擎 series 新增 variants:依本季第 1 劑時年齡與季前累計劑數決定未滿 9 歲 2 劑。季末技術邊界 2027-06-30。示範區塊移入 rules/archive/。單元與情境 36/36、端對端 17/17。
 - **v0.4.1**(2026-09-27):顯示外掛版號——面板頁尾(讀取中、出錯時也顯示)、浮動鈕滑鼠提示、設定頁標題、示範頁頁尾、Console「[疫苗檢核] 已載入 vX」(健保雲端與 NIIS 兩頁)。e2e 加 2 項檢查,17/17。
 - **v0.4.0**:src/ 依 docs/01、05–11 重建。引擎(三值邏輯、ageByYear、cases 待定機制、曆法間隔、時間窗與分階段 scheduled/not_open/out_of_season、人工條件 evidence 預勾、只問決定性條件、縣市 overlay 合併與來源標註)、adapters(健保雲端 5 個 API、NIIS 劑別代號最長前綴)、background、content scripts、面板、設定頁、示範頁。IPD 高風險證據改用疾管署官方 ICD 表(1,847 碼,rules/codelists/)。scripts/validate-rules.mjs 併入 build-rules.mjs --check;CI 改為 ci.yml(驗證 + 測試 + 建置)。單元與情境 32/32、端對端 15/15(真 Chromium + 偽造頁面)。FHIR Bundle 轉換尚未重建(引擎直接吃 facts)。
 - 2026-09-17:NIIS 疫苗代碼表(81 碼 + Stool;31 碼註記刪除但保留;38 碼自費標記;canonical 對照);validate-rules 加疫苗代碼白名單;build-rules 產出 dist/rules/。
@@ -22,7 +23,7 @@
 1. 院內實測(docs/TESTING_v0.4.md):NIIS 查詢頁網址、肺鏈判定與臨床一致性、IMUE0190 可讀性。
 2. FHIR to/from Bundle(04 契約)重建為匯出與模組邊界。
 3. 規則管線(05):監看、PDF 確定性解析、歸檔腳本(07 §5)、黃金案例目錄。
-4. 流感、COVID-19 正式規則(Claude 依 08 產出,YC 核准)。
+4. 流感已上線(v0.4.2);待補:115 年度計畫全文核對年齡算法、附件1 高風險慢性病 ICD 表轉為證據。COVID-19 正式規則待做。
 5. docs/11 §7 四項待決定後更新 codeLists。
 
 ## FHIR 待補

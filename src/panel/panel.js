@@ -136,7 +136,8 @@ export function renderPanel(wrap, state, on) {
         h('b', {}, g.value === true ? '符合' : g.value === false ? '不符' : '未確認'),
         ` ${g.label}`, g.providedBy === 'county' ? `(${PROVIDER(g, names)})` : '', g.state !== 'active' ? `〔${g.state === 'scheduled' ? `${fmtDate(g.window.from)} 起` : '已結束'}〕` : '',
         h('small', {}, g.why.join(';'))))),
-      v.dosing?.case && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.case.label}(${v.dosing.case.sourceRef || ''})`)));
+      v.dosing?.case && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.case.label}(${v.dosing.case.sourceRef || ''})`),
+      v.dosing?.variant && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.variant.label};本季應接種 ${v.dosing.dosesRequired} 劑,季前累計 ${v.dosing.variant.priorDoses} 劑`)));
     list.append(li);
   }
   wrap.append(list);

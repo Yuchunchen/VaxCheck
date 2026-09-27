@@ -1,0 +1,67 @@
+# reason: superseded
+# supersededBy: rules/vaccines.yaml FLU(115 年度正式轉譯,ruleSetVersion 2026.09.27-v042)
+# archivedAt: "2026-09-27"
+# 說明:v0.4.x 的流感【示範】區塊(非正式公費規則),原樣保存。
+  # =====================================================================
+  # 流感 —【示範】非正式公費規則。階段日期為 YC 舉例(10/1 第一階段、11/1 第二階段)
+  # =====================================================================
+  - vaccineId: FLU
+    name: { zh: 流感疫苗(示範規則), en: Seasonal influenza vaccine (demo rules) }
+    historyMatch: { vaccineCodes: [FLU] }
+    season:
+      start: "2026-10-01"
+      end: "2027-03-31"
+      phases:
+        - { phase: 1, start: "2026-10-01", label: 第一階段 }
+        - { phase: 2, start: "2026-11-01", label: 第二階段 }
+    sourceIds: [SRC_EXAMPLE]
+    eligibilityGroups:
+      - groupId: FLU_ELDER_65
+        label: 65 歲以上長者
+        priorityPhase: 1
+        criteria: { age: { min: { years: 65 } } }
+      - groupId: FLU_INDIGENOUS_55
+        label: 55 歲以上原住民
+        priorityPhase: 1
+        criteria:
+          all:
+            - age: { min: { years: 55 } }
+            - manual: indigenous
+      - groupId: FLU_PREGNANT
+        label: 孕婦
+        priorityPhase: 1
+        criteria: { manual: pregnant }
+      - groupId: FLU_LTC
+        label: 安養、養護、長期照顧等機構之受照顧者及工作人員
+        priorityPhase: 1
+        criteria: { manual: ltcResident }
+      - groupId: FLU_HIGHRISK_50_64
+        label: 50 至 64 歲具潛在疾病者
+        priorityPhase: 2
+        criteria:
+          all:
+            - age: { min: { years: 50 }, max: { years: 64 } }
+            - any:
+                - diagnosis: { $list: CHRONIC_DZ_HIGHRISK, minRecords: 2 }
+                - medication: { $list: IMMUNOSUPPRESSANTS, withinDays: 180 }
+                - manual: bmi30
+    dosing:
+      seasonal: true
+      series:
+        - { dose: 1, minAge: { months: 6 } }
+    contraindications:
+      - { id: FLU_C_ALLERGY, label: 曾對流感疫苗或其成分嚴重過敏, severity: absolute, manual: severeAllergyToVaccine }
+      - { id: FLU_C_FEVER, label: "急性中重度疾病或發燒,建議延後", severity: precaution, manual: acuteFebrileIllness }
+    explain:
+      eligible: "符合「{groupLabels}」,本季尚未接種,可打第 {nextDose} 劑"
+      eligiblePending: "符合「{groupLabels}」;接種史未查,本季是否已打待確認"
+      completed: "本季已於 {lastDate} 接種"
+# --- 流感示範用 codeLists(原 codeLists 區段)---
+  CHRONIC_DZ_HIGHRISK:
+    label: 高風險慢性病(示範清單)
+    system: ICD-10-CM
+    codes: [E08-E13, I10-I16, I20-I25, "I50*", "J44*", "J45*", "N18*", K70-K77]
+  IMMUNOSUPPRESSANTS:
+    label: 免疫抑制劑(示範)
+    system: ATC
+    codes: ["L04A*", "L01*"]

@@ -12,7 +12,9 @@ test('正式規則集通過 schema 與語意檢查', () => {
   assert.deepEqual(errors, []);
   assert.equal(outputs.TW.jurisdiction.code, 'TW');
   const flu = outputs.TW.vaccines.find((v) => v.vaccineId === 'FLU');
-  assert.deepEqual(flu.eligibilityGroups.find((g) => g.groupId === 'FLU_HIGHRISK_50_64').effective, { from: '2026-11-01', to: '2027-03-31' });
+  assert.deepEqual(flu.eligibilityGroups.find((g) => g.groupId === 'FLU_ADULT_50_64').effective, { from: '2026-11-02', to: '2027-06-30' });
+  assert.deepEqual(flu.eligibilityGroups.find((g) => g.groupId === 'FLU_ELDER_65').effective, { from: '2026-10-01', to: '2027-06-30' });
+  assert.equal(flu.eligibilityGroups.filter((g) => g.priorityPhase === 1).length, 11, '第一階段 11 類');
 });
 
 test('縣市 overlay:合併後標示來源為縣市,中央判定不變', () => {
