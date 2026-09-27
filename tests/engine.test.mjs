@@ -192,9 +192,9 @@ test('代碼比對:三碼類目含所有子碼(附件1 E66、G40、I63、J96;重
   const chr = rules().codeLists.FLU_CHRONIC_DX.codes;
   for (const c of ['E6601', 'E669', 'G40909', 'I639', 'I70219', 'J9610', 'M3500', 'D869', 'N039']) assert.ok(matchCode(c, chr), c);
   assert.ok(!matchCode('I10', chr) && !matchCode('E6', chr) && !matchCode('I64', chr));
-  // 英文欄 I5A、P91(新生兒腦梗塞 P91.82x)納入;P91 其他細碼不含
-  assert.ok(matchCode('I5A', chr) && matchCode('P91.821', chr) && matchCode('P91829', chr));
-  assert.ok(!matchCode('P91.60', chr) && !matchCode('P91.2', chr));
+  // 英文欄 I5A、P91 全類目納入(YC 2026-09-27)
+  assert.ok(matchCode('I5A', chr) && matchCode('P91.821', chr) && matchCode('P91.60', chr) && matchCode('P91.2', chr));
+  assert.ok(!matchCode('P90', chr) && !matchCode('P92.0', chr));
   // 58 歲只有腦梗塞 I63.9 → 第一階段即可打,不是排 11/2
   const v = V(run(patient({ birth: '1968-05-05', vacc: [], dx: [['I639', '2026-05-01']] }), '2026-10-05'), 'FLU');
   assert.equal(v.verdict, 'eligible');
