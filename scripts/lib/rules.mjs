@@ -1,4 +1,5 @@
 // 規則建置:YAML → 內嵌代碼清單 → 展開階段 → 合併縣市 overlay → schema + 語意檢查
+import { ENGINE_VERSION } from '../../src/engine/evaluate.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -175,7 +176,8 @@ export function writeDist(outputs, distDir) {
     fs.writeFileSync(path.join(distDir, file), body);
     latest[code] = { version: rs.ruleSetVersion, file, sha256: crypto.createHash('sha256').update(body).digest('hex'), name: rs.jurisdiction.name };
   }
-  const manifest = { publishedAt: new Date().toISOString(), latest };
+  // minEngine:建置這份規則的引擎版本;舊外掛讀到較新引擎的線上規則時改用內建(src/rulesource.js)
+  const manifest = { publishedAt: new Date().toISOString(), minEngine: ENGINE_VERSION, latest };
   fs.writeFileSync(path.join(distDir, 'manifest.json'), JSON.stringify(manifest, null, 1));
   return manifest;
 }

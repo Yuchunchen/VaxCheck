@@ -1,6 +1,8 @@
 // 工作站設定(chrome.storage.sync):預設值、讀取、網址檢查。background 與設定頁共用。
 export const MEDCLOUD_ORIGIN = 'https://medcloud2.nhi.gov.tw';
 export const NIIS_ORIGIN = 'https://10.241.219.35';
+/** 線上規則預設來源:公開 repo Yuchunchen/VaxCheck-rules(發行時由 release workflow 推送) */
+export const DEFAULT_RULES_BASE = 'https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/';
 
 export const DEFAULTS = {
   jurisdiction: 'TW',
@@ -9,7 +11,7 @@ export const DEFAULTS = {
   niisQueryUrl: `${NIIS_ORIGIN}/`,
   autoClickNiis: false,
   autoSwitchCard: true,
-  remoteRulesBase: '',
+  remoteRulesBase: DEFAULT_RULES_BASE,
   pinBundled: false,
 };
 
@@ -22,6 +24,7 @@ export async function readOptions(sync) {
   if (stored.niisQueryUrl === undefined && stored.niisUrl) stored.niisQueryUrl = stored.niisUrl;
   delete stored.niisUrl;
   if (stored.medcloudEntryUrl === OLD_DEFAULT_ENTRY) stored.medcloudEntryUrl = DEFAULTS.medcloudEntryUrl;
+  if (!stored.remoteRulesBase) delete stored.remoteRulesBase;   // 空白 = 預設來源;停用線上規則改勾 pinBundled
   return { ...DEFAULTS, ...stored };
 }
 

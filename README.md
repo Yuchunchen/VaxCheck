@@ -6,7 +6,8 @@
 - 面板四組:**可接種 → 待確認 → 尚未開打 → 不符合**。「待確認」只放確認後今天就能打的疫苗;需確認的條件有「是/否」鈕。
 - 判定原則:預設不可;資料查不到回「需確認/資料不足」,不會誤判成可打。能自動判可打就不再問;只問勾了會改變結果的條件;病歷有證據的條件先自動勾選並標依據,醫師可取消(docs/10)。
 - 規則:`rules/vaccines.yaml` 是唯一來源;IPD 高風險證據用疾管署官方 ICD 參考表(docs/11)。規則怎麼被執行見 `rules/EXECUTION.md`。
-- 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console;不連任何外部主機(線上規則為選配,預設關)。
+- 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console。唯一的外部連線是下載線上規則(不帶任何病患資料)。
+- 線上規則:預設從公開 repo `Yuchunchen/VaxCheck-rules` 下載(每 6 小時檢查一次),發行時才更新。讀不到、雜湊不符、比內建舊、或需要較新版外掛時,自動改用外掛內建規則;面板頁尾「來源」顯示線上/快取/內建。設定頁勾「只用內建規則」可停用。
 
 ## 院內安裝(未封裝)
 1. 到 GitHub Releases 下載最新版 `vaxcheck-ext-<版號>.zip`(或 Actions → 最新 ci 執行 → vaxcheck-dist → ext)。
@@ -40,7 +41,13 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 2. 本機跑上面四個指令(含 e2e)全過 → commit、推 main,等 ci 綠燈。
 3. 觸發 release workflow(二擇一):`git tag v<版號> && git push origin v<版號>`;或 GitHub → Actions → release → Run workflow(分支選 main)。workflow 重跑驗證/測試/建置,建立 tag 與 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。同版號已發行會失敗,要發新版先升版號。
 
-外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。佈署路線(商店未列出 → 公開)見 `docs/09_DEPLOYMENT_v0.1.md`。
+外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。發行時 workflow 會把建置後的規則推到公開 repo `Yuchunchen/VaxCheck-rules`(需 secret `RULES_PUSH_TOKEN`,沒設定時只警告、不推送),已安裝的外掛約 6 小時內換新。`ENGINE_VERSION`(src/engine/evaluate.js)只在引擎本身改動時才升:它寫進規則 manifest 的 `minEngine`,較舊的外掛遇到需要新引擎的規則會自動用內建。
+
+### 線上規則 repo 一次性設定
+1. GitHub 新增 **Public** repo `VaxCheck-rules`(勾 Add a README)。
+2. Settings → Developer settings → Fine-grained personal access tokens → Generate:Repository access 只選 `VaxCheck-rules`;Permissions → Contents = Read and write;期限自訂(到期要換)。
+3. 回 `VaxCheck` repo → Settings → Secrets and variables → Actions → New repository secret:名稱 `RULES_PUSH_TOKEN`,值貼上權杖。
+4. 下一次發行起,規則自動推送;確認 `https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/manifest.json` 打得開。佈署路線(商店未列出 → 公開)見 `docs/09_DEPLOYMENT_v0.1.md`。
 
 ## 目錄
 ```

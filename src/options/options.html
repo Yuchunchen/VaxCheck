@@ -20,9 +20,9 @@ input.bad{border-color:#B3261E}
 <label for="niis">NIIS 查詢頁網址<small>按圖示時在健保雲端右側開背景分頁</small></label><input type="text" id="niis">
 <label class="row"><input type="checkbox" id="switch"> 按圖示時自動按健保雲端「請換卡再按我」<small>(實驗功能,預設開;院內發現副作用可關)</small></label>
 <label class="row"><input type="checkbox" id="auto"> 按圖示後自動按 NIIS「讀取健保卡及醫事人員卡」<small>(健保雲端讀到本次病患後才按,每次按圖示最多一次;需先在院內確認;預設關閉)</small></label>
-<label for="remote">線上規則位址(選填)<small>GitHub Pages 的 rules 目錄,例 https://帳號.github.io/VaxCheck/rules/ 。留空 = 只用外掛內建規則</small></label>
-<input type="text" id="remote" placeholder="留空">
-<label class="row"><input type="checkbox" id="pin"> 暫時只用內建規則(緊急時鎖定版本)</label>
+<label for="remote">線上規則位址<small>預設 https://raw.githubusercontent.com/Yuchunchen/VaxCheck-rules/main/ (發行時更新,約 6 小時內生效)。留空 = 預設;讀不到、雜湊不符或比內建舊時自動改用內建規則</small></label>
+<input type="text" id="remote" placeholder="留空 = 預設來源">
+<label class="row"><input type="checkbox" id="pin"> 只用內建規則(停用線上規則;緊急時鎖定版本)</label>
 <button id="save">儲存設定</button><span id="msg"></span>
 <script src="options.js"></script>
 </body></html>

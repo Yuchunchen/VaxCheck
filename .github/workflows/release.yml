@@ -34,3 +34,15 @@ jobs:
         run: |
           gh release create "v$V" "dist/vaxcheck-ext-$V.zip" "dist/vaxcheck-web-$V.html" dist/SHA256SUMS.txt \
             --target "$GITHUB_SHA" --title "VaxCheck v$V" --notes-file dist/notes.md
+      - name: 推送線上規則到 Yuchunchen/VaxCheck-rules(需 secret RULES_PUSH_TOKEN)
+        env: { RULES_PUSH_TOKEN: '${{ secrets.RULES_PUSH_TOKEN }}' }
+        run: |
+          if [ -z "$RULES_PUSH_TOKEN" ]; then echo "::warning::未設定 RULES_PUSH_TOKEN,線上規則未更新(外掛會用內建規則)"; exit 0; fi
+          git clone --depth 1 "https://x-access-token:${RULES_PUSH_TOKEN}@github.com/Yuchunchen/VaxCheck-rules.git" rules-repo
+          cp dist/rules/manifest.json dist/rules/vaccines.*.json rules-repo/
+          cd rules-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "VaxCheck v$V 規則 $(node -p "require('../dist/rules/manifest.json').latest.TW.version")"
+          git push origin HEAD:main

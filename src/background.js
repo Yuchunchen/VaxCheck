@@ -2,6 +2,8 @@
 // 病患資料只放 chrome.storage.session(關瀏覽器即清);規則快取放 local(非病患資料)。
 import { NIIS_ORIGIN, migrateOptions, readOptions } from './workspace/options.js';
 import { createWorkspace } from './workspace/workspace.js';
+import { rejectRemote } from './rulesource.js';
+import { ENGINE_VERSION } from './engine/evaluate.js';
 
 const S = chrome.storage.session;
 const get = async (k) => (await S.get(k))[k];
@@ -38,11 +40,13 @@ async function loadRules() {
         const base = o.remoteRulesBase.replace(/\/?$/, '/');
         const m = await (await fetch(base + 'manifest.json', { cache: 'no-store' })).json();
         const code = pickCode(m);
+        const why = rejectRemote(m, bundledManifest, code, ENGINE_VERSION);
+        if (why) throw new Error(why);
         const txt = await (await fetch(base + m.latest[code].file, { cache: 'no-store' })).text();
         if ((await sha256Hex(txt)) !== m.latest[code].sha256) throw new Error('規則檔雜湊不符');
         await chrome.storage.local.set({ rulesCache: { fetchedAt: Date.now(), manifest: m, code, body: txt } });
         manifest = m; body = txt; source = 'remote';
-      } else if (cache.code === pickCode(cache.manifest)) { manifest = cache.manifest; body = cache.body; source = 'cache'; }
+      } else if (cache.code === pickCode(cache.manifest) && !rejectRemote(cache.manifest, bundledManifest, cache.code, ENGINE_VERSION)) { manifest = cache.manifest; body = cache.body; source = 'cache'; }
     } catch (e) { console.warn('[疫苗檢核] 線上規則失敗,改用內建', e); }
   }
   const code = pickCode(manifest);
