@@ -274,3 +274,111 @@ test('資料來源失敗 → 不誤判成可打', () => {
   const v = V(run(patient({ birth: '1981-04-01', dx: [['D561', '2026-02-10']], vacc: [], sources: { medication: 'error' } }), D), 'PNEUMO_PCV20_21');
   assert.equal(v.verdict, 'needs_input', '病歷讀不到就改問醫師,不放行');
 });
+
+// ---------------- COVID-19 115–116 年度 ----------------
+const CV = (p, at) => V(run(patient(p), at), 'COVID');
+
+test('COVID 115:68 歲開打前 → 10/1 起;10/5 可打第 1 劑;打完 → 180 天後可再增加 1 劑', () => {
+  const s = CV({ birth: '1958-03-02' }, D);
+  assert.equal(s.verdict, 'scheduled');
+  assert.equal(s.opensOn, '2026-10-01');
+  const v = CV({ birth: '1958-03-02', vacc: [] }, '2026-10-05');
+  assert.equal(v.verdict, 'eligible');
+  assert.equal(v.dosing.dose, 1);
+  const w = CV({ birth: '1958-03-02', vacc: [['COVID', '2026-10-05']] }, '2026-11-01');
+  assert.equal(w.verdict, 'wait');
+  assert.equal(w.dosing.dose, 2);
+  assert.equal(w.dosing.earliestDate, '2027-04-03');
+  assert.match(w.explanation, /可再增加 1 劑/);
+  const c = CV({ birth: '1958-03-02', vacc: [['COVID', '2026-10-05'], ['COVID', '2027-04-10']] }, '2027-05-01');
+  assert.equal(c.verdict, 'completed');
+});
+
+test('COVID 115:曾接種者與前 1 劑間隔 12 週,不限本季(上季 8/1 打 → 10/24 起)', () => {
+  const v = CV({ birth: '1958-03-02', vacc: [['COVID', '2026-08-01']] }, '2026-10-05');
+  assert.equal(v.verdict, 'wait');
+  assert.equal(v.dosing.earliestDate, '2026-10-24');
+  assert.equal(CV({ birth: '1958-03-02', vacc: [['COVID', '2026-06-01']] }, '2026-10-05').verdict, 'eligible');
+});
+
+test('COVID 115:40 歲糖尿病 → 第一階段(沿用流感潛在疾病);ADHD → 其他風險預勾;僅 1 劑', () => {
+  const dm = CV({ birth: '1986-01-01', vacc: [], dx: [['E119', '2026-06-01']] }, '2026-10-05');
+  assert.equal(dm.verdict, 'eligible');
+  assert.ok(dm.matchedGroups.some((g) => g.groupId === 'COVID_HIGHRISK'));
+  assert.equal(dm.evidence[0].key, 'fluUnderlyingCondition');
+  assert.equal(dm.dosing.dosesRequired, 1);
+  const adhd = CV({ birth: '1996-01-01', vacc: [], dx: [['F900', '2026-06-01']] }, '2026-10-05');
+  assert.equal(adhd.verdict, 'eligible');
+  assert.equal(adhd.evidence[0].key, 'covidOtherRisk');
+  // 結核病只看一年內
+  assert.notEqual(CV({ birth: '1996-01-01', vacc: [], dx: [['A150', '2024-06-01']] }, '2026-10-05').verdict, 'eligible');
+  // 輕微先天畸形(舌繫帶 Q38.1)不預勾
+  assert.notEqual(CV({ birth: '1996-01-01', vacc: [], dx: [['Q381', '2026-06-01']] }, '2026-10-05').verdict, 'eligible');
+});
+
+test('COVID 115:免疫低下(TNF 阻斷劑、洗腎)→ 自動預勾,本季可再增加 1 劑', () => {
+  const tnf = CV({ birth: '1986-01-01', vacc: [], meds: [['L04AB02', '2026-08-20']] }, '2026-10-05');
+  assert.equal(tnf.verdict, 'eligible');
+  assert.ok(tnf.matchedGroups.some((g) => g.groupId === 'COVID_IMMUNOCOMPROMISED'));
+  assert.equal(tnf.dosing.dosesRequired, 2);
+  const hd = CV({ birth: '1986-01-01', vacc: [], flags: ['dialysis'] }, '2026-10-05');
+  assert.equal(hd.dosing.dosesRequired, 2);
+  // 免疫抑制劑超過 90 天 → 不預勾
+  const old = CV({ birth: '1986-01-01', vacc: [], meds: [['L04AB02', '2026-05-01']] }, '2026-10-05');
+  assert.ok(!old.matchedGroups.some((g) => g.groupId === 'COVID_IMMUNOCOMPROMISED'));
+});
+
+test('COVID 115:58 歲無高風險 → 第一階段排 11/2;11/2 可打', () => {
+  assert.equal(CV({ birth: '1968-05-05' }, '2026-10-15').opensOn, '2026-11-02');
+  assert.equal(CV({ birth: '1968-05-05', vacc: [] }, '2026-11-01').verdict, 'scheduled');
+  assert.equal(CV({ birth: '1968-05-05', vacc: [] }, '2026-11-02').verdict, 'eligible');
+});
+
+test('COVID 115 幼兒:從未接種 2 歲 → 2 劑間隔 4 週;曾接種 → 不在幼兒群;5 歲首次 → 1 劑;6 歲 → 不符', () => {
+  const at = '2026-10-05';
+  const t = CV({ birth: '2024-06-01', vacc: [] }, at);
+  assert.equal(t.verdict, 'eligible');
+  assert.ok(t.matchedGroups.some((g) => g.groupId === 'COVID_NAIVE_CHILD'));
+  assert.equal(t.dosing.variant.id, 'COVID_UNDER5_NAIVE_2DOSE');
+  assert.equal(t.dosing.dosesRequired, 2);
+  const t2 = CV({ birth: '2024-06-01', vacc: [['COVID', '2026-10-05']] }, '2026-10-20');
+  assert.equal(t2.verdict, 'wait', '本季第 1 劑後仍屬「開打前從未接種」,可打第 2 劑');
+  assert.equal(t2.dosing.earliestDate, '2026-11-02');
+  const prior = CV({ birth: '2024-06-01', vacc: [['COVID', '2025-12-01']] }, at);
+  assert.ok(!prior.matchedGroups.some((g) => g.groupId === 'COVID_NAIVE_CHILD'));
+  assert.notEqual(prior.verdict, 'eligible');
+  const five = CV({ birth: '2021-03-01', vacc: [] }, at);
+  assert.equal(five.verdict, 'eligible');
+  assert.equal(five.dosing.dosesRequired, 1);
+  const six = CV({ birth: '2020-09-01', vacc: [] }, at);
+  assert.ok(!six.matchedGroups.some((g) => g.groupId === 'COVID_NAIVE_CHILD'));
+  assert.notEqual(CV({ birth: '2026-05-01', vacc: [] }, at).verdict, 'eligible', '未滿 6 個月');
+});
+
+test('COVID 115 幼兒免疫低下:從未接種 2 歲 → 2 劑 + 再增加 1 劑', () => {
+  const t = CV({ birth: '2024-06-01', vacc: [], dx: [['D801', '2026-03-01']] }, '2026-10-05');
+  assert.equal(t.dosing.variant.id, 'COVID_UNDER5_NAIVE_2DOSE_PLUS1');
+  assert.equal(t.dosing.dosesRequired, 3);
+});
+
+test('COVID 115:25 歲男性開打前 → 只問決定性條件;潛在疾病與流感共用同一題', () => {
+  const res = run(patient({ birth: '2001-01-01' }), D);
+  const v = V(res, 'COVID');
+  assert.equal(v.verdict, 'not_open');
+  const keys = v.decisiveManual.map((m) => m.key).sort();
+  assert.deepEqual(keys, ['childcareWorker', 'covidImmunocompromised', 'covidOtherRisk', 'fluUnderlyingCondition', 'healthcareWorker', 'infantCaregiver', 'ltcResident'].sort());
+  const q = res.ask.find((a) => a.key === 'fluUnderlyingCondition');
+  assert.deepEqual(q.vaccines.sort(), ['COVID', 'FLU']);
+  assert.equal(res.ask.filter((a) => a.key === 'fluUnderlyingCondition').length, 1);
+});
+
+test('COVID 115 禁忌:嚴重過敏 → 不可打', () => {
+  assert.equal(CV({ birth: '1958-03-02', vacc: [], manual: { severeAllergyToVaccine: true } }, '2026-10-05').verdict, 'contraindicated');
+});
+
+test('vaccination 條件 before:只看該日前,無日期視為較早', () => {
+  const f = patient({ birth: '2024-06-01', vacc: [['COVID', '2026-10-05']] });
+  assert.equal(evalCond({ vaccination: { vaccineCodes: ['COVID'], maxDoses: 0, before: '2026-10-01' } }, ctx(f, '2026-10-20')).v, true);
+  const g = patient({ birth: '2024-06-01', vacc: [['COVID', null]] });
+  assert.equal(evalCond({ vaccination: { vaccineCodes: ['COVID'], maxDoses: 0, before: '2026-10-01' } }, ctx(g, '2026-10-20')).v, false);
+});

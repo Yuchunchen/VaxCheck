@@ -106,14 +106,15 @@ const LEAVES = {
   specialMaterial() { return T(null, '特材紀錄端點未實作', { sources: ['specialMaterial'] }); },
   vaccination(spec, ctx) {
     if (!sourceOk(ctx.facts, 'niis')) return T(null, '接種史未查詢', { sources: ['niis'] });
-    let recs = (ctx.facts.vaccinations?.records || []).filter((r) => spec.vaccineCodes.includes(r.code) && within(ctx, r.date, spec.withinDays));
+    let recs = (ctx.facts.vaccinations?.records || []).filter((r) => spec.vaccineCodes.includes(r.code) && within(ctx, r.date, spec.withinDays)
+      && (!spec.before || !r.date || r.date < spec.before));   // before:只看該日前(無日期視為較早)
     const n = recs.length;
     let ok = (spec.minDoses == null || n >= spec.minDoses) && (spec.maxDoses == null || n <= spec.maxDoses);
     if (ok && spec.minDaysSinceLast != null && n) {
       const last = recs.map((r) => r.date).filter(Boolean).sort().at(-1);
       ok = !last || addDays(last, spec.minDaysSinceLast) <= ctx.asOf;
     }
-    return T(ok, `${spec.vaccineCodes.join('/')} ${n} 劑`);
+    return T(ok, `${spec.vaccineCodes.join('/')} ${spec.before ? `${spec.before} 前 ` : ''}${n} 劑`);
   },
   flag(spec, ctx) {
     if (!sourceOk(ctx.facts, 'summary')) return T(null, '病人資訊摘要未取得', { sources: ['summary'] });

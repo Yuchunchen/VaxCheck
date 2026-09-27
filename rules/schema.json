@@ -376,6 +376,11 @@
         "minDaysSinceLast": {
          "type": "integer",
          "minimum": 0
+        },
+        "before": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+         "description": "只計此日期前的接種紀錄(無日期者視為較早);例:本季開打前從未接種"
         }
        }
       }
@@ -1181,7 +1186,8 @@
      },
      "minIntervalDays": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "description": "與前 1 劑(historyMatch 代碼,不限本季)間隔天數;無前劑則不適用"
      },
      "requiresPrior": {
       "type": "object",

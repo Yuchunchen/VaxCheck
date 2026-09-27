@@ -161,7 +161,7 @@ export function buildAll({ centralFile = R('vaccines.yaml'), overlayDir = R('ove
   for (const [code, rs] of Object.entries(outputs)) {
     schemaValidate(rs, errors, `${code}(合併)`);
     semanticCheck(rs, niis, errors);
-    rs.build = { builtAt: new Date().toISOString(), engine: '0.4.2' };
+    rs.build = { builtAt: new Date().toISOString(), engine: '0.4.5' };
   }
   return { outputs, errors, niis };
 }

@@ -7,9 +7,10 @@
 #   - 肺炎鏈球菌 PCV20/21:正式(Policy 2026-08-10);IPD 高風險證據改用疾管署官方 ICD 參考表(docs/11)
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
 #     潛在疾病證據:附件1 高風險慢性病 ICD(61 項)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 透析/CKD 旗標
+#   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,待 YC 核准
 # =====================================================================
 
-ruleSetVersion: 2026.09.27-v044
+ruleSetVersion: 2026.09.27-v045
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -92,6 +93,14 @@ sources:
     url: https://health.gov.taipei/cp.aspx?n=F9B897CA6DEBE79A&s=5EB7FADADF8A23A3
     kind: qa
 
+  # --- COVID-19 115–116 年度 ---
+  - id: SRC_CDC_COVID_PLAN_115
+    title: 115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 7 月版全文 PDF,1150727,YC 提供;第二章實施對象、第三章分階段、第五章劑數與間隔)
+    issuer: 衛生福利部疾病管制署
+    date: "2026-07-27"
+    watch: true
+    kind: plan
+
 codeLists:
   # --- 疾管署官方 IPD 高風險 ICD 參考表(逐碼,ICD-10-CM 2023)---
   IPD_SPLEEN_DX:     { label: 脾臟功能缺損, system: ICD-10-CM, file: codelists/ipd-highrisk.cdc-1140310.json#spleen }
@@ -111,6 +120,47 @@ codeLists:
   NHI_CATASTROPHIC_1Y_DX:   { label: "重大傷病項目診斷碼(一年內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within365 }
   NHI_CATASTROPHIC_6M_DX:   { label: "重大傷病項目診斷碼(六個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within183 }
   NHI_CATASTROPHIC_1M_DX:   { label: "重大傷病項目診斷碼(急性一個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within31 }
+  # --- COVID-19 計畫第二章壹五(二):結核病、失能、精神疾病、失智症「經醫師評估」— 病歷證據只預勾,醫師可取消 ---
+  # 計畫未附代碼表;以下為 Claude 依病名轉錄(ICD-10-CM),待 YC 核准
+  COVID_TB_DX:
+    label: 結核病(一年內)
+    system: ICD-10-CM
+    codes: [A15-A19]                              # 活動性結核;潛伏結核 R76.1/Z22.7 不列
+  COVID_DISABILITY_DX:
+    label: 失能(注意力不足過動症、腦性麻痺、先天性缺陷、發展或學習障礙、脊髓損傷)
+    system: ICD-10-CM
+    codes:
+      - "F90*"                                    # 注意力不足及過動症
+      - "G80*"                                    # 腦性麻痺
+      - Q00-Q07                                   # 先天性缺陷:只列神經、心血管、呼吸、泌尿、骨骼發育不良、染色體(排除舌繫帶、隱睪等輕微畸形)
+      - Q20-Q28
+      - Q30-Q34
+      - Q60-Q64
+      - Q77-Q78
+      - Q90-Q99
+      - F70-F79                                   # 智能障礙(發展障礙)
+      - F80-F89                                   # 語言、學習、動作協調、自閉症等發展障礙
+      - S14.0-S14.1                               # 脊髓損傷(頸、胸、腰)
+      - S24.0-S24.1
+      - S34.0-S34.1
+      - "G82*"                                    # 下身/四肢癱瘓
+  COVID_PSYCH_DX:
+    label: 精神疾病(情緒障礙、思覺失調症)
+    system: ICD-10-CM
+    codes: [F30-F39, "F20*", "F25*"]                    # 思覺失調症 F20/F25 同重大傷病六(四)
+  COVID_DEMENTIA_DX:
+    label: 失智症
+    system: ICD-10-CM
+    codes: [F01-F03, "G30*", "G31.0*", G31.83]
+  # --- COVID-19 計畫第二章貳:免疫不全或免疫低下(可再增加 1 劑)---
+  IMMUNOSUPPRESSANT_ATC:
+    label: 免疫抑制劑(L04A:含 TNF 阻斷劑、移植用藥、其他免疫抑制/調節生物製劑)
+    system: ATC
+    codes: ["L04A*"]
+  HIV_DX:
+    label: 人類免疫缺乏病毒感染
+    system: ICD-10-CM
+    codes: [B20, Z21]
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
     label: 透析相關診斷
@@ -164,6 +214,30 @@ manualConditions:
     label: 幼兒園、托育機構工作人員或居家托育人員(保母)
   - key: animalWorker
     label: 禽畜養殖等相關行業工作人員、動物園工作人員或動物防疫人員
+  # --- COVID-19 115–116 年度 ---
+  - key: covidOtherRisk
+    label: 結核病、失能、精神疾病或失智症(經醫師評估)
+    hint: 計畫第二章壹五(二):結核病、失能(注意力不足及過動症、腦性麻痺、先天性缺陷、發展或學習障礙、脊髓損傷)、精神疾病(情緒障礙、思覺失調症)、失智症之患者,經醫師評估符合者
+    evidence:
+      any:
+        - diagnosis: { $list: COVID_TB_DX, withinDays: 365 }
+        - diagnosis: { $list: COVID_DISABILITY_DX }
+        - diagnosis: { $list: COVID_PSYCH_DX }
+        - diagnosis: { $list: COVID_DEMENTIA_DX }
+  - key: covidImmunocompromised
+    label: 免疫不全或免疫低下(COVID-19 可再增加 1 劑)
+    hint: 計畫第二章貳:目前或 1 年內曾接受免疫抑制治療之癌症患者、器官/幹細胞移植、中度/嚴重先天性免疫不全、洗腎、HIV、目前使用高度免疫抑制藥物(含高劑量類固醇)、6 個月內化療或放療、其他經醫師評估者
+    evidence:
+      any:
+        - diagnosis: { $list: HIV_DX }
+        - diagnosis: { $list: IPD_IMMUNE_DX }                          # 疾管署官方 IPD 免疫不全表(含先天性免疫不全)
+        - diagnosis: { $list: IPD_TRANSPLANT_DX }
+        - flag: dialysis
+        - diagnosis: { $list: DIALYSIS_DX }
+        - all:                                                         # 癌症 + 一年內抗癌藥
+            - diagnosis: { $list: IPD_MALIGNANCY_DX }
+            - medication: { $list: ANTINEOPLASTIC_ATC, withinDays: 365 }
+        - medication: { $list: IMMUNOSUPPRESSANT_ATC, withinDays: 90 }  # 「目前使用」以 90 天內處方推估;高劑量類固醇雲端無法判劑量 → 靠醫師
   - key: ipdHighRisk
     label: IPD 高風險對象
     hint: 疾管署定義五類:脾臟功能缺損、先天或後天免疫功能不全、人工耳植入、腦脊髓液滲漏、一年內接受抗癌藥物或放射治療的惡性腫瘤者及器官移植者
@@ -442,5 +516,133 @@ vaccines:
       eligible: "符合「{groupLabels}」,本季可打第 {nextDose} 劑(本季共 {dosesRequired} 劑)"
       eligiblePending: "符合「{groupLabels}」;接種史未查,本季是否已打待確認"
       ineligible: "{age},不在 115 年度公費流感對象內"
+      completed: "本季已完成(最近一劑 {lastDate})"
+      needs_review: "{caseReason}"
+
+
+  # =====================================================================
+  # COVID-19 115–116 年度 — 正式轉譯
+  # 依據:115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 7 月,1150727)
+  # 第一階段 2026-10-01 起 9 類;第二階段 2026-11-02 起 50–64 歲無高風險成人;至疫苗用罄止
+  # 年齡:65 歲、55 歲原住民、50–64 歲依「接種年減出生年」(ageByYear,計畫第二章壹一、二、十原文)
+  #       從未接種幼兒以「接種年月日減出生年月日」小於 6 歲(age,計畫第二章壹九)
+  # 劑次(第五章):滿 6 個月至 4 歲未曾接種 → 2 劑間隔 28 天;其餘 1 劑;曾接種者與前 1 劑間隔 84 天
+  # 再增加 1 劑(第二章貳):65 歲以上、55 歲以上原住民、滿 6 個月以上免疫不全或免疫低下者,間隔 180 天
+  # 廠牌(不影響資格,本規則不判定):莫德納 mRNA-1273 滿 6 個月、mRNA-1283 滿 12 歲(10/1 起);Novavax 滿 12 歲(最快 11 月起)
+  # 後續「視接種情形擴大全國滿 6 個月以上尚未接種者」屬未公告事項,待公告再加群組
+  # =====================================================================
+  - vaccineId: COVID
+    name: { zh: COVID-19 疫苗(115–116 年度公費), en: COVID-19 vaccine 2026–27 (publicly funded) }
+    historyMatch: { vaccineCodes: [COVID] }
+    season:
+      start: "2026-10-01"
+      end: "2027-09-30"          # 技術邊界(非公告日期;公告為「至疫苗用罄為止」),用於本季劑數計算
+      phases:
+        - { phase: 1, start: "2026-10-01", label: 第一階段 }
+        - { phase: 2, start: "2026-11-02", label: 第二階段 }
+    sourceIds: [SRC_CDC_COVID_PLAN_115]
+    notes: 第一階段 9 類對象(本規則將免疫低下另立一群以套用再增加 1 劑);第二階段 50–64 歲無高風險成人。高風險對象沿用流感潛在疾病條件,另加結核病、失能、精神疾病、失智症。
+
+    eligibilityGroups:
+      # ---------- 第一階段(2026-10-01 起)----------
+      - groupId: COVID_ELDER_65
+        label: 65 歲以上長者
+        priorityPhase: 1
+        criteria: { ageByYear: { min: 65 } }
+        dosingOverride: &COVID_PLUS_ONE           # 可再增加 1 劑(計畫第二章貳)
+          seasonal: true
+          variants:
+            - id: COVID_UNDER5_NAIVE_2DOSE_PLUS1
+              label: 滿 6 個月至 4 歲未曾接種(2 劑)+ 免疫低下再增加 1 劑
+              sourceRef: SRC_CDC_COVID_PLAN_115
+              age: { max: { years: 4 } }
+              priorDoses: { max: 0 }
+              series:
+                - { dose: 1, minAge: { months: 6 } }
+                - { dose: 2, minIntervalDays: 28, label: "與第 1 劑間隔 4 週以上" }
+                - { dose: 3, minIntervalDays: 180, label: "可再增加 1 劑,與前劑間隔 6 個月以上" }
+          series:
+            - { dose: 1, minAge: { months: 6 }, minIntervalDays: 84 }
+            - { dose: 2, minIntervalDays: 180, label: "可再增加 1 劑,與前劑間隔 6 個月以上" }
+      - groupId: COVID_INDIGENOUS_55
+        label: 55 歲以上原住民
+        priorityPhase: 1
+        criteria:
+          all:
+            - ageByYear: { min: 55 }
+            - manual: indigenous
+        dosingOverride: *COVID_PLUS_ONE
+      - groupId: COVID_IMMUNOCOMPROMISED
+        label: 滿 6 個月以上免疫不全或免疫低下者
+        priorityPhase: 1
+        criteria:
+          all:
+            - age: { min: { months: 6 } }
+            - manual: covidImmunocompromised
+        dosingOverride: *COVID_PLUS_ONE
+      - groupId: COVID_LTC
+        label: 安養、長期照顧(服務)等機構之受照顧者及其所屬工作人員
+        priorityPhase: 1
+        criteria: { manual: ltcResident }
+      - groupId: COVID_PREGNANT
+        label: 孕婦
+        priorityPhase: 1
+        criteria: { manual: pregnant }
+      - groupId: COVID_HIGHRISK
+        label: 滿 6 個月以上高風險對象(流感潛在疾病條件,及結核病、失能、精神疾病、失智症)
+        priorityPhase: 1
+        sourceIds: [SRC_CDC_COVID_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
+        criteria:
+          all:
+            - age: { min: { months: 6 } }
+            - any:
+                - manual: fluUnderlyingCondition   # 「符合流感疫苗高風險對象條件」— 與流感共用同一題
+                - manual: covidOtherRisk
+      - groupId: COVID_HCW
+        label: 醫事及衛生防疫相關人員
+        priorityPhase: 1
+        criteria: { manual: healthcareWorker }
+      - groupId: COVID_CHILDCARE_STAFF
+        label: 幼兒園及托育機構工作人員、居家托育人員(保母)
+        priorityPhase: 1
+        criteria: { manual: childcareWorker }
+      - groupId: COVID_INFANT_CAREGIVER
+        label: 6 個月內嬰兒之雙親或實際扶養者
+        priorityPhase: 1
+        criteria: { manual: infantCaregiver }
+      - groupId: COVID_NAIVE_CHILD
+        label: 從未接種 COVID-19 疫苗之滿 6 個月至未滿 6 歲幼兒
+        priorityPhase: 1
+        criteria:
+          all:
+            - age: { min: { months: 6 }, max: { years: 5 } }             # 足月計,未滿 6 歲
+            - vaccination: { vaccineCodes: [COVID], maxDoses: 0, before: "2026-10-01" }   # 本季開打前從未接種;本季第 1 劑後仍可打第 2 劑
+      # ---------- 第二階段(2026-11-02 起)----------
+      - groupId: COVID_ADULT_50_64
+        label: 50–64 歲無高風險成人
+        priorityPhase: 2
+        criteria: { ageByYear: { min: 50, max: 64 } }
+
+    dosing:
+      seasonal: true
+      variants:
+        - id: COVID_UNDER5_NAIVE_2DOSE
+          label: 滿 6 個月至 4 歲、未曾接種 COVID-19 疫苗
+          sourceRef: SRC_CDC_COVID_PLAN_115
+          age: { max: { years: 4 } }
+          priorDoses: { max: 0 }
+          series:
+            - { dose: 1, minAge: { months: 6 } }
+            - { dose: 2, minIntervalDays: 28, label: "與第 1 劑間隔 4 週以上" }
+      series:
+        - { dose: 1, minAge: { months: 6 }, minIntervalDays: 84 }   # 曾接種者與前 1 劑間隔 12 週(不限本季)
+
+    contraindications:
+      - { id: COVID_C_ALLERGY, label: 曾對 COVID-19 疫苗或其成分嚴重過敏, severity: absolute, manual: severeAllergyToVaccine }
+
+    explain:
+      eligible: "符合「{groupLabels}」,可打本季第 {nextDose} 劑{doseLabel}"
+      eligiblePending: "符合「{groupLabels}」;接種史未查,本季劑數與間隔待確認"
+      ineligible: "{age},不在 115–116 年度公費 COVID-19 疫苗對象內"
       completed: "本季已完成(最近一劑 {lastDate})"
       needs_review: "{caseReason}"

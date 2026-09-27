@@ -43,10 +43,11 @@ export function computeSeries(dosing, vaccine, ctx) {
   const series = pick?.variant?.series || dosing.series || [];
   const n = recs.length;
   const lastDate = lastDateOf(recs);
+  const lastAny = lastDateOf(allRecs);               // 間隔以「前 1 劑」計,不限本季(新冠:與上季末劑間隔 12 週)
   if (n >= series.length) return { status: 'completed', lastDate, dosesGiven: n, dosesRequired: series.length, variant, flags };
   const next = series[n];
   let earliest = ctx.asOf;
-  if (next.minIntervalDays && lastDate) earliest = maxDate(earliest, addDays(lastDate, next.minIntervalDays));
+  if (next.minIntervalDays && lastAny) earliest = maxDate(earliest, addDays(lastAny, next.minIntervalDays));
   if (next.minAge && facts.patient?.birthDate) earliest = maxDate(earliest, addInterval(facts.patient.birthDate, next.minAge));
   if (next.requiresPrior) {
     const prior = recsOf(facts).filter((r) => next.requiresPrior.vaccineCodes.includes(r.code));
