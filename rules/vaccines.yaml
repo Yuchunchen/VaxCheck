@@ -6,11 +6,11 @@
 # 狀態:
 #   - 肺炎鏈球菌 PCV20/21:正式(Policy 2026-08-10);IPD 高風險證據改用疾管署官方 ICD 參考表(docs/11)
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
-#     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 透析/CKD 旗標
+#     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 國健署罕見疾病 ICD(115-07-23,推估)+ 透析/CKD 旗標
 #   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,待 YC 核准
 # =====================================================================
 
-ruleSetVersion: 2026.09.27-v047
+ruleSetVersion: 2026.09.27-v048
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -85,6 +85,12 @@ sources:
     title: 全民健康保險保險對象免自行負擔費用辦法第二條附表一 重大傷病項目(114-01-01 起適用,ICD-10-CM 2023 版;113-09-16 修正,YC 提供 PDF)
     issuer: 衛生福利部
     date: "2024-09-16"
+    kind: other
+  - id: SRC_HPA_RARE_1150723
+    title: 公告罕見疾病名單暨ICD-10-CM編碼一覽表(115-07-23 衛授國字第1150461436號,249 項,YC 提供 PDF)
+    issuer: 衛生福利部(國民健康署)
+    date: "2026-07-23"
+    watch: true
     kind: other
   - id: SRC_TPE_FLU_QA_115
     title: 臺北市政府衛生局 公費流感疫苗常見問答(年齡以「接種年減出生年」計算;更新 115-09-02)— 次級來源,已由計畫全文第二章參確認
@@ -161,6 +167,8 @@ codeLists:
     label: 人類免疫缺乏病毒感染
     system: ICD-10-CM
     codes: [B20, Z21]
+  # --- 國健署公告罕見疾病(115-07-23)— 診斷碼推估,以健保卡註記或證明為準;通用碼 9 個與組合碼成分 E74.31 不作證據(見 JSON excluded)---
+  RARE_DISEASE_DX:   { label: "罕見疾病(國健署公告名單,推估)", system: ICD-10-CM, file: codelists/rare-disease.hpa-1150723.json#rare }
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
     label: 透析相關診斷
@@ -188,7 +196,7 @@ manualConditions:
   # --- 流感 115 年度對象(健保雲端查不到 → 醫師勾選)---
   - key: fluUnderlyingCondition
     label: 具潛在疾病(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
-    hint: 高風險慢性病依流感計畫附件1(糖尿病、慢性心肺肝腎疾病、腦血管與神經退化疾病、自體免疫、免疫缺乏/HIV、肥胖症 E66、脾臟缺損等;單純高血壓 I10 不算),有門/住診紀錄即可,無紀錄可經醫師評估。重大傷病以證明為準。BMI≥30、罕見疾病需醫師確認
+    hint: 高風險慢性病依流感計畫附件1(糖尿病、慢性心肺肝腎疾病、腦血管與神經退化疾病、自體免疫、免疫缺乏/HIV、肥胖症 E66、脾臟缺損等;單純高血壓 I10 不算),有門/住診紀錄即可,無紀錄可經醫師評估。重大傷病、罕見疾病以健保卡註記或證明為準(病歷診斷碼僅推估預勾)。BMI≥30 需醫師確認
     evidence:                                    # 病歷命中 → 自動預勾、標依據;醫師可取消
       any:
         - flag: dialysis
@@ -199,6 +207,7 @@ manualConditions:
         - diagnosis: { $list: NHI_CATASTROPHIC_1Y_DX, withinDays: 365 }
         - diagnosis: { $list: NHI_CATASTROPHIC_6M_DX, withinDays: 183 }
         - diagnosis: { $list: NHI_CATASTROPHIC_1M_DX, withinDays: 31 }
+        - diagnosis: { $list: RARE_DISEASE_DX }                       # 罕見疾病:診斷碼推估(YC 2026-09-27 決定採用)
   - key: preschoolChild
     label: 國小入學前幼兒(尚未註冊國小)
     hint: 滿 6 個月(以出生年月日足月計)至國小註冊就學前
@@ -455,7 +464,7 @@ vaccines:
       - groupId: FLU_UNDERLYING
         label: 具潛在疾病者(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
         priorityPhase: 1
-        sourceIds: [SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
+        sourceIds: [SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101, SRC_HPA_RARE_1150723]
         criteria:
           all:
             - age: { min: { months: 6 } }        # 計畫第二章肆未設年齡限制;下限取疫苗最小接種年齡(v0.4.3 前為 19–64 歲,漏 15–18 歲非在學者)
@@ -591,7 +600,7 @@ vaccines:
       - groupId: COVID_HIGHRISK
         label: 滿 6 個月以上高風險對象(流感潛在疾病條件,及結核病、失能、精神疾病、失智症)
         priorityPhase: 1
-        sourceIds: [SRC_CDC_COVID_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
+        sourceIds: [SRC_CDC_COVID_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101, SRC_HPA_RARE_1150723]
         criteria:
           all:
             - age: { min: { months: 6 } }

@@ -201,6 +201,19 @@ test('代碼比對:三碼類目含所有子碼(附件1 E66、G40、I63、J96;重
   assert.ok(v.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING'));
 });
 
+test('罕見疾病名單(115-07-23):診斷碼推估預勾;通用碼不作證據', () => {
+  const rare = rules().codeLists.RARE_DISEASE_DX.codes;
+  assert.equal(rare.length, 324);
+  for (const c of ['Q87.11', 'E75.21', 'E74.04', 'M61.122', 'G40.833', 'E75.244', 'H47.22']) assert.ok(matchCode(c, rare), c);
+  for (const c of ['E78.00', 'E78.01', 'E16.1', 'E23.0', 'E27.49', 'K83.1', 'K52.89', 'D69.8', 'Q82.8', 'E74.31']) assert.ok(!matchCode(c, rare), c);
+  const at = '2026-10-05';
+  const pw = V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['Q8711', '2026-04-01']] }), at), 'FLU');   // Prader-Willi:不在附件1、重大傷病表
+  assert.equal(pw.verdict, 'eligible');
+  assert.match(pw.evidence[0].why.join(), /罕見疾病/);
+  assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['Q8711', '2026-04-01']] }), at), 'COVID').verdict, 'eligible');
+  assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['E7800', '2026-04-01']] }), at), 'FLU').verdict, 'needs_input', '高膽固醇血症不預勾');
+});
+
 test('流感 115 潛在疾病證據:附件1、重大傷病推估、時效', () => {
   const at = '2026-10-05';
   const P = (dx, extra = {}) => V(run(patient({ birth: '1986-01-01', vacc: [], dx, ...extra }), at), 'FLU');
