@@ -18,7 +18,12 @@ export function inlineCodeLists(rs, baseDir = R()) {
     const doc = JSON.parse(fs.readFileSync(path.join(baseDir, f), 'utf8'));
     const sec = doc.sections?.[section];
     if (!sec) throw new Error(`codeList ${name}:${cl.file} 找不到 section`);
-    rs.codeLists[name] = { label: cl.label || sec.label, system: cl.system, codes: sec.codes.map((c) => c.code), source: { id: doc.id, sha256: doc.sourceSha256 } };
+    rs.codeLists[name] = { label: cl.label || sec.label, system: cl.system, codes: sec.codes.map((c) => c.code), source: { id: doc.id, sha256: doc.sourceSha256 }, threeCharAsCategory: cl.threeCharAsCategory };
+  }
+  for (const cl of Object.values(rs.codeLists || {})) {
+    if (!cl.threeCharAsCategory) continue;
+    cl.codes = cl.codes.map((c) => (/^[A-Z][0-9][0-9A-Z]$/.test(c) ? `${c}*` : c));   // 類目 = 其下所有細碼
+    delete cl.threeCharAsCategory;
   }
   return rs;
 }

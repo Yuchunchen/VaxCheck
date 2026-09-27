@@ -1073,6 +1073,10 @@
      "pattern": "^[\\w./-]+\\.json#\\w+$",
      "description": "建置時由 JSON 檔的 sections.<name>.codes 內嵌"
     },
+    "threeCharAsCategory": {
+     "type": "boolean",
+     "description": "true:清單中的三碼(E66、I63)代表整個類目,建置時展開為 E66*;官方表為逐碼列舉者(IPD 表)不可設"
+    },
     "source": {
      "type": "object",
      "description": "建置時寫入:官方清單來源與雜湊"

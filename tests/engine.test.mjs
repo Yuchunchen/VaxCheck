@@ -188,6 +188,16 @@ test('代碼比對:細碼區間(重大傷病表)與附件1', () => {
   assert.ok(!matchCode('M94.2', chr));
 });
 
+test('代碼比對:三碼類目含所有子碼(附件1 E66、G40、I63、J96;重大傷病 F20 同理)', () => {
+  const chr = rules().codeLists.FLU_CHRONIC_DX.codes;
+  for (const c of ['E6601', 'E669', 'G40909', 'I639', 'I70219', 'J9610', 'M3500', 'D869', 'N039']) assert.ok(matchCode(c, chr), c);
+  assert.ok(!matchCode('I10', chr) && !matchCode('E6', chr) && !matchCode('I64', chr));
+  // 58 歲只有腦梗塞 I63.9 → 第一階段即可打,不是排 11/2
+  const v = V(run(patient({ birth: '1968-05-05', vacc: [], dx: [['I639', '2026-05-01']] }), '2026-10-05'), 'FLU');
+  assert.equal(v.verdict, 'eligible');
+  assert.ok(v.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING'));
+});
+
 test('流感 115 潛在疾病證據:附件1、重大傷病推估、時效', () => {
   const at = '2026-10-05';
   const P = (dx, extra = {}) => V(run(patient({ birth: '1986-01-01', vacc: [], dx, ...extra }), at), 'FLU');

@@ -105,7 +105,7 @@ codeLists:
     system: ATC
     codes: ["L01*"]
   # --- 流感 115 附件1 高風險慢性病人(逐類轉錄;門/住診紀錄 1 筆即可)---
-  FLU_CHRONIC_DX:    { label: 高風險慢性病(流感計畫附件1), system: ICD-10-CM, file: codelists/flu-highrisk-chronic.cdc-115.json#chronic }
+  FLU_CHRONIC_DX:    { label: 高風險慢性病(流感計畫附件1), system: ICD-10-CM, file: codelists/flu-highrisk-chronic.cdc-115.json#chronic, threeCharAsCategory: true }   # 附件1 的 E66、I63 等為類目(v0.4.5 前誤作完整碼,漏 E66.01、I63.9)
   # --- 健保重大傷病項目(114-01-01 起,2023 版)— 診斷碼推估,以重大傷病證明為準 ---
   NHI_CATASTROPHIC_DX:      { label: 重大傷病項目診斷碼(推估), system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#general }
   NHI_CATASTROPHIC_1Y_DX:   { label: "重大傷病項目診斷碼(一年內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within365 }

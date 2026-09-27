@@ -4,7 +4,7 @@
 - 結構由 `rules/schema.json` 定義(JSON Schema),YAML 只是寫法,鍵名與值完全相同。
 - 每支疫苗、每個對象群(eligibilityGroup)旁邊**請寫註解**:公文字號、CDC 原文用語、為什麼這樣設(例:`minRecords: 2` 是為了避免單次誤打 ICD)。註解是給醫師與衛生局看的,不進外掛。
 - 日期一律 `"YYYY-MM-DD"` **加引號**(YAML 會把裸日期當日期型別,不同工具行為不一);年齡用 `age: { min/max: { years|months|days } }`,含端點;CDC 公告「民國 xx 年 xx 月 xx 日(含)以前出生」時改用 `birthDate: { onOrBefore: … }`。
-- 代碼寫法:完整碼 `E11.9`、前綴 `"E11*"`、區間 `E08-E13`(三碼類目)、細碼區間 `M05.70-M06.09`(逐字比對,含端點與上界子碼)。含 `*` 的要加引號。
+- 代碼寫法:完整碼 `E11.9`、前綴 `"E11*"`(類目含所有細碼,例 `"F90*"`)、區間 `E08-E13`(三碼類目)、細碼區間 `M05.70-M06.09`(逐字比對,含端點與上界子碼)。含 `*` 的要加引號。**只寫三碼 `E66` = 只比對 `E66` 本身**;官方表的三碼若指整個類目(如流感附件1),在該 codeList 加 `threeCharAsCategory: true`,IPD 表等逐碼列舉者不可加。
 - 在 `{ … }` 一行式寫法裡,值含逗號或冒號時要加引號(例 `label: "發燒,建議延後"`),否則會被切成新欄位。
 - 疫苗代碼(`historyMatch.vaccineCodes`、`has`、`none`、`intervalFrom`、`vaccination.vaccineCodes`)**只寫 canonical**(`PCV13`、`PPV23`、`FLU`…),值集合 = `rules/niis-vaccine-codes.json` 的 `canonical` 欄;不寫 NIIS 原碼(`13PCV`、`PPV`)。`validate-rules` 會擋。
 - 三個來源查不到的條件(原住民、孕婦、機構住民、醫事人員、BMI…)一律用 `manual: key`,並在 `manualConditions` 宣告。
