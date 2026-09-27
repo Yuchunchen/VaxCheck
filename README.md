@@ -38,7 +38,7 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 ## 發行(維護者)
 1. `npm version <版號> --no-git-tag-version`;`CHANGELOG.md` 加 `## v<版號>(日期)` 一節;`docs/STATUS.md` 加一行。
 2. 本機跑上面四個指令(含 e2e)全過 → commit、推 main,等 ci 綠燈。
-3. `git tag v<版號> && git push origin v<版號>` → release workflow 驗證 tag 與版號一致、重跑驗證/測試/建置,建立 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。
+3. 觸發 release workflow(二擇一):`git tag v<版號> && git push origin v<版號>`;或 GitHub → Actions → release → Run workflow(分支選 main)。workflow 重跑驗證/測試/建置,建立 tag 與 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。同版號已發行會失敗,要發新版先升版號。
 
 外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。佈署路線(商店未列出 → 公開)見 `docs/09_DEPLOYMENT_v0.1.md`。
 
