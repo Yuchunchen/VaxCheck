@@ -154,7 +154,7 @@ test('流感 115:58 歲無勾選 → 第一階段期間排 11/2;第二階段 →
 test('流感 115:40 歲具潛在疾病(醫師勾)→ 第一階段可打;透析旗標 → 自動預勾', () => {
   const v = V(run(patient({ birth: '1986-01-01', vacc: [], manual: { fluUnderlyingCondition: true } }), '2026-10-05'), 'FLU');
   assert.equal(v.verdict, 'eligible');
-  assert.equal(v.matchedGroups[0].groupId, 'FLU_UNDERLYING_19_64');
+  assert.equal(v.matchedGroups[0].groupId, 'FLU_UNDERLYING');
   const w = V(run(patient({ birth: '1986-01-01', vacc: [], flags: ['dialysis'] }), '2026-10-05'), 'FLU');
   assert.equal(w.verdict, 'eligible');
   assert.equal(w.evidence[0].key, 'fluUnderlyingCondition');
@@ -170,7 +170,7 @@ test('流感 115:25 歲男性開打前 → 尚未開打,只問決定性條件(�
   assert.ok(f.decisiveManual.some((m) => m.key === 'pregnant'), '女性問孕婦');
   const s = V(run(patient({ birth: '2010-01-01' }), D), 'FLU');
   assert.ok(s.decisiveManual.some((m) => m.key === 'fluStudent'), '16 歲問學生');
-  assert.ok(!s.decisiveManual.some((m) => m.key === 'fluUnderlyingCondition'), '未滿 19 歲不走潛在疾病群');
+  assert.ok(s.decisiveManual.some((m) => m.key === 'fluUnderlyingCondition'), '潛在疾病群無年齡上下限(計畫第二章肆),16 歲也問');
 });
 
 test('代碼比對:細碼區間(重大傷病表)與附件1', () => {
@@ -206,7 +206,16 @@ test('流感 115 潛在疾病證據:附件1、重大傷病推估、時效', () =
   // 58 歲糖尿病:第一階段就可打,不用等 11/2
   const d58 = V(run(patient({ birth: '1968-05-05', vacc: [], dx: [['E1165', '2026-05-01']] }), at), 'FLU');
   assert.equal(d58.verdict, 'eligible');
-  assert.ok(d58.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING_19_64'));
+  assert.ok(d58.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING'));
+});
+
+test('流感 115 潛在疾病群不限年齡:18 歲氣喘 → 可打;5 個月大重大傷病 → 未滿 6 個月不符', () => {
+  const at = '2026-10-05';
+  const y18 = V(run(patient({ birth: '2008-03-01', vacc: [], dx: [['J45909', '2026-05-01']] }), at), 'FLU');
+  assert.equal(y18.verdict, 'eligible');
+  assert.ok(y18.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING'));
+  const baby = V(run(patient({ birth: '2026-05-01', vacc: [], dx: [['Q211', '2026-06-01']] }), at), 'FLU');
+  assert.notEqual(baby.verdict, 'eligible');
 });
 
 test('流感 115 幼兒:未滿 6 個月不符;2 歲首次 → 本季 2 劑、第 2 劑間隔 4 週', () => {

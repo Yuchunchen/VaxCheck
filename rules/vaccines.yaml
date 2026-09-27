@@ -9,7 +9,7 @@
 #     潛在疾病證據:附件1 高風險慢性病 ICD(61 項)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 透析/CKD 旗標
 # =====================================================================
 
-ruleSetVersion: 2026.09.27-v043
+ruleSetVersion: 2026.09.27-v044
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -57,7 +57,7 @@ sources:
     url: https://www.cdc.gov.tw/Bulletin/Detail/PdJqXvsZjg1Q5TA301JYpg?typeId=9
     kind: other
   - id: SRC_CDC_FLU_PLAN_115
-    title: 115年度流感疫苗接種計畫(計畫網頁;全文 PDF 與附件1 高風險慢性病 ICD 表因 robots 限制未自動取得)
+    title: 115年度流感疫苗接種計畫(衛生福利部 115 年 7 月版全文 PDF,YC 提供;第二章實施對象、第三章分階段、附件1)
     issuer: 衛生福利部疾病管制署
     url: https://www.cdc.gov.tw/Category/MPage/JNTC9qza3F_rgt9sRHqV2Q
     watch: true
@@ -86,7 +86,7 @@ sources:
     date: "2024-09-16"
     kind: other
   - id: SRC_TPE_FLU_QA_115
-    title: 臺北市政府衛生局 公費流感疫苗常見問答(年齡以「接種年減出生年」計算;更新 115-09-02)— 次級來源,待計畫全文核對
+    title: 臺北市政府衛生局 公費流感疫苗常見問答(年齡以「接種年減出生年」計算;更新 115-09-02)— 次級來源,已由計畫全文第二章參確認
     issuer: 臺北市政府衛生局
     date: "2026-09-02"
     url: https://health.gov.taipei/cp.aspx?n=F9B897CA6DEBE79A&s=5EB7FADADF8A23A3
@@ -327,9 +327,9 @@ vaccines:
 
   # =====================================================================
   # 流感 115 年度(2026–27 季)— 正式轉譯
-  # 依據:疾管署 2026-08-25 新聞稿;115 年度流感疫苗接種計畫網頁;公費流感 Q&A;幼兒篇 Q&A
+  # 依據:115 年度流感疫苗接種計畫全文(115 年 7 月版);疾管署 2026-08-25 新聞稿;公費流感 Q&A;幼兒篇 Q&A
   # 第一階段 2026-10-01 起;第二階段 2026-11-02 起(50–64 歲無高風險慢性病成人),至疫苗用罄止
-  # 年齡:65 歲、55 歲原住民、50–64 歲依「接種年減出生年」(ageByYear;臺北市衛生局 Q&A,待計畫全文核對)
+  # 年齡:65 歲、55 歲原住民、50–64 歲依「接種年減出生年」(ageByYear;計畫第二章參「50歲以上成人」原文,65/55 為其分階段子群)
   # 幼兒:以出生年月日足月計(age)
   # 加強型流感疫苗(優先給機構內 65 歲以上長者)屬廠牌選擇,不影響資格,本規則不判定
   # =====================================================================
@@ -378,13 +378,13 @@ vaccines:
         label: 孕婦
         priorityPhase: 1
         criteria: { manual: pregnant }
-      - groupId: FLU_UNDERLYING_19_64
-        label: 19–64 歲具潛在疾病者(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
+      - groupId: FLU_UNDERLYING
+        label: 具潛在疾病者(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
         priorityPhase: 1
-        sourceIds: [SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
+        sourceIds: [SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
         criteria:
           all:
-            - ageByYear: { min: 19, max: 64 }    # 18 歲以下多已涵蓋於幼兒/學生;年齡算法待計畫全文核對
+            - age: { min: { months: 6 } }        # 計畫第二章肆未設年齡限制;下限取疫苗最小接種年齡(v0.4.3 前為 19–64 歲,漏 15–18 歲非在學者)
             - manual: fluUnderlyingCondition
       - groupId: FLU_INFANT_CAREGIVER
         label: 6 個月內嬰兒之雙親或實際扶養者
