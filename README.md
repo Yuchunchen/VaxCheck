@@ -1,36 +1,59 @@
-# VaxCheck 疫苗檢核程式 v0.4.0
+# VaxCheck 疫苗檢核程式
 
-門診插健保卡 → 健保雲端右下角按「疫苗檢核」→ 看這位病患現在能不能公費打哪些疫苗、為什麼、補什麼條件就能打。
+門診插健保卡 → 按瀏覽器標題列的 VaxCheck 圖示 → 看這位病患現在能公費打哪些疫苗、為什麼、確認哪些條件就能打。版本與變更見 `CHANGELOG.md`。
 
-- 判定原則:預設不可;資料查不到回「需確認/資料不足」,不會誤判成可打。能自動判可打就不再問;判不出只問「勾了會改變結果」的條件;病歷有證據的條件先自動勾選並標依據,醫師可取消(docs/10)。
-- 規則:`rules/vaccines.yaml` 是唯一來源(肺鏈 PCV20/21、流感 115 年度、COVID-19 115–116 年度皆為正式);IPD 高風險證據用疾管署官方 ICD 參考表(docs/11)。
-- 病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存;不連任何外部主機(線上規則為選配)。
-
-## 指令
-```
-npm install
-npm run validate-rules   # schema + 語意檢查(代碼清單、人工條件、疫苗代碼白名單、縣市 overlay 規範)
-npm test                 # 引擎、規則、adapters 單元與臨床情境測試
-npm run build            # dist/ext(外掛)、dist/vaxcheck-ext-<版本>.zip、dist/web/index.html(示範頁)
-NPM_GLOBAL=$(npm root -g) node e2e/run.mjs   # 需 playwright:真 Chromium 載入外掛,偽造健保雲端與 NIIS
-```
+- 涵蓋:肺炎鏈球菌 PCV20/21、流感 115 年度、COVID-19 115–116 年度(皆為疾管署正式規則)。
+- 面板四組:**可接種 → 待確認 → 尚未開打 → 不符合**。「待確認」只放確認後今天就能打的疫苗;需確認的條件有「是/否」鈕。
+- 判定原則:預設不可;資料查不到回「需確認/資料不足」,不會誤判成可打。能自動判可打就不再問;只問勾了會改變結果的條件;病歷有證據的條件先自動勾選並標依據,醫師可取消(docs/10)。
+- 規則:`rules/vaccines.yaml` 是唯一來源;IPD 高風險證據用疾管署官方 ICD 參考表(docs/11)。規則怎麼被執行見 `rules/EXECUTION.md`。
+- 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console;不連任何外部主機(線上規則為選配,預設關)。
 
 ## 院內安裝(未封裝)
-1. 解壓 `vaxcheck-ext-0.4.0.zip` 到固定資料夾(例 `C:\VaxCheck\ext`)。
-2. Chrome 開 `chrome://extensions` → 開「開發人員模式」→「載入未封裝項目」→ 選該資料夾。
-3. 按工具列的 VaxCheck 圖示進設定頁;先維持預設(中央規則、不自動點查詢)。
+1. 到 GitHub Releases 下載最新版 `vaxcheck-ext-<版號>.zip`(或 Actions → 最新 ci 執行 → vaxcheck-dist → ext)。
+2. 解壓到**固定資料夾**,例 `C:\VaxCheck\ext`。資料夾路徑決定外掛 ID;換路徑等於裝一個新外掛,設定會不見。
+3. Chrome 開 `chrome://extensions` → 右上開「開發人員模式」→「載入未封裝項目」→ 選該資料夾。
+4. 在 VaxCheck 圖示按右鍵 →「選項」:確認「健保雲端入口網址」與「NIIS 查詢頁網址」;其他先維持預設。
+5. 插醫事人員卡與健保卡 → 按圖示 → 健保雲端與 NIIS 分頁開啟、面板自動出現。頁尾可看外掛版號與規則版本。
 
-院內測試步驟見 `docs/TESTING_v0.4.md`。
+### 更新
+1. 下載新版 zip,**解壓覆蓋同一個資料夾**(先刪掉舊檔再解壓亦可,路徑不變即可)。
+2. `chrome://extensions` → VaxCheck 卡片按「重新載入」(圓形箭頭)。
+3. 開一位病患確認面板頁尾顯示新版號。設定會保留。
+
+### 回復上一版
+到 Releases 下載上一版 zip,照「更新」步驟覆蓋同一資料夾並重新載入。
+
+### 回報問題
+院區/電腦、外掛版號、步驟、截圖、F12 Console 中 `[疫苗檢核]` 開頭的訊息。需要時按面板「匯出診斷檔」(已排除姓名與身分證,但仍是病歷資料,傳送前請去識別)。院內測試步驟見 `docs/TESTING_v0.4.md`。
+
+## 開發
+```
+npm ci
+npm run validate-rules   # schema + 語意檢查(代碼清單、人工條件、疫苗代碼白名單、縣市 overlay 規範)
+npm test                 # 引擎、規則、adapters、面板分組單元與臨床情境測試
+npm run build            # dist/ext(外掛)、dist/vaxcheck-ext-<版號>.zip、dist/web/index.html(示範頁)
+node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造健保雲端與 NIIS;另跑示範頁四組流程
+```
+
+## 發行(維護者)
+1. `npm version <版號> --no-git-tag-version`;`CHANGELOG.md` 加 `## v<版號>(日期)` 一節;`docs/STATUS.md` 加一行。
+2. 本機跑上面四個指令(含 e2e)全過 → commit、推 main,等 ci 綠燈。
+3. `git tag v<版號> && git push origin v<版號>` → release workflow 驗證 tag 與版號一致、重跑驗證/測試/建置,建立 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。
+
+外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。佈署路線(商店未列出 → 公開)見 `docs/09_DEPLOYMENT_v0.1.md`。
 
 ## 目錄
 ```
-rules/        規則 YAML、schema、NIIS 代碼表、官方 IPD ICD 清單
-src/engine/   判定引擎(純函式,Node 可測)
+rules/        規則 YAML、schema、NIIS 代碼表、官方 ICD 清單(codelists/)
+src/engine/   判定引擎(純函式,Node 可測);display.js = 保底/升級與面板分組
 src/adapters/ 健保雲端 JSON、NIIS 結果頁 → facts
 src/panel/    結果面板(Shadow DOM,外掛與示範頁共用)
-src/content/  medcloud2 與 NIIS 的 content scripts
+src/content/  健保雲端與 NIIS 的 content scripts
+src/workspace/ 標題列圖示一鍵工作區(開分頁、換卡、登入備援)
 src/background.js  身分核對、NIIS 中繼、人工條件暫存、規則載入
-src/web/      示範頁(手動模式)
+src/options/  設定頁
+src/web/      示範頁(手動模式,合成病患)
+scripts/      規則建置/驗證、外掛建置、發行說明
 tests/  e2e/  fixtures/  docs/
 ```
 

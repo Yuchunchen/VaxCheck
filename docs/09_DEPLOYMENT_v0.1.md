@@ -14,6 +14,7 @@
 - 企業政策自架更新:IT 派送 + 自架 `update_url`,不經商店;適合院方不願公開時,但 IT 要長期維護派送。
 
 建議路徑:未列出 → 兩院試用 → 公開(與開源同步)。
+現況(2026-09-28):v0.4.12 起以 GitHub Release 發行未封裝 zip(院內正式版,流程見 README「發行」);商店未列出待帳號名義決定後再做。
 userscript 包裝不列為備案:若 GPO 封鎖全部擴充功能,Tampermonkey 也一起被封;若是允許清單制,加本外掛 ID 與加 Tampermonkey 是同一件事。
 
 ## 2. 商店審查要準備的
@@ -54,7 +55,7 @@ userscript 包裝不列為備案:若 GPO 封鎖全部擴充功能,Tampermonkey �
 - `manifest.json`:加 `options_page`;加 `*.github.io`;NIIS 主機不變。
 - `src/options/`:選項頁。
 - `build.mjs`:多一個目標 `dist-web/index.html`(手動模式)。
-- `.github/workflows/release.yml`:建 zip、附版本與規則版本。
+- `.github/workflows/release.yml`:建 zip、附版本與規則版本。(v0.4.12 已完成:推 tag 自動發行)
 - `02_TESTING.md` §B:安裝方式改為商店連結,保留未封裝載入作開發用。
 - `docs/PRIVACY.md`、`docs/SECURITY.md`:商店與資訊室共用。
 

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import path from 'node:path';
 import { buildAll, ROOT } from '../scripts/lib/rules.mjs';
 import { evaluate } from '../src/engine/index.js';
@@ -44,4 +45,11 @@ test('縣市 overlay 違規 → 建置失敗(改劑次、缺來源、前綴錯�
   assert.match(all, /必須以 TPE_ 開頭/);
   assert.match(all, /缺 sourceIds/);
   assert.match(all, /resident_TW_TPE/);
+});
+
+test('發行:CHANGELOG.md 有目前版號的一節(沒有就不能發行)', async () => {
+  const { notesFor } = await import('../scripts/release-notes.mjs');
+  const { version } = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.ok(notesFor(version), `CHANGELOG.md 缺 ## v${version}`);
+  assert.equal(notesFor('9.9.9', '## v9.9.8(x)\n- a\n## v9.9.9(y)\n- b\n- c\n## v9.9.7\n- d'), '- b\n- c');
 });

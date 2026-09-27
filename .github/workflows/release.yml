@@ -1,0 +1,32 @@
+name: release
+# 推 tag vX.Y.Z → 驗證、測試、建置 → 建立 GitHub Release(外掛 zip、示範頁、SHA256SUMS)
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: tag 必須等於 package.json 版號
+        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+      - run: npm ci
+      - run: npm run validate-rules
+      - run: npm test
+      - run: npm run build
+      - name: 發行檔案
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          cp dist/web/index.html "dist/vaxcheck-web-$V.html"
+          (cd dist && sha256sum "vaxcheck-ext-$V.zip" "vaxcheck-web-$V.html" > SHA256SUMS.txt)
+          node scripts/release-notes.mjs "$V" > dist/notes.md
+      - name: 建立 Release
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" "dist/vaxcheck-ext-$V.zip" "dist/vaxcheck-web-$V.html" dist/SHA256SUMS.txt \
+            --title "VaxCheck $GITHUB_REF_NAME" --notes-file dist/notes.md
