@@ -8,6 +8,8 @@ const PROVIDER = (g, names) => (g.providedBy === 'county' ? (names[g.jurisdictio
 
 function head(v, fmtDate) {
   const d = v.dosing || {};
+  const own = display(v, fmtDate);   // 分組與 verdict 不一致時,標籤依保底(verdict 本身不改)
+  if (own) return own;
   switch (v.verdict) {
     case 'eligible': return ['可打', 'go', `今日可打第 ${d.dose || 1} 劑${d.case ? `(${d.case.label})` : ''}`];
     case 'wait': return ['尚不可打', 'wait', `${fmtDate(d.earliestDate)} 起可打${d.case ? `(${d.case.label})` : ''}`];
@@ -30,6 +32,47 @@ function altText(alt, fmtDate) {
   if (alt.status === 'wait') return `若無下列條件:${fmtDate(alt.earliestDate)} 起可打`;
   if (alt.status === 'not_funded') return '若無下列條件:不再公費';
   return '';
+}
+
+// ---------- 保底 / 升級(v0.4.12,docs/07 §3.1)----------
+const caseNote = (v) => v.dosing?.alternative?.case?.note || v.dosing?.case?.note || '';
+/** 保底行 */
+function fallbackLine(fb, fmtDate, v) {
+  if (!fb) return '';
+  if (fb.kind === 'phase') return `已符合${fb.phase || ''}「${fb.groupLabel}」,${fmtDate(fb.date)} 起可打`;
+  if (fb.kind === 'dose') return `未確認前:${fmtDate(fb.date)} 起可打${fb.label ? `(${fb.label})` : ''}`;
+  if (fb.kind === 'completed') return `目前視為已完成${fb.label ? `(${fb.label})` : ''}`;
+  if (fb.kind === 'not_funded') return `目前不再公費${fb.label ? `(${fb.label})` : ''}`;
+  return caseNote(v);
+}
+/** 「〔A、B〕」或「下列任一(N 項)」 */
+function whatText(up) {
+  const names = up.items.map((i) => (i.type === 'source' ? `缺${SRC_NAMES[i.key] || i.key}` : i.label));
+  if (names.length <= 2) return `〔${names.join('、')}〕${names.length > 1 ? '任一' : ''}`;
+  return `下列任一(${names.length} 項)`;
+}
+/** 升級結果:今天 / 提早至某日 */
+function upgradeOutcome(up, fb, fmtDate) {
+  const when = up.decisive ? '今天' : `${fmtDate(up.date)} 起`;
+  const lbl = up.label ? `(${up.label})` : '';
+  const later = fb ? `可提早至 ${fmtDate(up.date)}${lbl}` : `${fmtDate(up.date)} 起可打${lbl}`;   // 無保底(開打前)不說「提早」
+  if (up.kind === 'phase') return up.decisive ? `屬${up.label},今天即可打` : later;
+  if (fb && (fb.kind === 'completed' || fb.kind === 'not_funded')) return `${when}可追加 ${up.dose || 1} 劑${lbl}`;
+  return up.decisive ? `今天可打${lbl}` : later;
+}
+function display(v, fmtDate) {
+  const dp = v.display;
+  if (!dp) return null;
+  const fb = dp.fallback;
+  if (dp.bucket === 'confirm' && dp.step === '3a') return ['需確認', 'wait', fallbackLine(fb, fmtDate, v)];
+  if (dp.bucket === 'not_open' && fb) {   // 「{日期} 起可打(第 N 階段 / 與前劑間隔)」
+    const why = fb.kind === 'phase' ? `${fb.phase || '開打日'}:${fb.groupLabel}` : `與前劑間隔${fb.label ? `:${fb.label}` : ''}`;
+    return [fb.kind === 'phase' ? '尚未開打' : '尚不可打', 'wait', `${fmtDate(fb.date)} 起可打(${why})`];
+  }
+  if (dp.bucket === 'ineligible' && fb?.kind === 'completed' && v.verdict !== 'completed') return ['已完成', 'done', caseNote(v) || fallbackLine(fb, fmtDate, v)];
+  if (dp.bucket === 'ineligible' && fb?.kind === 'not_funded' && v.verdict !== 'not_funded') return ['不再公費', 'no', caseNote(v)];
+  if (dp.bucket === 'ineligible' && v.verdict === 'not_open') return ['不可打', 'no', `目前不符合公費對象;${fmtDate(v.opensOn)} 開打`];
+  return null;
 }
 
 const h = (tag, attrs = {}, ...kids) => {
@@ -86,7 +129,7 @@ export function renderPanel(wrap, state, on) {
   const res = state.result;
   if (!res) { const f = footer(null); if (f) wrap.append(f); return; }
   const manual = state.manual || {};
-  // 分組顯示:可接種 → 待確認 → 不符合(組內維持規則順序;Result 本身不改順序)
+  // 分組顯示:可接種 → 待確認 → 尚未開打 → 不符合(依 display.bucket;組內維持規則順序;Result 本身不改順序)
   for (const grp of groupVaccines(res.vaccines)) {
     const list = h('ol', { class: `vx-list vx-list-${grp.key}`, 'aria-label': grp.label });
     wrap.append(h('h3', { class: `vx-grp vx-grp-${grp.key}` }, grp.label, ' ', h('span', { class: 'vx-grp-n' }, String(grp.items.length))));
@@ -109,13 +152,35 @@ export function renderPanel(wrap, state, on) {
           h('span', {}, `依病歷判定「${e.label}」:${e.why.join(';')}`),
           h('button', { class: 'vx-link', onclick: () => on.manual(e.key, false) }, '不符合,取消')));
       }
-      // 決定性條件:只列勾了會改變結果的
-      if (v.decisiveManual.length) {
+      // 是/否勾選:勾「是」「否」都重算;再按一次同一鈕 = 取消。多項時可「以上皆否」
+      const yn = (items) => {
+        const man = items.filter((i) => i.type === 'manual');
+        return [...man.map((m) => h('div', { class: 'vx-check', role: 'group', 'aria-label': m.label },
+          h('span', {}, m.label, m.hint && h('small', {}, m.hint)),
+          h('span', { class: 'vx-yn' },
+            h('button', { type: 'button', class: 'vx-yes', 'aria-pressed': String(manual[m.key] === true), onclick: () => on.manual(m.key, manual[m.key] === true ? null : true) }, '是'),
+            h('button', { type: 'button', class: 'vx-no', 'aria-pressed': String(manual[m.key] === false), onclick: () => on.manual(m.key, manual[m.key] === false ? null : false) }, '否')))),
+        man.length > 1 && h('button', { type: 'button', class: 'vx-link vx-allno', onclick: async () => { for (const m of man) await on.manual(m.key, false); } }, '以上皆否'),
+        items.some((i) => i.type === 'source') && h('p', { class: 'vx-sub' }, `另需:${items.filter((i) => i.type === 'source').map((i) => SRC_NAMES[i.key] || i.key).join('、')}`)];
+      };
+      const dp = v.display || {};
+      const up = dp.upgrade;
+      if (dp.bucket === 'confirm' && dp.step === '3a' && up) {
+        // 3a:保底行(上方 vx-line)+ 升級行 + 是/否(決定性,列入待確認清單)
+        body.append(h('fieldset', { class: 'vx-ask vx-up' },
+          h('legend', {}, '確認後今天可打'),
+          h('p', { class: 'vx-upline' }, `若確認${whatText(up)} → ${upgradeOutcome(up, dp.fallback, fmtDate)}`),
+          yn(up.items)));
+      } else if (up && !up.decisive) {
+        // 3b、不符合:選填提示,不列入待確認清單
+        body.append(h('details', { class: 'vx-opt' },
+          h('summary', {}, `選填:若確認${whatText(up)},${upgradeOutcome(up, dp.fallback, fmtDate)}`),
+          yn(up.items)));
+      } else if (v.decisiveManual.length) {
+        // 無保底、今天開打中(現行行為):只列勾了會改變結果的
         body.append(h('fieldset', { class: 'vx-ask' },
           h('legend', {}, '若符合下列任一,可能改為可打'),
-          v.decisiveManual.map((m) => h('label', { class: 'vx-check' },
-            h('input', { type: 'checkbox', checked: manual[m.key] === true, onchange: (ev) => on.manual(m.key, ev.target.checked ? true : null) }),
-            h('span', {}, m.label, m.hint && h('small', {}, m.hint))))));
+          yn(v.decisiveManual.map((m) => ({ ...m, type: 'manual' })))));
       }
       // 已被醫師排除的條件可還原
       const ml = state.manualLabels || {};
@@ -132,7 +197,7 @@ export function renderPanel(wrap, state, on) {
       }
       for (const p of v.precautions) body.append(h('p', { class: 'vx-sub vx-warn' }, `注意:${p.label}`));
       for (const f of v.dosing?.flags || []) body.append(h('p', { class: 'vx-sub vx-warn' }, f === 'NEED_DATE_CONFIRMATION' ? '接種紀錄缺日期,請確認' : '接種史有型別不明紀錄,請確認'));
-      if (v.upcoming?.length && !['eligible', 'scheduled'].includes(v.verdict)) {
+      if (v.upcoming?.length && !['eligible', 'scheduled'].includes(v.verdict) && !v.display?.upgrade) {
         body.append(h('p', { class: 'vx-sub' }, v.upcoming.map((g) => `${fmtDate(g.window.from)} 起:${g.label}${g.value === null ? '(需確認)' : ''}`).join(';')));
       }
       // 判定依據

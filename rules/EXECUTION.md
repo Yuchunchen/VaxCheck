@@ -72,13 +72,13 @@ NIIS 查完合併進 Bundle 後重跑同一段:`vaccination` 變成 true/false,P
 ## `mode: cases` 的走法(肺鏈)
 
 ```
-computeByCases(dosing, 接種史):
-  接種史未查 → unknown
+computeCases(dosing, 接種史):
+  接種史未查 → pending_history
   for case in cases(由上往下):
     when 不命中 → 下一個
-    criteria 存在且 unknown → 記住第一個「待定 case」,繼續往下
+    criteria 存在且 unknown → 記住第一個「待定 case」,並先算好它的 then 結果(確認後會怎樣),繼續往下
     criteria false → 下一個
-    then:
+    then(第一個確定 case = 劑次層保底 fallback):
       complete   → 若有待定 case:回待定 + alternative=completed;否則 completed
       notFunded  → not_funded
       review     → needs_review
@@ -86,9 +86,21 @@ computeByCases(dosing, 接種史):
                    due(今日可打)→ 直接回
                    wait → 若有待定 case:回待定 + alternative=wait;否則 wait
   沒命中 → 待定 case 或 needs_review(組合未定義)
+  另回 dosing.fallback(保底摘要)與 dosing.upgrade(待定 case 確認後的結果 + requires;只在比保底好時列出)
 ```
 
-待定機制的用意:例如「IPD 高風險(醫師未勾)且僅打過 PCV13」,8 週路徑未知、但 1 年路徑已經到期 → 直接給「今日可打」,不必等醫師勾選;反之若 1 年路徑還要等,面板顯示「待確認 IPD 高風險;否則 YYYY-MM-DD 可打」。
+待定機制的用意:例如「IPD 高風險(醫師未勾)且僅打過 PCV13」,8 週路徑未知、但 1 年路徑已經到期 → 直接給「今日可打」,不必等醫師勾選。反之 1 年路徑還要等時,看 8 週路徑確認後今天能不能打:
+- 能(PCV13 已滿 8 週)→ 待確認:「若確認〔IPD 高風險…〕任一 → 今天可打;未確認前 YYYY-MM-DD 起可打」,列入決定性條件。
+- 不能(未滿 8 週)→ 尚未開打:「YYYY-MM-DD 起可打」,附選填提示「若確認…可提早至 PCV13 + 56 天」,不列入決定性條件。
+
+## 保底與升級 → 面板分組(v0.4.12)
+
+`evaluate` 先照原規則得出 verdict(語意不變),再由 `engine/display.js` 合併兩層:
+- 對象群層:true 的對象群 = 保底(已開打 = 今天,未開打 = 開打日);unknown 的對象群 = 升級候選,劑次以「假設其人工條件已確認」重算。
+- 劑次層:上面的 `dosing.fallback` / `dosing.upgrade`。
+- 最終可打日 = max(對象群開打日, 劑次 earliestDate)。
+
+分組規則(`display.bucket`)與何時算決定性,見 docs/07 §3.1、docs/10 §3.1。一句話:保底今天可打 → 可接種、不問;升級確認後今天可打 → 待確認、問;升級只能提早到未來某日 → 尚未開打或不符合,提示為選填。
 
 ## 安全與可測性
 - 規則是資料,不是程式:規則檔再怎麼寫都不能執行任意程式碼。

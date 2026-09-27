@@ -2,34 +2,36 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { groupOf, groupVaccines, sortTrace } from '../src/panel/order.js';
 
-const v = (id, verdict, dosing = null) => ({ vaccineId: id, verdict, dosing });
+const v = (id, bucket, verdict = 'x') => ({ vaccineId: id, verdict, display: bucket ? { bucket } : undefined });
 
-test('分組:可接種 → 待確認 → 不符合,組內維持規則順序,空組不列', () => {
+test('分組:可接種 → 待確認 → 尚未開打 → 不符合,組內維持規則順序,空組不列', () => {
   const vaccines = [
-    v('A', 'completed'), v('B', 'eligible', { status: 'due' }), v('C', 'needs_input'), v('D', 'wait', { status: 'wait' }),
-    v('E', 'pending_history', { status: 'pending_history' }), v('F', 'eligible', { status: 'due' }), v('G', 'ineligible'),
-    v('H', 'unknown_source'), v('I', 'needs_review'), v('J', 'not_funded'), v('K', 'not_open'), v('L', 'out_of_season'), v('M', 'scheduled'),
+    v('A', 'ineligible'), v('B', 'eligible'), v('C', 'confirm'), v('D', 'not_open'), v('E', 'confirm'), v('F', 'eligible'),
+    v('G', 'ineligible'), v('H', 'not_open'), v('I', 'confirm'),
   ];
   const g = groupVaccines(vaccines);
   assert.deepEqual(g.map((x) => [x.key, x.label, x.items.map((i) => i.vaccineId).join('')]), [
-    ['go', '可接種', 'BF'],
-    ['check', '待確認', 'CEHI'],
-    ['no', '不符合', 'ADGJKLM'],
+    ['eligible', '可接種', 'BF'],
+    ['confirm', '待確認', 'CEI'],
+    ['not_open', '尚未開打', 'DH'],
+    ['ineligible', '不符合', 'AG'],
   ]);
-  assert.deepEqual(vaccines.map((x) => x.vaccineId).join(''), 'ABCDEFGHIJKLM', 'Result 本身不改順序');
-  assert.deepEqual(groupVaccines([v('X', 'ineligible')]).map((x) => x.key), ['no'], '空組不顯示');
+  assert.deepEqual(vaccines.map((x) => x.vaccineId).join(''), 'ABCDEFGHI', 'Result 本身不改順序');
+  assert.deepEqual(groupVaccines([v('X', 'ineligible'), v('Y', 'eligible')]).map((x) => x.key), ['eligible', 'ineligible'], '空組不顯示');
+  assert.deepEqual(groupVaccines([v('Z', 'not_open')]).map((x) => x.label), ['尚未開打']);
 });
 
-test('分組:待定 case(含 alternative)→ 待確認;eligible 但非今日可打 → 待確認', () => {
-  assert.equal(groupOf(v('P', 'needs_input', { status: 'pending_case', alternative: { status: 'completed' } })), 'check');
-  assert.equal(groupOf(v('Q', 'needs_review', { status: 'pending_case', alternative: null })), 'check');
-  assert.equal(groupOf(v('R', 'eligible', { status: 'wait' })), 'check');
+test('分組只看 display.bucket:verdict、pending_case、alternative 不影響', () => {
+  assert.equal(groupOf({ verdict: 'needs_input', dosing: { status: 'pending_case', alternative: { status: 'wait' } }, display: { bucket: 'not_open' } }), 'not_open');
+  assert.equal(groupOf({ verdict: 'scheduled', display: { bucket: 'confirm' } }), 'confirm');
+  assert.equal(groupOf({ verdict: 'needs_input', dosing: { status: 'pending_case', alternative: { status: 'completed' } }, display: { bucket: 'ineligible' } }), 'ineligible');
 });
 
-test('分組:表上未列的 verdict(含 contraindicated)→ 待確認,不歸入可接種', () => {
-  assert.equal(groupOf(v('X', 'contraindicated')), 'check');
-  assert.equal(groupOf(v('Y', 'something_new')), 'check');
-  assert.equal(groupOf(v('Z', undefined)), 'check');
+test('分組:沒有 display 或 bucket 不在表上 → 待確認,不歸入可接種', () => {
+  assert.equal(groupOf(v('X', undefined, 'eligible')), 'confirm');
+  assert.equal(groupOf(v('Y', 'something_new', 'eligible')), 'confirm');
+  assert.equal(groupOf({ vaccineId: 'Z' }), 'confirm');
+  assert.equal(groupOf(undefined), 'confirm');
 });
 
 test('判定依據:✓ → 未確認 → ✗,同值維持規則順序', () => {

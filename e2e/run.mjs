@@ -2,9 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { execSync } from 'node:child_process';
 import { startFakeSites } from './fake-sites.mjs';
 const require = createRequire(import.meta.url);
-const { chromium } = require(path.join(process.env.NPM_GLOBAL || '/usr/local/lib/node_modules', 'playwright'));
+const NPM_GLOBAL = process.env.NPM_GLOBAL || (fs.existsSync('/usr/local/lib/node_modules/playwright') ? '/usr/local/lib/node_modules' : execSync('npm root -g').toString().trim());
+const { chromium } = require(path.join(NPM_GLOBAL, 'playwright'));
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const EXT = path.join(ROOT, 'dist/ext');
@@ -47,8 +49,8 @@ const verdictOf = async (page, name) => {
   return shadow(page, (n) => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; const li = [...r.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n)); return li?.querySelector('.vx-verdict').textContent; }, name);
 };
 const panelText = (page, sel) => shadow(page, (s) => document.querySelector('#vaxcheck-panel')?.shadowRoot?.querySelector(s)?.textContent || '', sel);
-// 面板排序:可接種 → 待確認 → 不符合,小標題筆數 = 該組卡片數;判定依據 ✓ → 未確認 → ✗
-const ORDER = ['可接種', '待確認', '不符合'];
+// 面板排序:可接種 → 待確認 → 尚未開打 → 不符合,小標題筆數 = 該組卡片數;判定依據 ✓ → 未確認 → ✗
+const ORDER = ['可接種', '待確認', '尚未開打', '不符合'];
 const RANK = { 'g-y': 0, 'g-u': 1, 'g-n': 2 };
 async function checkLayout(pg, need = 2) {
   const layout = await shadow(pg, () => {
@@ -92,13 +94,13 @@ await niis.screenshot({ path: path.join(SHOTS, '2-niis-toast.png') });
 
 await page.bringToFront();
 check('合併後:肺鏈 PCV13 未滿 1 年 → 需確認', !!(await until(async () => (await verdictOf(page, '肺炎鏈球菌')) === '需確認', 5000)));
-const asks = await shadow(page, () => [...document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-check span')].map((s) => s.firstChild.textContent));
+const asks = await shadow(page, () => [...document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-check > span:first-child')].map((s) => s.firstChild.textContent));
 check('只問決定性條件(IPD/洗腎/機構住民)', asks.includes('IPD 高風險對象') && !asks.includes('具原住民身分'), asks.join('、'));
 await page.screenshot({ path: path.join(SHOTS, '3-merged-needs-input.png') });
 
-await shadow(page, () => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; [...r.querySelectorAll('.vx-check')].find((l) => l.textContent.includes('IPD 高風險')).querySelector('input').click(); });
+await shadow(page, () => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; [...r.querySelectorAll('.vx-check')].find((l) => l.textContent.includes('IPD 高風險')).querySelector('.vx-yes').click(); });
 await sleep(600);
-check('勾 IPD 高風險 → 8 週路徑 → 可打', (await verdictOf(page, '肺炎鏈球菌')) === '可打');
+check('勾 IPD 高風險「是」→ 8 週路徑 → 可打', (await verdictOf(page, '肺炎鏈球菌')) === '可打');
 check('面板分組(可接種在前)、判定依據 ✓ → 未確認 → ✗', ...(await checkLayout(page)));
 await shadow(page, () => document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-why').forEach((d, i) => { if (i < 2) d.open = true; }));
 await page.screenshot({ path: path.join(SHOTS, '4-panel-groups.png') });
@@ -249,6 +251,77 @@ const migrated = await entryAfterRestart(OLD_ENTRY);
 check('設定遷移:舊預設 IMUE2000 → ?type=icc', migrated === NEW_ENTRY, migrated);
 const kept = await entryAfterRestart(CUSTOM);
 check('設定遷移:自訂值保留', kept === CUSTOM, kept);
+
+// ───────── C. 面板四組 + 保底/升級(示範頁:同一套引擎與面板,asOf 可固定)─────────
+const demo = await ctx.newPage();
+await demo.goto('file://' + path.join(ROOT, 'dist/web/index.html'));
+await demo.waitForSelector('#samples button');
+const setAsOf = (d) => demo.evaluate((v) => { const el = document.querySelector('#asof'); el.value = v; el.dispatchEvent(new Event('change')); }, d);
+const pick = async (id) => { await demo.click(`#samples button[data-id="${id}"]`); await sleep(150); };
+const dLayout = () => demo.evaluate(() => {
+  const r = document.querySelector('#panel-host').shadowRoot;
+  return [...r.querySelectorAll('.vx-grp')].map((g) => ({ t: g.firstChild.textContent, n: Number(g.querySelector('.vx-grp-n').textContent),
+    items: [...g.nextElementSibling.querySelectorAll(':scope > .vx-v')].map((li) => li.querySelector('.vx-name').firstChild.textContent) }));
+});
+const dCard = (name) => demo.evaluate((n) => {
+  const li = [...document.querySelector('#panel-host').shadowRoot.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n));
+  return li && { word: li.querySelector('.vx-verdict').textContent, line: li.querySelector('.vx-line')?.textContent || '', up: li.querySelector('.vx-upline')?.textContent || '',
+    opt: li.querySelector('.vx-opt summary')?.textContent || '', asks: [...li.querySelectorAll('.vx-ask .vx-check > span:first-child')].map((s) => s.firstChild.textContent) };
+}, name);
+const dClick = (name, fn) => demo.evaluate(([n, f]) => {
+  const li = [...document.querySelector('#panel-host').shadowRoot.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n));
+  if (f === 'allno') li.querySelector('.vx-allno').click();
+  else [...li.querySelectorAll('.vx-check')].find((c) => c.textContent.includes(f)).querySelector('.vx-yes').click();
+}, [name, fn]);
+const where = (lay, name) => lay.find((g) => g.items.some((x) => x.includes(name)))?.t;
+const seen = new Set();
+const orderOk = (lay) => { lay.forEach((g) => seen.add(g.t)); const idx = lay.map((g) => ORDER.indexOf(g.t)); return idx.every((x, i) => x >= 0 && (i === 0 || x > idx[i - 1])) && lay.every((g) => g.n === g.items.length && g.n > 0); };
+
+await setAsOf('2026-10-15');
+await pick('J');
+let lay = await dLayout();
+let flu = await dCard('流感');
+check('C1 10/15 55 歲:流感在「待確認」(3a)', where(lay, '流感') === '待確認' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.n])));
+check('C1 3a 保底行:已符合第二階段,115/11/02 起可打', /已符合第二階段/.test(flu.line) && /115\/11\/02 起可打/.test(flu.line), flu.line);
+check('C1 3a 升級行:若確認 → 屬第一階段,今天即可打;含潛在疾病是/否', /若確認/.test(flu.up) && /屬第一階段,今天即可打/.test(flu.up) && flu.asks.some((a) => a.startsWith('具潛在疾病')), `${flu.up}|${flu.asks.length} 項`);
+await demo.screenshot({ path: path.join(SHOTS, '11-demo-3a-flu.png'), fullPage: true });
+
+await dClick('流感', '具潛在疾病');
+await sleep(150);
+lay = await dLayout();
+check('C2 勾潛在疾病「是」→ 流感移到「可接種」', where(lay, '流感') === '可接種' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.n])));
+await demo.screenshot({ path: path.join(SHOTS, '12-demo-yes-eligible.png'), fullPage: true });
+
+await pick('J');
+await dClick('流感', 'allno');
+await sleep(300);
+lay = await dLayout();
+flu = await dCard('流感');
+check('C3 第一階段條件「以上皆否」→ 流感移到「尚未開打」,115/11/02 起可打(第二階段)', where(lay, '流感') === '尚未開打' && flu.line.includes('115/11/02 起可打(第二階段') && orderOk(lay), `${flu.word}|${flu.line}`);
+await demo.screenshot({ path: path.join(SHOTS, '13-demo-no-not-open.png'), fullPage: true });
+
+await pick('K');
+lay = await dLayout();
+let pn = await dCard('肺炎鏈球菌');
+check('C4 肺鏈 PCV13 10 週:待確認,保底 116/08/06、升級今天(8 週)', where(lay, '肺炎鏈球菌') === '待確認' && /116\/08\/06 起可打/.test(pn.line) && /今天可打/.test(pn.up), `${pn.line}|${pn.up}`);
+await demo.screenshot({ path: path.join(SHOTS, '14-demo-3a-pneumo.png'), fullPage: true });
+await dClick('肺炎鏈球菌', 'allno');
+await sleep(300);
+lay = await dLayout();
+check('C4 肺鏈「以上皆否」→ 尚未開打(1 年路徑)', where(lay, '肺炎鏈球菌') === '尚未開打' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.n])));
+
+await pick('H');
+lay = await dLayout();
+check('C5 自費 PPV23 + 公費 PCV13 → 肺鏈在「不符合」(不再公費)', where(lay, '肺炎鏈球菌') === '不符合' && (await dCard('肺炎鏈球菌')).word === '不再公費' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.n])));
+check('C 四組小標題皆出現且順序正確', ORDER.every((t) => seen.has(t)), ORDER.filter((t) => seen.has(t)).join('→'));
+
+await setAsOf('2026-09-28');
+await pick('J');
+lay = await dLayout();
+flu = await dCard('流感');
+check('C6 9/28 55 歲:流感在「尚未開打」,選填提示可提早至 115/10/01,不列入待確認', where(lay, '流感') === '尚未開打' && /可提早至 115\/10\/01/.test(flu.opt) && flu.asks.length === 0, flu.opt);
+await demo.screenshot({ path: path.join(SHOTS, '15-demo-3b-flu-0928.png'), fullPage: true });
+await demo.close();
 
 await ctx.close();
 sites.close();

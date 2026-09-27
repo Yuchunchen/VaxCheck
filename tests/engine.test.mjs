@@ -178,17 +178,27 @@ test('流感 115:40 歲具潛在疾病(醫師勾)→ 第一階段可打;透析�
   assert.equal(w.evidence[0].key, 'fluUnderlyingCondition');
 });
 
-test('流感 115:25 歲男性開打前 → 尚未開打,只問決定性條件(不問孕婦、學生、原住民、幼兒)', () => {
+test('流感 115:25 歲男性開打前 → 尚未開打,決定性條件只列選填提示(不問孕婦、學生、原住民、幼兒)', () => {
   assert.equal(V(run(patient({ birth: '1958-03-02' }), '2027-07-01'), 'FLU').verdict, 'out_of_season');
   const v = V(run(patient({ birth: '2001-01-01' }), D), 'FLU');
   assert.equal(v.verdict, 'not_open');
-  const keys = v.decisiveManual.map((m) => m.key).sort();
+  // v0.4.12:開打前確認了也不能今天打 → 不符合 + 選填提示,不列入 decisiveManual(docs/10 §3.1)
+  assert.equal(v.display.bucket, 'ineligible');
+  assert.deepEqual(v.decisiveManual, []);
+  assert.equal(v.display.upgrade.date, '2026-10-01');
+  assert.equal(v.display.upgrade.decisive, false);
+  const keys = [...v.display.upgrade.requires].sort();
   assert.deepEqual(keys, ['animalWorker', 'childcareWorker', 'fluUnderlyingCondition', 'healthcareWorker', 'infantCaregiver', 'ltcResident'].sort());
   const f = V(run(patient({ birth: '2001-01-01', sex: 'F' }), D), 'FLU');
-  assert.ok(f.decisiveManual.some((m) => m.key === 'pregnant'), '女性問孕婦');
+  assert.ok(f.display.upgrade.requires.includes('pregnant'), '女性問孕婦');
   const s = V(run(patient({ birth: '2010-01-01' }), D), 'FLU');
-  assert.ok(s.decisiveManual.some((m) => m.key === 'fluStudent'), '16 歲問學生');
-  assert.ok(s.decisiveManual.some((m) => m.key === 'fluUnderlyingCondition'), '潛在疾病群無年齡上下限(計畫第二章肆),16 歲也問');
+  assert.ok(s.display.upgrade.requires.includes('fluStudent'), '16 歲問學生');
+  assert.ok(s.display.upgrade.requires.includes('fluUnderlyingCondition'), '潛在疾病群無年齡上下限(計畫第二章肆),16 歲也問');
+  // 開打後(10/15):確認後今日可打 → 待確認,列入 decisiveManual(現行行為)
+  const w = V(run(patient({ birth: '2001-01-01', vacc: [] }), '2026-10-15'), 'FLU');
+  assert.equal(w.verdict, 'needs_input');
+  assert.equal(w.display.bucket, 'confirm');
+  assert.deepEqual(w.decisiveManual.map((m) => m.key).sort(), keys);
 });
 
 test('代碼比對:細碼區間(重大傷病表)與附件1', () => {
@@ -395,10 +405,14 @@ test('COVID 115 幼兒免疫低下:從未接種 2 歲 → 2 劑 + 再增加 1 �
   assert.equal(t.dosing.dosesRequired, 3);
 });
 
-test('COVID 115:25 歲男性開打前 → 只問決定性條件;潛在疾病與流感共用同一題', () => {
-  const res = run(patient({ birth: '2001-01-01' }), D);
+test('COVID 115:25 歲男性開打前 → 只列選填提示;開打後只問決定性條件,潛在疾病與流感共用同一題', () => {
+  const pre = V(run(patient({ birth: '2001-01-01' }), D), 'COVID');
+  assert.equal(pre.verdict, 'not_open');
+  assert.equal(pre.display.bucket, 'ineligible');
+  assert.deepEqual(pre.decisiveManual, []);
+  const res = run(patient({ birth: '2001-01-01', vacc: [] }), '2026-10-15');
   const v = V(res, 'COVID');
-  assert.equal(v.verdict, 'not_open');
+  assert.equal(v.verdict, 'needs_input');
   const keys = v.decisiveManual.map((m) => m.key).sort();
   assert.deepEqual(keys, ['childcareWorker', 'covidImmunocompromised', 'covidOtherRisk', 'fluUnderlyingCondition', 'healthcareWorker', 'infantCaregiver', 'ltcResident'].sort());
   const q = res.ask.find((a) => a.key === 'fluUnderlyingCondition');

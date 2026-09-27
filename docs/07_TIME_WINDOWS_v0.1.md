@@ -39,6 +39,46 @@
 Result 新增:`vaccines[].upcoming: [{ groupId, label, opensOn, value }]`、`vaccines[].window: { from, to }`。
 explain 新增鍵:`scheduled`、`out_of_season`。
 
+## 3.1 保底與升級(v0.4.12 起,面板四組)
+
+同一支疫苗常有「已確定的保底路徑」與「需確認才成立、但較快的路徑」。引擎把兩層合併成一組保底(fallback)/升級(upgrade),寫在 `vaccines[].display`;既有 verdict 語意不變(`scheduled`、`needs_input` 等照舊),只新增欄位。
+
+兩層:
+- 對象群層(分階段):保底 = 值為 true 的對象群中最早可打者(已開打 = 今天,未開打 = 開打日)。升級 = 值為 unknown 的對象群中,確認後可打日最早且早於保底者;附需確認的人工條件或缺少的資料來源。候選對象群的劑次以「假設其人工條件已確認」重算(例:假設 IPD 高風險 → 肺鏈 8 週 case 直接成立)。確認後仍已完成/不再公費者不算升級。
+- 劑次層(`dosing.mode: cases`):保底 = 第一個確定(criteria 為 true 或無 criteria)且 `when` 命中的 case 結果;升級 = 在它之前遇到、criteria 為 unknown 的第一個 case 確認後的結果(`give` 算 earliestDate 與劑數),只在比保底好時列出。見 `dosing.fallback`、`dosing.upgrade`;既有 `alternative` 不動。
+- 最終可打日 = max(對象群開打日, 劑次 earliestDate)。兩層都有升級時取確認後最早者;同日的需確認條件取聯集,各路徑列在 `upgrade.paths`。
+
+分組(依序,第一個成立者為準;today = asOf):
+1. absolute 禁忌命中 → 不符合(保留「禁忌」標籤)。
+2. 保底今日可打(對象群已開打且劑次 due)→ 可接種;不列升級、不問任何條件。
+3. 保底存在但非今日可打(未開打、間隔未滿、已完成、不再公費):
+   - a. 升級確認後今日可打 → 待確認;卡片「保底行 + 升級行 + 是/否」。
+   - b. 升級確認後可打日較早但仍在未來 → 保底未開打/間隔未滿者歸「尚未開打」,已完成/不再公費者歸「不符合」;兩者都附選填提示(「若確認〔…〕可提早至 {日期}」)。
+   - c. 無升級 → 未開打/間隔未滿歸「尚未開打」(「{日期} 起可打(第 N 階段 / 與前劑間隔)」);已完成/不再公費歸「不符合」。
+4. 無保底、有升級:確認後今日可打 → 待確認(現行行為);否則(例:開打前、無任何確定對象群)→ 不符合 + 選填提示。
+5. 待查接種史、需人工判定、資料不足 → 待確認。
+6. 季末已過、全部對象群為 false → 不符合。
+7. 表上未涵蓋 → 待確認(不歸入可接種)。
+
+走一遍(115 年度流感,55 歲男,潛在疾病未確認,NIIS 已查、本季未接種)
+- 9/28:保底第二階段 11/2;升級第一階段 10/1(未來)→ 尚未開打,選填「若確認下列任一,可提早至 10/1」。
+- 10/15:升級今天 → 待確認;「已符合第二階段,11/2 起可打」+「若確認下列任一(7 項)→ 屬第一階段,今天即可打」。7 項 = 第一階段所有未確認的人工條件(潛在疾病、醫事人員、55 歲以上原住民、機構、嬰兒照顧者、托育、禽畜);「以上皆否」→ 尚未開打。
+- 11/3:第二階段已開打 → 可接種,不問。
+
+肺鏈(70 歲,僅 PCV13,IPD 未確認):10 週前 → 待確認(8 週路徑今天可打;否則 +1 年);3 週前 → 尚未開打(+1 年;選填「若確認…可提早至 +56 天」);PCV13+PPV23 最後一劑 6 年前 → 待確認(目前視為已完成;若確認 IPD 高風險今天可追加),3 年前 → 不符合(已完成;選填「+5 年起可追加」)。
+
+`display` 欄位:
+```
+display = {
+  bucket: "eligible" | "confirm" | "not_open" | "ineligible",
+  step: 1 | 2 | "3a" | "3b" | "3c" | 4 | 5 | 6 | 7,
+  fallback: { kind: "phase" | "dose" | "completed" | "not_funded" | null, date, groupId, caseId, label, phase, groupLabel, dose, doseUnknown } | null,
+  upgrade:  { kind: "phase" | "dose", date, groupId, caseId, label, phase, dose, requires: [manualKey | sourceKey], manual, sources,
+              decisive, paths: [...], items: [{ key, type: "manual" | "source", label, hint }] } | null
+}
+```
+`kind: "phase"` 指對象群層(含無分階段疫苗的對象群,例如肺鏈 19–64 歲 IPD 高風險)。
+
 ## 4. schema.json 變更
 
 ```json
@@ -137,6 +177,6 @@ explain 新增鍵:`scheduled`、`out_of_season`。
 ## 9. 待決
 
 - 寬限 14 天是否合適(可改成 0,或依疫苗別設定)。
-- `scheduled` 是否要出現在「可施打畫面」的主清單,或另列「即將開放」區。
+- ~~`scheduled` 是否要出現在「可施打畫面」的主清單,或另列「即將開放」區。~~ v0.4.12 決定:另列「尚未開打」組(§3.1)。
 - 歸檔是否也套用到中央規則集的疫苗層(例如某疫苗公費計畫整個結束)→ 提案是套用,但整份規則集不動。
 - archive 保存期限:永久,或依院內稽核年限。

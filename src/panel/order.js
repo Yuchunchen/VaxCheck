@@ -1,20 +1,17 @@
 // 面板排序(只在渲染層;engine Result 維持規則順序,稽核與匯出不受影響)。純函式,可在 Node 測試。
+// v0.4.12:分組依 engine 算好的 display.bucket(保底/升級,docs/07 §3.1),不再看 pending_case、alternative
 export const GROUPS = [
-  { key: 'go', label: '可接種' },
-  { key: 'check', label: '待確認' },
-  { key: 'no', label: '不符合' },
+  { key: 'eligible', label: '可接種' },
+  { key: 'confirm', label: '待確認' },
+  { key: 'not_open', label: '尚未開打' },
+  { key: 'ineligible', label: '不符合' },
 ];
+const KEYS = new Set(GROUPS.map((g) => g.key));
 
-const CHECK = new Set(['needs_input', 'unknown_source', 'needs_review', 'pending_history']);
-const NO = new Set(['ineligible', 'completed', 'not_funded', 'wait', 'not_open', 'out_of_season', 'scheduled']);
-
-/** 可接種 = eligible 且今日可打(dosing due);表上未列的 verdict 一律待確認(不歸入可接種) */
+/** 沒有 display 或 bucket 不在表上 → 待確認(不歸入可接種) */
 export function groupOf(v) {
-  if (v.verdict === 'eligible') return !v.dosing || v.dosing.status === 'due' ? 'go' : 'check';
-  if (v.dosing?.alternative || v.dosing?.status === 'pending_case') return 'check';   // 待定 case
-  if (CHECK.has(v.verdict)) return 'check';
-  if (NO.has(v.verdict)) return 'no';
-  return 'check';
+  const b = v?.display?.bucket;
+  return KEYS.has(b) ? b : 'confirm';
 }
 
 /** 回 [{ key, label, items }],空組不列;組內維持規則原始順序 */

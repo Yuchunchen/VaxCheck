@@ -2,8 +2,9 @@
 import { evalCond } from './conditions.js';
 import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
+import { computeDisplay, decisiveKeys } from './display.js';
 
-export const ENGINE_VERSION = '0.4.5';
+export const ENGINE_VERSION = '0.4.12';
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -33,6 +34,19 @@ function evaluateVaccine(vaccine, ctx) {
     const win = windowOf(g, vaccine);
     return { g, win, state: stateOf(win, ctx.asOf), t: evalCond(g.criteria, vctx) };
   });
+  const out = legacyVerdict(vaccine, vctx, groups);
+  // v0.4.12:保底/升級 → 面板分組;decisiveManual 只留「確認後今日可打」的條件(docs/10 §3.1)
+  out.display = computeDisplay(vaccine, vctx, groups, out);
+  out.decisiveManual = decisiveKeys(out.display, out.decisiveManual);
+  if (out.display.upgrade) out.display.upgrade.items = out.display.upgrade.requires.map((k) => (ctx.manualDefs[k]
+    ? { key: k, type: 'manual', label: ctx.manualDefs[k].label || k, hint: ctx.manualDefs[k].hint }
+    : { key: k, type: 'source', label: k }));
+  return finish(out, vaccine, ctx);
+}
+
+// v0.4.10 的 verdict 判定(既有欄位語意不變)
+function legacyVerdict(vaccine, vctx, groups) {
+  const ctx = vctx;
   const out = {
     vaccineId: vaccine.vaccineId, name: vaccine.name?.zh || vaccine.vaccineId,
     groupTrace: groups.map(({ g, t, state, win }) => groupOut(g, t, state, win)),
@@ -53,7 +67,7 @@ function evaluateVaccine(vaccine, ctx) {
       else if (t.v === true) out.precautions.push({ id: c.id, label: c.label });
       else if (t.v === null && c.manual) out.reminders.push({ id: c.id, key: c.manual, label: c.label });
     }
-    if (out.verdict) return finish(out, vaccine, ctx);
+    if (out.verdict) return out;
     const override = matched.find((x) => x.g.dosingOverride)?.g.dosingOverride;
     const d = computeDosing(override || vaccine.dosing, vaccine, vctx);
     out.dosing = d;
@@ -61,14 +75,14 @@ function evaluateVaccine(vaccine, ctx) {
       if (d.pendingManual?.length) { out.verdict = 'needs_input'; out.decisiveManual = d.pendingManual; }
       else { out.verdict = 'needs_review'; out.missingSources = d.pendingSources || []; }
     } else out.verdict = DOSING_TO_VERDICT[d.status];
-    return finish(out, vaccine, ctx);
+    return out;
   }
 
   const upcoming = groups.filter((x) => x.state === 'scheduled' && x.t.v !== false);
   out.upcoming = upcoming.map(({ g, t, state, win }) => groupOut(g, t, state, win));
   const sched = upcoming.filter((x) => x.t.v === true).sort((a, b) => a.win.from.localeCompare(b.win.from));
-  if (sched.length) { out.verdict = 'scheduled'; out.opensOn = sched[0].win.from; out.matchedGroups = [groupOut(sched[0].g, sched[0].t, 'scheduled', sched[0].win)]; return finish(out, vaccine, ctx); }
-  if (groups.length && groups.every((x) => x.state === 'expired')) { out.verdict = 'out_of_season'; return finish(out, vaccine, ctx); }
+  if (sched.length) { out.verdict = 'scheduled'; out.opensOn = sched[0].win.from; out.matchedGroups = [groupOut(sched[0].g, sched[0].t, 'scheduled', sched[0].win)]; return out; }
+  if (groups.length && groups.every((x) => x.state === 'expired')) { out.verdict = 'out_of_season'; return out; }
 
   // 尚未開打(所有群組都還沒到期間):仍算出「若符合哪些條件」供事先確認
   const notOpen = !active.length && upcoming.length > 0;
@@ -83,7 +97,7 @@ function evaluateVaccine(vaccine, ctx) {
     out.verdict = 'not_open';
     out.decisiveManual = uniq(reach.flatMap(({ a }) => a.manual));
     out.reachableGroups = reach.map(({ x }) => ({ groupId: x.g.groupId, label: x.g.label, providedBy: x.g.providedBy || 'central' }));
-    return finish(out, vaccine, ctx);
+    return out;
   }
   if (reach.length) {
     out.verdict = 'needs_input';
@@ -92,7 +106,7 @@ function evaluateVaccine(vaccine, ctx) {
   } else if (out.missingSources.length) out.verdict = 'unknown_source';
   else out.verdict = 'ineligible';
   out.reasons = active.filter((x) => x.t.v === false).map((x) => `${x.g.label}:${x.t.why.join(';')}`);
-  return finish(out, vaccine, ctx);
+  return out;
 }
 
 function fill(tpl, vars) { return tpl.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? '')); }

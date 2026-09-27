@@ -83,45 +83,73 @@ function codesInHas(p, out = new Set()) {
 }
 const caseInfo = (c) => ({ id: c.id, label: c.label, note: c.then.note, sourceRef: c.sourceRef });
 
+// 一個 case 的 then → 劑次結果(complete / notFunded / review / give 算 earliestDate)
+function caseResult(c, recs, ctx, flags) {
+  const info = caseInfo(c);
+  const a = c.then.action;
+  if (a === 'complete') return { status: 'completed', case: info, lastDate: lastDateOf(recs.filter((r) => codesInHas(c.when).has(r.code))), flags };
+  if (a === 'notFunded') return { status: 'not_funded', case: info, flags };
+  if (a === 'review') return { status: 'needs_review', case: info, flags };
+  // give
+  const from = c.then.intervalFrom || [...codesInHas(c.when)];
+  const prior = recs.filter((r) => from.includes(r.code));
+  if (prior.some((r) => !r.date)) flags.push('NEED_DATE_CONFIRMATION');
+  const last = lastDateOf(prior);
+  let earliest = ctx.asOf;
+  if (last && c.then.minInterval) earliest = maxDate(earliest, addInterval(last, c.then.minInterval));
+  if (last && c.then.minIntervalDays != null) earliest = maxDate(earliest, addDays(last, c.then.minIntervalDays));
+  return { status: earliest <= ctx.asOf ? 'due' : 'wait', case: info, dose: c.then.dose || 1, earliestDate: earliest, lastDate: last, flags };
+}
+
+/** 劑次層摘要(dosing.fallback / dosing.upgrade 共用) */
+export function brief(r) {
+  if (!r) return null;
+  return { status: r.status, caseId: r.case?.id || null, label: r.case?.label || r.label || null, earliestDate: r.earliestDate || null, dose: r.dose ?? null, lastDate: r.lastDate || null };
+}
+const GIVE = new Set(['due', 'wait']);
+// 待定 case 確認後是否比保底更好:give 且較早,或保底為已完成/不再公費/需人工/不存在;review 視為「今天可能可打」
+function improves(up, fb, asOf) {
+  if (!up || !(GIVE.has(up.status) || up.status === 'needs_review')) return false;
+  if (!fb || !GIVE.has(fb.status)) return true;
+  return (up.earliestDate || asOf) < fb.earliestDate;
+}
+
 export function computeCases(dosing, vaccine, ctx) {
   const facts = ctx.facts;
-  if (!sourceOk(facts, 'niis')) return { status: 'pending_history' };
+  if (!sourceOk(facts, 'niis')) return { status: 'pending_history', fallback: null, upgrade: null };
   const recs = recsOf(facts);
   const flags = [];
   if (dosing.unknownTypeCodes?.length && recs.some((r) => dosing.unknownTypeCodes.includes(r.code))) {
-    return { status: 'needs_review', flags: ['NEED_HISTORY_CONFIRMATION'], note: '接種史有型別不明的肺鏈紀錄,請人工確認' };
+    const res = { status: 'needs_review', flags: ['NEED_HISTORY_CONFIRMATION'], note: '接種史有型別不明的肺鏈紀錄,請人工確認' };
+    return { ...res, fallback: brief(res), upgrade: null };
   }
   let pending = null;
-  const withPending = (res) => (pending ? { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: res, flags } : res);
+  // §4 劑次層:fallback = 第一個確定 case 的結果;upgrade = 其前第一個待定 case 確認後的結果(較好時才列)
+  const layers = (res) => ({
+    fallback: brief(res),
+    upgrade: pending && improves(pending.res, res, ctx.asOf) ? { ...brief(pending.res), requires: pending.manual, sources: pending.sources } : null,
+  });
+  const withPending = (res) => (pending ? { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: res, flags, ...layers(res) } : { ...res, ...layers(res) });
 
   for (const c of dosing.cases) {
     if (!evalHist(c.when, recs)) continue;
     if (c.criteria) {
       const t = evalCond(c.criteria, ctx);
       if (t.v === false) continue;
-      if (t.v === null) { if (!pending) pending = { info: caseInfo(c), manual: t.manual, sources: t.sources }; continue; }
+      if (t.v === null) { if (!pending) pending = { info: caseInfo(c), manual: t.manual, sources: t.sources, res: caseResult(c, recs, ctx, []) }; continue; }
     }
-    const info = caseInfo(c);
-    const a = c.then.action;
-    if (a === 'complete') return withPending({ status: 'completed', case: info, lastDate: lastDateOf(recs.filter((r) => codesInHas(c.when).has(r.code))), flags });
-    if (a === 'notFunded') return withPending({ status: 'not_funded', case: info, flags });
-    if (a === 'review') return { status: 'needs_review', case: info, flags };
-    // give
-    const from = c.then.intervalFrom || [...codesInHas(c.when)];
-    const prior = recs.filter((r) => from.includes(r.code));
-    if (prior.some((r) => !r.date)) flags.push('NEED_DATE_CONFIRMATION');
-    const last = lastDateOf(prior);
-    let earliest = ctx.asOf;
-    if (last && c.then.minInterval) earliest = maxDate(earliest, addInterval(last, c.then.minInterval));
-    if (last && c.then.minIntervalDays != null) earliest = maxDate(earliest, addDays(last, c.then.minIntervalDays));
-    const res = { status: earliest <= ctx.asOf ? 'due' : 'wait', case: info, dose: c.then.dose || 1, earliestDate: earliest, lastDate: last, flags };
-    if (res.status === 'due') return res;            // 今日已可打:不必等待定條件
+    const res = caseResult(c, recs, ctx, flags);
+    if (res.status === 'needs_review') return { ...res, ...layers(res), upgrade: null };
+    if (res.status === 'due') return { ...res, ...layers(res) };   // 今日已可打:不必等待定條件
     return withPending(res);
   }
-  if (pending) return { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: null, flags };
-  return { status: 'needs_review', note: '接種史組合未定義,請人工判定', flags };
+  if (pending) return { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: null, flags, ...layers(null) };
+  const res = { status: 'needs_review', note: '接種史組合未定義,請人工判定', flags };
+  return { ...res, fallback: brief(res), upgrade: null };
 }
 
 export function computeDosing(dosing, vaccine, ctx) {
-  return dosing.mode === 'cases' ? computeCases(dosing, vaccine, ctx) : computeSeries(dosing, vaccine, ctx);
+  if (dosing.mode === 'cases') return computeCases(dosing, vaccine, ctx);
+  const d = computeSeries(dosing, vaccine, ctx);
+  return { ...d, fallback: d.status === 'pending_history' ? null : brief(d), upgrade: null };   // series 無待定路徑
 }

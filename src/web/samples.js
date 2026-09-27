@@ -9,6 +9,8 @@ export const SAMPLES = [
   { id: 'G', title: '58 歲女,糖尿病規律就醫', birth: '1968-05-05', sex: 'F', dx: [['E119', '2026-01-10', '第二型糖尿病'], ['E119', '2026-04-10', '第二型糖尿病']], vacc: [] },
   { id: 'H', title: '66 歲女,自費 PPV23 + 公費 PCV13', birth: '1960-02-02', sex: 'F', vacc: [['PPV23', '2020-01-01', '自費'], ['PCV13', '2024-01-01', '公費']] },
   { id: 'I', title: '52 歲男,乳癌化療中', birth: '1974-08-08', sex: 'M', dx: [['C509', '2025-11-01', '乳房惡性腫瘤']], meds: [['L01CD01', '2026-08-20', 'Paclitaxel']], vacc: [] },
+  { id: 'J', title: '55 歲男,潛在疾病未確認(流感第二階段)', birth: '1971-05-05', sex: 'M', vacc: [] },
+  { id: 'K', title: '70 歲男,8/6 打過 PCV13(8 週 vs 1 年)', birth: '1956-03-02', sex: 'M', vacc: [['PCV13', '2026-08-06']] },
 ];
 
 export function toFacts(s, { niisQueried = true } = {}) {
