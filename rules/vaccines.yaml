@@ -6,10 +6,10 @@
 # 狀態:
 #   - 肺炎鏈球菌 PCV20/21:正式(Policy 2026-08-10);IPD 高風險證據改用疾管署官方 ICD 參考表(docs/11)
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
-#     高風險慢性病 ICD 附件1 尚未取得 → 潛在疾病先由醫師勾選(透析/CKD 旗標自動預勾)
+#     潛在疾病證據:附件1 高風險慢性病 ICD(61 項)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 透析/CKD 旗標
 # =====================================================================
 
-ruleSetVersion: 2026.09.27-v042
+ruleSetVersion: 2026.09.27-v043
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -74,6 +74,17 @@ sources:
     url: https://www.cdc.gov.tw/Category/QAPage/73XYTJQLONnIQaCBBi5YVw
     watch: true
     kind: qa
+  - id: SRC_CDC_FLU_ANNEX1_115
+    title: 115年度流感疫苗接種計畫 附件1 高風險慢性病人疾病代碼一覽表(YC 提供 PDF)
+    issuer: 衛生福利部疾病管制署
+    url: https://www.cdc.gov.tw/File/Get/om1fPXrhC0oM-kq9v-m4VQ
+    watch: true
+    kind: other
+  - id: SRC_NHI_CATASTROPHIC_1140101
+    title: 全民健康保險保險對象免自行負擔費用辦法第二條附表一 重大傷病項目(114-01-01 起適用,ICD-10-CM 2023 版;113-09-16 修正,YC 提供 PDF)
+    issuer: 衛生福利部
+    date: "2024-09-16"
+    kind: other
   - id: SRC_TPE_FLU_QA_115
     title: 臺北市政府衛生局 公費流感疫苗常見問答(年齡以「接種年減出生年」計算;更新 115-09-02)— 次級來源,待計畫全文核對
     issuer: 臺北市政府衛生局
@@ -93,6 +104,13 @@ codeLists:
     label: 抗癌藥物(L01;是否含 L02 荷爾蒙療法待 YC 決定)
     system: ATC
     codes: ["L01*"]
+  # --- 流感 115 附件1 高風險慢性病人(逐類轉錄;門/住診紀錄 1 筆即可)---
+  FLU_CHRONIC_DX:    { label: 高風險慢性病(流感計畫附件1), system: ICD-10-CM, file: codelists/flu-highrisk-chronic.cdc-115.json#chronic }
+  # --- 健保重大傷病項目(114-01-01 起,2023 版)— 診斷碼推估,以重大傷病證明為準 ---
+  NHI_CATASTROPHIC_DX:      { label: 重大傷病項目診斷碼(推估), system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#general }
+  NHI_CATASTROPHIC_1Y_DX:   { label: "重大傷病項目診斷碼(一年內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within365 }
+  NHI_CATASTROPHIC_6M_DX:   { label: "重大傷病項目診斷碼(六個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within183 }
+  NHI_CATASTROPHIC_1M_DX:   { label: "重大傷病項目診斷碼(急性一個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within31 }
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
     label: 透析相關診斷
@@ -120,12 +138,17 @@ manualConditions:
   # --- 流感 115 年度對象(健保雲端查不到 → 醫師勾選)---
   - key: fluUnderlyingCondition
     label: 具潛在疾病(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
-    hint: 高風險慢性病 = 有門/住診紀錄之糖尿病、慢性肝病(含肝炎、肝硬化)、心血管疾病(不含單純高血壓)、慢性肺病、腎臟疾病、免疫低下(含 HIV);無紀錄者可經醫師評估認定。另含 BMI≥30、罕見疾病、重大傷病
-    evidence:                                    # 附件1 ICD 表未取得前,只用透析/CKD 旗標預勾(腎臟疾病)
+    hint: 高風險慢性病依流感計畫附件1(糖尿病、慢性心肺肝腎疾病、腦血管與神經退化疾病、自體免疫、免疫缺乏/HIV、肥胖症 E66、脾臟缺損等;單純高血壓 I10 不算),有門/住診紀錄即可,無紀錄可經醫師評估。重大傷病以證明為準。BMI≥30、罕見疾病需醫師確認
+    evidence:                                    # 病歷命中 → 自動預勾、標依據;醫師可取消
       any:
         - flag: dialysis
         - flag: ckd
         - diagnosis: { $list: DIALYSIS_DX }
+        - diagnosis: { $list: FLU_CHRONIC_DX }                        # 附件1,1 筆門/住診紀錄即可
+        - diagnosis: { $list: NHI_CATASTROPHIC_DX }                   # 重大傷病:診斷碼推估
+        - diagnosis: { $list: NHI_CATASTROPHIC_1Y_DX, withinDays: 365 }
+        - diagnosis: { $list: NHI_CATASTROPHIC_6M_DX, withinDays: 183 }
+        - diagnosis: { $list: NHI_CATASTROPHIC_1M_DX, withinDays: 31 }
   - key: preschoolChild
     label: 國小入學前幼兒(尚未註冊國小)
     hint: 滿 6 個月(以出生年月日足月計)至國小註冊就學前
@@ -320,7 +343,7 @@ vaccines:
         - { phase: 1, start: "2026-10-01", label: 第一階段 }
         - { phase: 2, start: "2026-11-02", label: 第二階段 }
     sourceIds: [SRC_CDC_FLU_PR_20260825, SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_QA_115]
-    notes: 第一階段 11 類對象;第二階段 50–64 歲無高風險慢性病成人。高風險慢性病 ICD 表(計畫附件1)待補為病歷證據。
+    notes: 第一階段 11 類對象;第二階段 50–64 歲無高風險慢性病成人。潛在疾病證據用附件1 ICD 與重大傷病 ICD(推估)。
 
     eligibilityGroups:
       # ---------- 第一階段(2026-10-01 起)----------
@@ -358,6 +381,7 @@ vaccines:
       - groupId: FLU_UNDERLYING_19_64
         label: 19–64 歲具潛在疾病者(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
         priorityPhase: 1
+        sourceIds: [SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101]
         criteria:
           all:
             - ageByYear: { min: 19, max: 64 }    # 18 歲以下多已涵蓋於幼兒/學生;年齡算法待計畫全文核對

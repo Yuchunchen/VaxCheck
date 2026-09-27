@@ -173,6 +173,42 @@ test('流感 115:25 歲男性開打前 → 尚未開打,只問決定性條件(�
   assert.ok(!s.decisiveManual.some((m) => m.key === 'fluUnderlyingCondition'), '未滿 19 歲不走潛在疾病群');
 });
 
+test('代碼比對:細碼區間(重大傷病表)與附件1', () => {
+  const cl = rules().codeLists;
+  const cat = cl.NHI_CATASTROPHIC_DX.codes, chr = cl.FLU_CHRONIC_DX.codes;
+  assert.ok(matchCode('M05.79', cat), 'RA M05.70-M06.09');
+  assert.ok(!matchCode('M06.1', cat), 'M06.1 不在 RA 區間');
+  assert.ok(matchCode('M068A', cat), 'M06.80-M06.8A 含字母上界');
+  assert.ok(matchCode('F01.B0', cat), '失智 F01.A11-F01.C4');
+  assert.ok(matchCode('F3240', cat) && !matchCode('F32.1', cat), '情感性疾患 F32.2-F32.5');
+  assert.ok(matchCode('C73', cat) && matchCode('C50.911', cat) && matchCode('C7A.00', cat));
+  assert.ok(!matchCode('C94.40', cat) && matchCode('C94.30', cat), '不含 C94.4、C94.6');
+  assert.ok(matchCode('E119', chr) && matchCode('I110', chr) && matchCode('Z90.81', chr) && matchCode('M941', chr));
+  assert.ok(!matchCode('I10', chr), '單純高血壓不算');
+  assert.ok(!matchCode('M94.2', chr));
+});
+
+test('流感 115 潛在疾病證據:附件1、重大傷病推估、時效', () => {
+  const at = '2026-10-05';
+  const P = (dx, extra = {}) => V(run(patient({ birth: '1986-01-01', vacc: [], dx, ...extra }), at), 'FLU');
+  const dm = P([['E119', '2026-06-01']]);
+  assert.equal(dm.verdict, 'eligible');
+  assert.equal(dm.evidence[0].key, 'fluUnderlyingCondition');
+  assert.match(dm.evidence[0].why.join(), /附件1/);
+  assert.equal(P([['I10', '2026-06-01']]).verdict, 'needs_input', '單純高血壓 → 仍要問');
+  const ca = P([['C50911', '2026-03-01']]);
+  assert.equal(ca.verdict, 'eligible');
+  assert.match(ca.evidence[0].why.join(), /重大傷病/);
+  assert.equal(P([['F05', '2026-02-01']]).verdict, 'needs_input', '譫妄超過六個月');
+  assert.equal(P([['F05', '2026-08-01']]).verdict, 'eligible');
+  // 醫師取消 → 不再自動
+  assert.equal(P([['E119', '2026-06-01']], { manual: { fluUnderlyingCondition: false } }).verdict, 'needs_input');
+  // 58 歲糖尿病:第一階段就可打,不用等 11/2
+  const d58 = V(run(patient({ birth: '1968-05-05', vacc: [], dx: [['E1165', '2026-05-01']] }), at), 'FLU');
+  assert.equal(d58.verdict, 'eligible');
+  assert.ok(d58.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING_19_64'));
+});
+
 test('流感 115 幼兒:未滿 6 個月不符;2 歲首次 → 本季 2 劑、第 2 劑間隔 4 週', () => {
   const baby = V(run(patient({ birth: '2026-05-01', vacc: [] }), '2026-10-05'), 'FLU');
   assert.notEqual(baby.verdict, 'eligible', '5 個月大');
