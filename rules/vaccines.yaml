@@ -10,7 +10,7 @@
 #   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
 # =====================================================================
 
-ruleSetVersion: 2026.09.28-v0411
+ruleSetVersion: 2026.09.28-v0412
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -91,6 +91,10 @@ sources:
     issuer: 衛生福利部(國民健康署)
     date: "2026-07-23"
     watch: true
+    kind: other
+  - id: SRC_CDC_FLU_MANUAL_115
+    title: 流感疫苗接種計畫工作手冊(衛生福利部疾病管制署 115 年 7 月;附件14 接種對象代碼對照表;第四章壹五(四)以職業別為優先填報類別;YC 提供 PDF,sha256 b99aa663a5be5284…)
+    issuer: 衛生福利部疾病管制署
     kind: other
   - id: SRC_TPE_FLU_QA_115
     title: 臺北市政府衛生局 公費流感疫苗常見問答(年齡以「接種年減出生年」計算;更新 115-09-02)— 次級來源,已由計畫全文第二章參確認
@@ -429,21 +433,48 @@ vaccines:
       phases:
         - { phase: 1, start: "2026-10-01", label: 第一階段 }
         - { phase: 2, start: "2026-11-02", label: 第二階段 }
-    sourceIds: [SRC_CDC_FLU_PR_20260825, SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_QA_115]
+    sourceIds: [SRC_CDC_FLU_PR_20260825, SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_QA_115, SRC_CDC_FLU_MANUAL_115]
+    reportCodes:                                 # 工作手冊附件14;只供填報顯示,不影響資格
+      label: NIIS 接種對象別
+      sourceRef: SRC_CDC_FLU_MANUAL_115
+      occupationalFirst: true                    # 第四章壹五(四):以職業別為優先填報類別;非職業別之間手冊未定順序 → 依附件14 表列順序
+      table:
+        - { code: F01,    label: 6 個月以上至國小入學前幼兒 }
+        - { code: F02A01, label: 國小學童 }
+        - { code: F02A02, label: 國中生 }
+        - { code: F02A03, label: 高中/職、五專 1 至 3 年級學生 }
+        - { code: F02B,   label: 幼兒園及托育機構工作人員、居家托育人員(保母), occupational: true }
+        - { code: F03A,   label: 滿 50 歲以上成人(衛生所或合約院所內), note: 社區/企業接種站/到宅接種改填 F03B }
+        - { code: F03B,   label: 滿 50 歲以上成人(社區/企業接種站/到宅接種) }
+        - { code: F04A,   label: 安養、長期照顧等機構受照顧者 }
+        - { code: F04B,   label: 機構所屬直接照顧工作人員, occupational: true }
+        - { code: F05A,   label: 孕婦 }
+        - { code: F05B,   label: 6 個月內嬰兒之雙親或實際扶養者 }
+        - { code: F06A,   label: 高風險慢性病患 }
+        - { code: F06B,   label: 罕見疾病患者 }
+        - { code: F06C,   label: 重大傷病患者 }
+        - { code: F07A,   label: 具執業登記之醫事人員, occupational: true }
+        - { code: F07B,   label: 醫療院所非執登工作人員, occupational: true }
+        - { code: F07C,   label: 防疫相關人員, occupational: true }
+        - { code: F07D,   label: 禽畜養殖/動物防疫相關行業工作人員, occupational: true }
+        - { code: F09,    label: 擴大對象 }
     notes: 第一階段 11 類對象;第二階段 50–64 歲無高風險慢性病成人。潛在疾病證據用附件1 ICD 與重大傷病 ICD(推估)。
 
     eligibilityGroups:
       # ---------- 第一階段(2026-10-01 起)----------
       - groupId: FLU_HCW
         label: 醫事及衛生等單位之防疫相關人員
+        reportCodes: [F07A, F07B, F07C]
         priorityPhase: 1
         criteria: { manual: healthcareWorker }
       - groupId: FLU_ELDER_65
         label: 65 歲以上長者
+        reportCodes: [F03A]
         priorityPhase: 1
         criteria: { ageByYear: { min: 65 } }
       - groupId: FLU_INDIGENOUS_55
         label: 55 歲以上原住民
+        reportCodes: [F03A]
         priorityPhase: 1
         criteria:
           all:
@@ -451,10 +482,12 @@ vaccines:
             - manual: indigenous
       - groupId: FLU_LTC
         label: 安養、長期照顧(服務)等機構之受照顧者及所屬工作人員
+        reportCodes: [F04A, F04B]
         priorityPhase: 1
         criteria: { manual: ltcResident }
       - groupId: FLU_PRESCHOOL
         label: 滿 6 個月以上至國小入學前幼兒
+        reportCodes: [F01]
         priorityPhase: 1
         sourceIds: [SRC_CDC_FLU_QA_CHILD]
         criteria:
@@ -463,10 +496,15 @@ vaccines:
             - manual: preschoolChild
       - groupId: FLU_PREGNANT
         label: 孕婦
+        reportCodes: [F05A]
         priorityPhase: 1
         criteria: { manual: pregnant }
       - groupId: FLU_UNDERLYING
         label: 具潛在疾病者(高風險慢性病、BMI≥30、罕見疾病、重大傷病)
+        reportCodes:                             # 依命中的病歷證據決定;醫師手動勾選(含 BMI≥30)則三者擇一
+          - { code: F06A, evidence: [FLU_CHRONIC_DX, DIALYSIS_DX, "flag:dialysis", "flag:ckd"] }
+          - { code: F06B, evidence: [RARE_DISEASE_DX] }
+          - { code: F06C, evidence: [NHI_CATASTROPHIC_DX, NHI_CATASTROPHIC_1Y_DX, NHI_CATASTROPHIC_6M_DX, NHI_CATASTROPHIC_1M_DX] }
         priorityPhase: 1
         sourceIds: [SRC_CDC_FLU_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101, SRC_HPA_RARE_1150723]
         criteria:
@@ -475,23 +513,28 @@ vaccines:
             - manual: fluUnderlyingCondition
       - groupId: FLU_INFANT_CAREGIVER
         label: 6 個月內嬰兒之雙親或實際扶養者
+        reportCodes: [F05B]
         priorityPhase: 1
         criteria: { manual: infantCaregiver }
       - groupId: FLU_CHILDCARE_STAFF
         label: 幼兒園、托育機構工作人員及居家托育人員(保母)
+        reportCodes: [F02B]
         priorityPhase: 1
         criteria: { manual: childcareWorker }
       - groupId: FLU_STUDENT
         label: 國小、國中、高中、高職、五專 1–3 年級學生
+        reportCodes: [F02A01, F02A02, F02A03]
         priorityPhase: 1
         criteria: { manual: fluStudent }
       - groupId: FLU_ANIMAL
         label: 禽畜養殖等相關行業工作人員、動物園工作人員及動物防疫人員
+        reportCodes: [F07D]
         priorityPhase: 1
         criteria: { manual: animalWorker }
       # ---------- 第二階段(2026-11-02 起)----------
       - groupId: FLU_ADULT_50_64
         label: 50–64 歲成人(無高風險慢性病者第二階段)
+        reportCodes: [F03A]
         priorityPhase: 2
         criteria: { ageByYear: { min: 50, max: 64 } }
 

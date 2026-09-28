@@ -146,11 +146,26 @@ export function renderPanel(wrap, state, on) {
         ));
       const body = li.querySelector('.vx-body');
 
-      // 病歷自動判定(可取消)
+      // NIIS 接種對象別代碼(填報用;職業別優先)
+      const rp = v.report;
+      if (rp && v.display?.bucket !== 'ineligible' && !['completed', 'not_funded', 'contraindicated'].includes(v.verdict)) {   // 只要有已符合的群(今日或開打後)就給填報代碼
+        const opt = (o) => `${o.code} ${o.label}`;
+        const notes = [...new Set(rp.primary.map((o) => o.note).filter(Boolean))];
+        body.append(h('div', { class: 'vx-code' },
+          h('div', { class: 'vx-code-main' }, h('span', { class: 'vx-code-k' }, rp.label),
+            rp.primary.flatMap((o, i) => [i ? h('span', { class: 'vx-code-or' }, '/') : null, h('b', { class: 'vx-code-v' }, o.code)]),
+            h('span', {}, rp.choose ? `(擇一:${rp.primary.map(opt).join('、')})` : rp.primary[0].label)),
+          rp.primary.some((o) => o.icd.length) && h('small', {}, `依據 ICD:${[...new Set(rp.primary.flatMap((o) => o.icd))].join('、')}`),
+          rp.others.length > 0 && h('small', {}, `亦符合:${rp.others.map(opt).join('、')}`),
+          notes.map((n) => h('small', {}, n)),
+          rp.hint && h('small', {}, rp.hint)));
+      }
+      // 病歷自動判定(可取消):逐項列出命中的 ICD / 旗標
       for (const e of v.evidence) {
         body.append(h('div', { class: 'vx-evid' },
-          h('span', {}, `依病歷判定「${e.label}」:${e.why.join(';')}`),
-          h('button', { class: 'vx-link', onclick: () => on.manual(e.key, false) }, '不符合,取消')));
+          h('div', { class: 'vx-evid-t' }, h('span', {}, `依病歷判定「${e.label}」`),
+            h('button', { class: 'vx-link', onclick: () => on.manual(e.key, false) }, '不符合,取消')),
+          h('ul', { class: 'vx-evid-l' }, e.why.map((w) => h('li', {}, w)))));
       }
       // 是/否勾選:勾「是」「否」都重算;再按一次同一鈕 = 取消。多項時可「以上皆否」
       const yn = (items) => {

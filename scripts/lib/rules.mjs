@@ -94,6 +94,7 @@ function walk(node, fn) {
   fn(node);
   for (const v of Object.values(node)) walk(v, fn);
 }
+const FLAGS = new Set(['homeCare', 'dialysis', 'ckd', 'hospice', 'longTermCare']);
 export function semanticCheck(rs, niisCodes, errors) {
   const canon = new Set(niisCodes.codes.map((c) => c.canonical));
   const lists = new Set(Object.keys(rs.codeLists || {}));
@@ -121,6 +122,23 @@ export function semanticCheck(rs, niisCodes, errors) {
       (g.sourceIds || []).forEach((s) => sources.has(s) || errors.push(`${g.groupId}:來源不存在 ${s}`));
       checkTree(g.criteria, `${v.vaccineId}.${g.groupId}`);
       if (g.effective && v.season && (g.effective.from < v.season.start || (g.effective.to && g.effective.to > v.season.end))) errors.push(`${g.groupId}:effective 超出 season`);
+      if (g.reportCodes) {
+        const table = new Set((v.reportCodes?.table || []).map((r) => r.code));
+        if (!table.size) errors.push(`${g.groupId}:有 reportCodes 但 ${v.vaccineId} 未定義 reportCodes.table`);
+        for (const e of g.reportCodes) {
+          const code = typeof e === 'string' ? e : e.code;
+          if (table.size && !table.has(code)) errors.push(`${g.groupId}:接種對象別代碼不在表內 ${code}`);
+          for (const r of (typeof e === 'string' ? [] : e.evidence)) {
+            if (r.startsWith('flag:')) { if (!FLAGS.has(r.slice(5))) errors.push(`${g.groupId}:reportCodes 證據旗標不存在 ${r}`); }
+            else if (!lists.has(r)) errors.push(`${g.groupId}:reportCodes 證據清單不存在 ${r}`);
+          }
+        }
+      }
+    }
+    if (v.reportCodes) {
+      const seen = new Set();
+      for (const r of v.reportCodes.table) { if (seen.has(r.code)) errors.push(`${v.vaccineId}:接種對象別代碼重複 ${r.code}`); seen.add(r.code); }
+      if (v.reportCodes.sourceRef && !sources.has(v.reportCodes.sourceRef)) errors.push(`${v.vaccineId}:reportCodes 來源不存在 ${v.reportCodes.sourceRef}`);
     }
     for (const c of v.contraindications || []) { if (c.criteria) checkTree(c.criteria, `${v.vaccineId}.${c.id}`); if (c.manual && !manual.has(c.manual)) errors.push(`${v.vaccineId}.${c.id}:人工條件未宣告 ${c.manual}`); }
     for (const c of v.dosing?.cases || []) {

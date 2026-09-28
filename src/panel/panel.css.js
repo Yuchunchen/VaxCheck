@@ -30,7 +30,16 @@ export const CSS = `
 .vx-line { margin: 4px 0 0; }
 .vx-sub { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
 .vx-warn { color: var(--wait); }
-.vx-evid { display:flex; flex-wrap: wrap; gap: 4px 8px; justify-content: space-between; align-items: baseline; margin-top: 8px; padding: 6px 8px; background: var(--wash); font-size: 13px; }
+.vx-evid { margin-top: 8px; padding: 6px 8px; background: var(--wash); font-size: 13px; }
+.vx-evid-t { display:flex; flex-wrap: wrap; gap: 4px 8px; justify-content: space-between; align-items: baseline; }
+.vx-evid-l { margin: 4px 0 0; padding-left: 18px; }
+.vx-evid-l li { margin: 2px 0; word-break: break-word; }
+.vx-code { margin-top: 8px; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 6px; font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+.vx-code-main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; }
+.vx-code-k { color: var(--muted); }
+.vx-code-v { font-size: 16px; font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: .5px; user-select: all; }
+.vx-code-or { color: var(--muted); }
+.vx-code small { color: var(--muted); }
 .vx-link { border:0; background:none; color: var(--stop); cursor:pointer; font: inherit; white-space: nowrap; text-decoration: underline; padding: 0; }
 .vx-ask { margin: 10px 0 0; padding: 8px 10px; border: 1px dashed var(--wait); border-radius: 4px; }
 .vx-ask legend { font-size: 12px; color: var(--wait); padding: 0 4px; }

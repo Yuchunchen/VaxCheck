@@ -1,1220 +1,1298 @@
 {
- "$schema": "http://json-schema.org/draft-07/schema#",
- "$id": "https://vaxcheck.local/rules/schema.json",
- "title": "疫苗檢核規則集 v0.4.0(中央 + 縣市 overlay)",
- "description": "中央規則集與縣市 overlay 共用。overlay 可用 vaccineExtension(extends);建置後合併為每管轄一份完整規則集。見 docs/06、07、10。",
- "type": "object",
- "required": [
-  "ruleSetVersion",
-  "effectiveFrom",
-  "jurisdiction",
-  "vaccines"
- ],
- "additionalProperties": false,
- "properties": {
-  "$schema": {
-   "type": "string"
-  },
-  "ruleSetVersion": {
-   "type": "string"
-  },
-  "effectiveFrom": {
-   "$ref": "#/definitions/isoDate"
-  },
-  "effectiveTo": {
-   "$ref": "#/definitions/isoDate"
-  },
-  "jurisdiction": {
-   "type": "object",
-   "required": [
-    "code",
-    "level"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "code": {
-     "type": "string",
-     "pattern": "^TW(-[A-Z]{3})?$"
-    },
-    "level": {
-     "enum": [
-      "central",
-      "county"
-     ]
-    },
-    "name": {
-     "type": "string"
-    },
-    "central": {
-     "type": "object",
-     "description": "建置時寫入:合併所依據的中央規則集管轄"
-    }
-   }
-  },
-  "build": {
-   "type": "object"
-  },
-  "sources": {
-   "type": "array",
-   "items": {
-    "$ref": "#/definitions/sourceRef"
-   }
-  },
-  "codeLists": {
-   "type": "object",
-   "additionalProperties": {
-    "$ref": "#/definitions/codeList"
-   }
-  },
-  "manualConditions": {
-   "type": "array",
-   "items": {
-    "$ref": "#/definitions/manualCondition"
-   }
-  },
-  "vaccines": {
-   "type": "array",
-   "items": {
-    "oneOf": [
-     {
-      "$ref": "#/definitions/vaccine"
-     },
-     {
-      "$ref": "#/definitions/vaccineExtension"
-     }
-    ]
-   }
-  }
- },
- "definitions": {
-  "isoDate": {
-   "type": "string",
-   "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-  },
-  "ageValue": {
-   "type": "object",
-   "additionalProperties": false,
-   "properties": {
-    "years": {
-     "type": "integer",
-     "minimum": 0
-    },
-    "months": {
-     "type": "integer",
-     "minimum": 0
-    },
-    "days": {
-     "type": "integer",
-     "minimum": 0
-    }
-   }
-  },
-  "codeMatch": {
-   "type": "object",
-   "additionalProperties": false,
-   "properties": {
-    "$list": {
-     "type": "string"
-    },
-    "codes": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vaxcheck.local/rules/schema.json",
+  "title": "疫苗檢核規則集 v0.4.0(中央 + 縣市 overlay)",
+  "description": "中央規則集與縣市 overlay 共用。overlay 可用 vaccineExtension(extends);建置後合併為每管轄一份完整規則集。見 docs/06、07、10。",
+  "type": "object",
+  "required": [
+    "ruleSetVersion",
+    "effectiveFrom",
+    "jurisdiction",
+    "vaccines"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
       "type": "string"
-     }
     },
-    "withinDays": {
-     "type": "integer",
-     "minimum": 1
-    },
-    "minRecords": {
-     "type": "integer",
-     "minimum": 1
-    }
-   },
-   "oneOf": [
-    {
-     "required": [
-      "$list"
-     ]
-    },
-    {
-     "required": [
-      "codes"
-     ]
-    }
-   ]
-  },
-  "condition": {
-   "oneOf": [
-    {
-     "type": "object",
-     "required": [
-      "age"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "age": {
-       "type": "object",
-       "additionalProperties": false,
-       "properties": {
-        "min": {
-         "$ref": "#/definitions/ageValue"
-        },
-        "max": {
-         "$ref": "#/definitions/ageValue"
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "ageByYear"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "ageByYear": {
-       "type": "object",
-       "additionalProperties": false,
-       "properties": {
-        "min": {
-         "type": "integer",
-         "minimum": 0
-        },
-        "max": {
-         "type": "integer",
-         "minimum": 0
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "birthDate"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "birthDate": {
-       "type": "object",
-       "additionalProperties": false,
-       "properties": {
-        "onOrBefore": {
-         "$ref": "#/definitions/isoDate"
-        },
-        "onOrAfter": {
-         "$ref": "#/definitions/isoDate"
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "sex"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "sex": {
-       "enum": [
-        "M",
-        "F"
-       ]
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "diagnosis"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "diagnosis": {
-       "$ref": "#/definitions/codeMatch"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "medication"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "medication": {
-       "$ref": "#/definitions/codeMatch"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "specialMaterial"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "specialMaterial": {
-       "$ref": "#/definitions/codeMatch"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "specialPayment"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "specialPayment": {
-       "type": "object",
-       "required": [
-        "category"
-       ],
-       "additionalProperties": false,
-       "properties": {
-        "category": {
-         "enum": [
-          "service",
-          "drug",
-          "material"
-         ]
-        },
-        "$list": {
-         "type": "string"
-        },
-        "codes": {
-         "type": "array",
-         "items": {
-          "type": "string"
-         }
-        },
-        "withinDays": {
-         "type": "integer",
-         "minimum": 1
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "lab"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "lab": {
-       "type": "object",
-       "required": [
-        "item",
-        "op",
-        "value"
-       ],
-       "additionalProperties": false,
-       "properties": {
-        "item": {
-         "type": "string"
-        },
-        "op": {
-         "enum": [
-          "<",
-          "<=",
-          ">",
-          ">=",
-          "=="
-         ]
-        },
-        "value": {
-         "type": "number"
-        },
-        "withinDays": {
-         "type": "integer",
-         "minimum": 1
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "vaccination"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "vaccination": {
-       "type": "object",
-       "required": [
-        "vaccineCodes"
-       ],
-       "additionalProperties": false,
-       "properties": {
-        "vaccineCodes": {
-         "type": "array",
-         "minItems": 1,
-         "items": {
-          "type": "string"
-         }
-        },
-        "minDoses": {
-         "type": "integer",
-         "minimum": 0
-        },
-        "maxDoses": {
-         "type": "integer",
-         "minimum": 0
-        },
-        "withinDays": {
-         "type": "integer",
-         "minimum": 1
-        },
-        "minDaysSinceLast": {
-         "type": "integer",
-         "minimum": 0
-        },
-        "before": {
-         "type": "string",
-         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-         "description": "只計此日期前的接種紀錄(無日期者視為較早);例:本季開打前從未接種"
-        }
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "flag"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "flag": {
-       "enum": [
-        "homeCare",
-        "dialysis",
-        "ckd",
-        "hospice",
-        "longTermCare"
-       ]
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "manual"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "manual": {
-       "type": "string"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "inSeason"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "inSeason": {
-       "type": "boolean"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "residentOf"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "residentOf": {
-       "type": "string",
-       "pattern": "^TW-[A-Z]{3}$"
-      }
-     }
-    }
-   ]
-  },
-  "criteria": {
-   "oneOf": [
-    {
-     "type": "object",
-     "required": [
-      "all"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "all": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "$ref": "#/definitions/criteria"
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "any"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "any": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "$ref": "#/definitions/criteria"
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "not"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "not": {
-       "$ref": "#/definitions/criteria"
-      }
-     }
-    },
-    {
-     "$ref": "#/definitions/condition"
-    }
-   ]
-  },
-  "historyPredicate": {
-   "oneOf": [
-    {
-     "type": "object",
-     "required": [
-      "all"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "all": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "$ref": "#/definitions/historyPredicate"
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "any"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "any": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "$ref": "#/definitions/historyPredicate"
-       }
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "not"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "not": {
-       "$ref": "#/definitions/historyPredicate"
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "has"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "has": {
-       "oneOf": [
-        {
-         "type": "array",
-         "minItems": 1,
-         "items": {
-          "type": "string"
-         }
-        },
-        {
-         "type": "object",
-         "required": [
-          "codes"
-         ],
-         "additionalProperties": false,
-         "properties": {
-          "codes": {
-           "type": "array",
-           "minItems": 1,
-           "items": {
-            "type": "string"
-           }
-          },
-          "funding": {
-           "enum": [
-            "公費",
-            "自費"
-           ]
-          },
-          "minDoses": {
-           "type": "integer",
-           "minimum": 1
-          }
-         }
-        }
-       ]
-      }
-     }
-    },
-    {
-     "type": "object",
-     "required": [
-      "none"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "none": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "type": "string"
-       }
-      }
-     }
-    }
-   ]
-  },
-  "dosing": {
-   "type": "object",
-   "additionalProperties": false,
-   "properties": {
-    "seasonal": {
-     "type": "boolean"
-    },
-    "lifetimeMaxDoses": {
-     "type": "integer",
-     "minimum": 1
-    },
-    "series": {
-     "$ref": "#/definitions/seriesList"
-    },
-    "mode": {
-     "enum": [
-      "series",
-      "cases"
-     ]
-    },
-    "unknownTypeCodes": {
-     "type": "array",
-     "items": {
+    "ruleSetVersion": {
       "type": "string"
-     }
     },
-    "cases": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
+    "effectiveFrom": {
+      "$ref": "#/definitions/isoDate"
+    },
+    "effectiveTo": {
+      "$ref": "#/definitions/isoDate"
+    },
+    "jurisdiction": {
       "type": "object",
       "required": [
-       "id",
-       "label",
-       "when",
-       "then"
+        "code",
+        "level"
       ],
       "additionalProperties": false,
       "properties": {
-       "id": {
-        "type": "string"
-       },
-       "label": {
-        "type": "string"
-       },
-       "sourceRef": {
-        "type": "string"
-       },
-       "when": {
-        "$ref": "#/definitions/historyPredicate"
-       },
-       "criteria": {
-        "$ref": "#/definitions/criteria"
-       },
-       "then": {
+        "code": {
+          "type": "string",
+          "pattern": "^TW(-[A-Z]{3})?$"
+        },
+        "level": {
+          "enum": [
+            "central",
+            "county"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "central": {
+          "type": "object",
+          "description": "建置時寫入:合併所依據的中央規則集管轄"
+        }
+      }
+    },
+    "build": {
+      "type": "object"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/sourceRef"
+      }
+    },
+    "codeLists": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/codeList"
+      }
+    },
+    "manualConditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/manualCondition"
+      }
+    },
+    "vaccines": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/vaccine"
+          },
+          {
+            "$ref": "#/definitions/vaccineExtension"
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "isoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "ageValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "years": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "months": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "days": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "codeMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "$list": {
+          "type": "string"
+        },
+        "codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "withinDays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minRecords": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "$list"
+          ]
+        },
+        {
+          "required": [
+            "codes"
+          ]
+        }
+      ]
+    },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "age"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "age": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "min": {
+                  "$ref": "#/definitions/ageValue"
+                },
+                "max": {
+                  "$ref": "#/definitions/ageValue"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "ageByYear"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ageByYear": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "min": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "birthDate"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "birthDate": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onOrBefore": {
+                  "$ref": "#/definitions/isoDate"
+                },
+                "onOrAfter": {
+                  "$ref": "#/definitions/isoDate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "sex"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "sex": {
+              "enum": [
+                "M",
+                "F"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "diagnosis"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "diagnosis": {
+              "$ref": "#/definitions/codeMatch"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "medication"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "medication": {
+              "$ref": "#/definitions/codeMatch"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "specialMaterial"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "specialMaterial": {
+              "$ref": "#/definitions/codeMatch"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "specialPayment"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "specialPayment": {
+              "type": "object",
+              "required": [
+                "category"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "category": {
+                  "enum": [
+                    "service",
+                    "drug",
+                    "material"
+                  ]
+                },
+                "$list": {
+                  "type": "string"
+                },
+                "codes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "withinDays": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "lab"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "lab": {
+              "type": "object",
+              "required": [
+                "item",
+                "op",
+                "value"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "item": {
+                  "type": "string"
+                },
+                "op": {
+                  "enum": [
+                    "<",
+                    "<=",
+                    ">",
+                    ">=",
+                    "=="
+                  ]
+                },
+                "value": {
+                  "type": "number"
+                },
+                "withinDays": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "vaccination"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "vaccination": {
+              "type": "object",
+              "required": [
+                "vaccineCodes"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "vaccineCodes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "minDoses": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "maxDoses": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "withinDays": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "minDaysSinceLast": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "before": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                  "description": "只計此日期前的接種紀錄(無日期者視為較早);例:本季開打前從未接種"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "flag"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "flag": {
+              "enum": [
+                "homeCare",
+                "dialysis",
+                "ckd",
+                "hospice",
+                "longTermCare"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "manual"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "manual": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "inSeason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "inSeason": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "residentOf"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "residentOf": {
+              "type": "string",
+              "pattern": "^TW-[A-Z]{3}$"
+            }
+          }
+        }
+      ]
+    },
+    "criteria": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/criteria"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/criteria"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "not": {
+              "$ref": "#/definitions/criteria"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/condition"
+        }
+      ]
+    },
+    "historyPredicate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/historyPredicate"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/definitions/historyPredicate"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "not": {
+              "$ref": "#/definitions/historyPredicate"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "has"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "has": {
+              "oneOf": [
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "codes"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "codes": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "funding": {
+                      "enum": [
+                        "公費",
+                        "自費"
+                      ]
+                    },
+                    "minDoses": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "none"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "none": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dosing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "seasonal": {
+          "type": "boolean"
+        },
+        "lifetimeMaxDoses": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "series": {
+          "$ref": "#/definitions/seriesList"
+        },
+        "mode": {
+          "enum": [
+            "series",
+            "cases"
+          ]
+        },
+        "unknownTypeCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "when",
+              "then"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "sourceRef": {
+                "type": "string"
+              },
+              "when": {
+                "$ref": "#/definitions/historyPredicate"
+              },
+              "criteria": {
+                "$ref": "#/definitions/criteria"
+              },
+              "then": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "give",
+                      "complete",
+                      "notFunded",
+                      "review"
+                    ]
+                  },
+                  "dose": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "minInterval": {
+                    "$ref": "#/definitions/ageValue"
+                  },
+                  "minIntervalDays": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "intervalFrom": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "variants": {
+          "type": "array",
+          "minItems": 1,
+          "description": "series 模式的分流:由上往下第一個符合者取代預設 series。age 以本季第 1 劑接種日(未打則為今日)計算;priorDoses = 本季開始前累計劑數(historyMatch 代碼)",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "series"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "sourceRef": {
+                "type": "string"
+              },
+              "age": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "$ref": "#/definitions/ageValue"
+                  },
+                  "max": {
+                    "$ref": "#/definitions/ageValue"
+                  }
+                }
+              },
+              "priorDoses": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "max": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
+              "series": {
+                "$ref": "#/definitions/seriesList"
+              }
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "series"
+          ]
+        },
+        {
+          "required": [
+            "mode",
+            "cases"
+          ],
+          "properties": {
+            "mode": {
+              "const": "cases"
+            }
+          }
+        }
+      ]
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "from"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "$ref": "#/definitions/isoDate"
+        },
+        "to": {
+          "$ref": "#/definitions/isoDate"
+        }
+      }
+    },
+    "season": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "$ref": "#/definitions/isoDate"
+        },
+        "end": {
+          "$ref": "#/definitions/isoDate"
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "phase",
+              "start"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "phase": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "start": {
+                "$ref": "#/definitions/isoDate"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "eligibilityGroup": {
+      "type": "object",
+      "required": [
+        "groupId",
+        "label",
+        "criteria"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "groupId": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "priorityPhase": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "effective": {
+          "$ref": "#/definitions/window"
+        },
+        "providedBy": {
+          "enum": [
+            "central",
+            "county"
+          ]
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "criteria": {
+          "$ref": "#/definitions/criteria"
+        },
+        "dosingOverride": {
+          "$ref": "#/definitions/dosing"
+        },
+        "reportCodes": {
+          "type": "array",
+          "minItems": 1,
+          "description": "此群對應的接種對象別代碼。多個純字串 = 由醫師擇一;物件帶 evidence(代碼清單名或 flag:x)= 依病歷命中的證據決定",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "code",
+                  "evidence"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "vaccine": {
+      "type": "object",
+      "required": [
+        "vaccineId",
+        "name",
+        "eligibilityGroups",
+        "dosing"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "vaccineId": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "name": {
+          "type": "object",
+          "required": [
+            "zh"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "zh": {
+              "type": "string"
+            },
+            "en": {
+              "type": "string"
+            }
+          }
+        },
+        "historyMatch": {
+          "type": "object",
+          "required": [
+            "vaccineCodes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "vaccineCodes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "season": {
+          "$ref": "#/definitions/season"
+        },
+        "eligibilityGroups": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/eligibilityGroup"
+          }
+        },
+        "dosing": {
+          "$ref": "#/definitions/dosing"
+        },
+        "contraindications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "severity"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "severity": {
+                "enum": [
+                  "absolute",
+                  "precaution"
+                ]
+              },
+              "criteria": {
+                "$ref": "#/definitions/criteria"
+              },
+              "manual": {
+                "type": "string"
+              }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "criteria"
+                ]
+              },
+              {
+                "required": [
+                  "manual"
+                ]
+              }
+            ]
+          }
+        },
+        "explain": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "eligible": {
+              "type": "string"
+            },
+            "ineligible": {
+              "type": "string"
+            },
+            "completed": {
+              "type": "string"
+            },
+            "eligiblePending": {
+              "type": "string"
+            },
+            "not_funded": {
+              "type": "string"
+            },
+            "needs_review": {
+              "type": "string"
+            },
+            "scheduled": {
+              "type": "string"
+            },
+            "out_of_season": {
+              "type": "string"
+            }
+          }
+        },
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "reportCodes": {
+          "type": "object",
+          "required": [
+            "table"
+          ],
+          "additionalProperties": false,
+          "description": "NIIS 接種對象別代碼表(例:流感工作手冊附件14)。只供面板顯示填報代碼,不影響資格與劑次",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "sourceRef": {
+              "type": "string"
+            },
+            "occupationalFirst": {
+              "type": "boolean",
+              "description": "多群符合時職業別優先填報"
+            },
+            "table": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "label"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "occupational": {
+                    "type": "boolean"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "vaccineExtension": {
+      "type": "object",
+      "required": [
+        "extends",
+        "eligibilityGroups"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "extends": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "eligibilityGroups": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/eligibilityGroup"
+          }
+        },
+        "sourceIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "codeList": {
+      "type": "object",
+      "required": [
+        "system"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "system": {
+          "enum": [
+            "ICD-10-CM",
+            "ATC",
+            "NHI-ORDER",
+            "NHI-MATERIAL",
+            "NHI-LFTP",
+            "NIIS-VACCINE"
+          ]
+        },
+        "codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "file": {
+          "type": "string",
+          "pattern": "^[\\w./-]+\\.json#\\w+$",
+          "description": "建置時由 JSON 檔的 sections.<name>.codes 內嵌"
+        },
+        "threeCharAsCategory": {
+          "type": "boolean",
+          "description": "true:清單中的三碼(E66、I63)代表整個類目,建置時展開為 E66*;官方表為逐碼列舉者(IPD 表)不可設"
+        },
+        "source": {
+          "type": "object",
+          "description": "建置時寫入:官方清單來源與雜湊"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "codes"
+          ]
+        },
+        {
+          "required": [
+            "file"
+          ]
+        }
+      ]
+    },
+    "manualCondition": {
+      "type": "object",
+      "required": [
+        "key",
+        "label"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        },
+        "askWhen": {
+          "$ref": "#/definitions/criteria"
+        },
+        "evidence": {
+          "$ref": "#/definitions/criteria",
+          "description": "病歷證據;命中即自動勾選、標依據、醫師可取消。只能用自動葉條件(不可含 manual)"
+        }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "issuer": {
+          "type": "string"
+        },
+        "docNo": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "date": {
+          "$ref": "#/definitions/isoDate"
+        },
+        "watch": {
+          "type": "boolean"
+        },
+        "kind": {
+          "enum": [
+            "plan",
+            "qa",
+            "letter",
+            "bulletin",
+            "other"
+          ]
+        }
+      }
+    },
+    "seriesList": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
         "type": "object",
         "required": [
-         "action"
+          "dose"
         ],
         "additionalProperties": false,
         "properties": {
-         "action": {
-          "enum": [
-           "give",
-           "complete",
-           "notFunded",
-           "review"
-          ]
-         },
-         "dose": {
-          "type": "integer",
-          "minimum": 1
-         },
-         "minInterval": {
-          "$ref": "#/definitions/ageValue"
-         },
-         "minIntervalDays": {
-          "type": "integer",
-          "minimum": 0
-         },
-         "intervalFrom": {
-          "type": "array",
-          "items": {
-           "type": "string"
+          "dose": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minAge": {
+            "$ref": "#/definitions/ageValue"
+          },
+          "minIntervalDays": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "與前 1 劑(historyMatch 代碼,不限本季)間隔天數;無前劑則不適用"
+          },
+          "requiresPrior": {
+            "type": "object",
+            "required": [
+              "vaccineCodes",
+              "minIntervalDays"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "vaccineCodes": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "minIntervalDays": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "label": {
+            "type": "string"
           }
-         },
-         "note": {
-          "type": "string"
-         }
         }
-       }
       }
-     }
-    },
-    "variants": {
-     "type": "array",
-     "minItems": 1,
-     "description": "series 模式的分流:由上往下第一個符合者取代預設 series。age 以本季第 1 劑接種日(未打則為今日)計算;priorDoses = 本季開始前累計劑數(historyMatch 代碼)",
-     "items": {
-      "type": "object",
-      "required": [
-       "id",
-       "label",
-       "series"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "id": {
-        "type": "string"
-       },
-       "label": {
-        "type": "string"
-       },
-       "sourceRef": {
-        "type": "string"
-       },
-       "age": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-         "min": {
-          "$ref": "#/definitions/ageValue"
-         },
-         "max": {
-          "$ref": "#/definitions/ageValue"
-         }
-        }
-       },
-       "priorDoses": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-         "min": {
-          "type": "integer",
-          "minimum": 0
-         },
-         "max": {
-          "type": "integer",
-          "minimum": 0
-         }
-        }
-       },
-       "series": {
-        "$ref": "#/definitions/seriesList"
-       }
-      }
-     }
     }
-   },
-   "oneOf": [
-    {
-     "required": [
-      "series"
-     ]
-    },
-    {
-     "required": [
-      "mode",
-      "cases"
-     ],
-     "properties": {
-      "mode": {
-       "const": "cases"
-      }
-     }
-    }
-   ]
-  },
-  "window": {
-   "type": "object",
-   "required": [
-    "from"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "from": {
-     "$ref": "#/definitions/isoDate"
-    },
-    "to": {
-     "$ref": "#/definitions/isoDate"
-    }
-   }
-  },
-  "season": {
-   "type": "object",
-   "required": [
-    "start",
-    "end"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "start": {
-     "$ref": "#/definitions/isoDate"
-    },
-    "end": {
-     "$ref": "#/definitions/isoDate"
-    },
-    "phases": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
-      "type": "object",
-      "required": [
-       "phase",
-       "start"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "phase": {
-        "type": "integer",
-        "minimum": 1
-       },
-       "start": {
-        "$ref": "#/definitions/isoDate"
-       },
-       "label": {
-        "type": "string"
-       }
-      }
-     }
-    }
-   }
-  },
-  "eligibilityGroup": {
-   "type": "object",
-   "required": [
-    "groupId",
-    "label",
-    "criteria"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "groupId": {
-     "type": "string",
-     "pattern": "^[A-Z][A-Z0-9_]*$"
-    },
-    "label": {
-     "type": "string"
-    },
-    "priorityPhase": {
-     "type": "integer",
-     "minimum": 1
-    },
-    "effective": {
-     "$ref": "#/definitions/window"
-    },
-    "providedBy": {
-     "enum": [
-      "central",
-      "county"
-     ]
-    },
-    "jurisdiction": {
-     "type": "string"
-    },
-    "sourceIds": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "criteria": {
-     "$ref": "#/definitions/criteria"
-    },
-    "dosingOverride": {
-     "$ref": "#/definitions/dosing"
-    }
-   }
-  },
-  "vaccine": {
-   "type": "object",
-   "required": [
-    "vaccineId",
-    "name",
-    "eligibilityGroups",
-    "dosing"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "vaccineId": {
-     "type": "string",
-     "pattern": "^[A-Z][A-Z0-9_]*$"
-    },
-    "name": {
-     "type": "object",
-     "required": [
-      "zh"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "zh": {
-       "type": "string"
-      },
-      "en": {
-       "type": "string"
-      }
-     }
-    },
-    "historyMatch": {
-     "type": "object",
-     "required": [
-      "vaccineCodes"
-     ],
-     "additionalProperties": false,
-     "properties": {
-      "vaccineCodes": {
-       "type": "array",
-       "minItems": 1,
-       "items": {
-        "type": "string"
-       }
-      }
-     }
-    },
-    "season": {
-     "$ref": "#/definitions/season"
-    },
-    "eligibilityGroups": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
-      "$ref": "#/definitions/eligibilityGroup"
-     }
-    },
-    "dosing": {
-     "$ref": "#/definitions/dosing"
-    },
-    "contraindications": {
-     "type": "array",
-     "items": {
-      "type": "object",
-      "required": [
-       "id",
-       "label",
-       "severity"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "id": {
-        "type": "string"
-       },
-       "label": {
-        "type": "string"
-       },
-       "severity": {
-        "enum": [
-         "absolute",
-         "precaution"
-        ]
-       },
-       "criteria": {
-        "$ref": "#/definitions/criteria"
-       },
-       "manual": {
-        "type": "string"
-       }
-      },
-      "anyOf": [
-       {
-        "required": [
-         "criteria"
-        ]
-       },
-       {
-        "required": [
-         "manual"
-        ]
-       }
-      ]
-     }
-    },
-    "explain": {
-     "type": "object",
-     "additionalProperties": false,
-     "properties": {
-      "eligible": {
-       "type": "string"
-      },
-      "ineligible": {
-       "type": "string"
-      },
-      "completed": {
-       "type": "string"
-      },
-      "eligiblePending": {
-       "type": "string"
-      },
-      "not_funded": {
-       "type": "string"
-      },
-      "needs_review": {
-       "type": "string"
-      },
-      "scheduled": {
-       "type": "string"
-      },
-      "out_of_season": {
-       "type": "string"
-      }
-     }
-    },
-    "sourceIds": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "notes": {
-     "type": "string"
-    }
-   }
-  },
-  "vaccineExtension": {
-   "type": "object",
-   "required": [
-    "extends",
-    "eligibilityGroups"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "extends": {
-     "type": "string",
-     "pattern": "^[A-Z][A-Z0-9_]*$"
-    },
-    "eligibilityGroups": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
-      "$ref": "#/definitions/eligibilityGroup"
-     }
-    },
-    "sourceIds": {
-     "type": "array",
-     "items": {
-      "type": "string"
-     }
-    },
-    "notes": {
-     "type": "string"
-    }
-   }
-  },
-  "codeList": {
-   "type": "object",
-   "required": [
-    "system"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "label": {
-     "type": "string"
-    },
-    "system": {
-     "enum": [
-      "ICD-10-CM",
-      "ATC",
-      "NHI-ORDER",
-      "NHI-MATERIAL",
-      "NHI-LFTP",
-      "NIIS-VACCINE"
-     ]
-    },
-    "codes": {
-     "type": "array",
-     "minItems": 1,
-     "items": {
-      "type": "string"
-     }
-    },
-    "file": {
-     "type": "string",
-     "pattern": "^[\\w./-]+\\.json#\\w+$",
-     "description": "建置時由 JSON 檔的 sections.<name>.codes 內嵌"
-    },
-    "threeCharAsCategory": {
-     "type": "boolean",
-     "description": "true:清單中的三碼(E66、I63)代表整個類目,建置時展開為 E66*;官方表為逐碼列舉者(IPD 表)不可設"
-    },
-    "source": {
-     "type": "object",
-     "description": "建置時寫入:官方清單來源與雜湊"
-    }
-   },
-   "oneOf": [
-    {
-     "required": [
-      "codes"
-     ]
-    },
-    {
-     "required": [
-      "file"
-     ]
-    }
-   ]
-  },
-  "manualCondition": {
-   "type": "object",
-   "required": [
-    "key",
-    "label"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "key": {
-     "type": "string",
-     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
-    },
-    "label": {
-     "type": "string"
-    },
-    "hint": {
-     "type": "string"
-    },
-    "askWhen": {
-     "$ref": "#/definitions/criteria"
-    },
-    "evidence": {
-     "$ref": "#/definitions/criteria",
-     "description": "病歷證據;命中即自動勾選、標依據、醫師可取消。只能用自動葉條件(不可含 manual)"
-    }
-   }
-  },
-  "sourceRef": {
-   "type": "object",
-   "required": [
-    "id",
-    "title"
-   ],
-   "additionalProperties": false,
-   "properties": {
-    "id": {
-     "type": "string"
-    },
-    "title": {
-     "type": "string"
-    },
-    "issuer": {
-     "type": "string"
-    },
-    "docNo": {
-     "type": "string"
-    },
-    "url": {
-     "type": "string"
-    },
-    "date": {
-     "$ref": "#/definitions/isoDate"
-    },
-    "watch": {
-     "type": "boolean"
-    },
-    "kind": {
-     "enum": [
-      "plan",
-      "qa",
-      "letter",
-      "bulletin",
-      "other"
-     ]
-    }
-   }
-  },
-  "seriesList": {
-   "type": "array",
-   "minItems": 1,
-   "items": {
-    "type": "object",
-    "required": [
-     "dose"
-    ],
-    "additionalProperties": false,
-    "properties": {
-     "dose": {
-      "type": "integer",
-      "minimum": 1
-     },
-     "minAge": {
-      "$ref": "#/definitions/ageValue"
-     },
-     "minIntervalDays": {
-      "type": "integer",
-      "minimum": 0,
-      "description": "與前 1 劑(historyMatch 代碼,不限本季)間隔天數;無前劑則不適用"
-     },
-     "requiresPrior": {
-      "type": "object",
-      "required": [
-       "vaccineCodes",
-       "minIntervalDays"
-      ],
-      "additionalProperties": false,
-      "properties": {
-       "vaccineCodes": {
-        "type": "array",
-        "minItems": 1,
-        "items": {
-         "type": "string"
-        }
-       },
-       "minIntervalDays": {
-        "type": "integer",
-        "minimum": 0
-       }
-      }
-     },
-     "label": {
-      "type": "string"
-     }
-    }
-   }
   }
- }
 }

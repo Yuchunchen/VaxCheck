@@ -1,10 +1,10 @@
 // 條件樹求值:三值邏輯 true / false / null(未知)。
-// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾) }
+// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾), hits[](命中的清單/旗標與代碼) }
 import { addInterval, addDays, ageYears, split } from './dates.js';
-import { matchCode } from './codes.js';
+import { matchCode, normCode } from './codes.js';
 
 const OK = new Set(['ok', 'nodata']);
-const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], ...extra });
+const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], hits: [], ...extra });
 const uniq = (a) => [...new Set(a)];
 
 export function sourceOk(facts, name) { return OK.has(facts.sourceStatus?.[name]); }
@@ -20,6 +20,7 @@ function combine(kind, kids) {
     manual: uniq(rel.flatMap((k) => k.manual)),
     sources: uniq(rel.flatMap((k) => k.sources)),
     evidence: kids.filter((k) => k.v === true).flatMap((k) => k.evidence),
+    hits: kids.filter((k) => k.v === true).flatMap((k) => k.hits),
   };
 }
 
@@ -72,8 +73,21 @@ const LEAVES = {
     const hits = (ctx.facts.diagnoses || []).filter((d) => within(ctx, d.date, spec.withinDays) && matchCode(d.code, codes));
     const need = spec.minRecords || 1;
     if (hits.length >= need) {
-      const last = [...hits].sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0];
-      return T(true, `${label ? label + ':' : '診斷 '}${last.code}${last.name ? ' ' + last.name : ''}(${last.date || '日期不明'}${need > 1 ? `,共 ${hits.length} 筆` : ''})`);
+      // 依代碼去重:每碼取最近一次(代碼照健保雲端原樣),最近者在前 — 醫師要看得到「抓到哪些 ICD」
+      // 單一代碼時文字與 v0.4.10 相同(回歸快照依此比對)
+      const by = new Map();
+      for (const d of hits) {
+        const k = normCode(d.code);
+        const c = by.get(k);
+        if (!c || (d.date || '') > c.date) by.set(k, { code: d.code, name: d.name || c?.name || '', date: d.date || '' });
+        else if (!c.name && d.name) c.name = d.name;
+      }
+      const codesHit = [...by.values()].sort((a, b) => b.date.localeCompare(a.date) || a.code.localeCompare(b.code));
+      const MAX = 5;
+      const txt = codesHit.slice(0, MAX).map((c) => `${c.code}${c.name ? ' ' + c.name : ''}(${c.date || '日期不明'}`).join(')、');
+      const more = codesHit.length > MAX ? ` 等 ${codesHit.length} 碼` : '';
+      return T(true, `${label ? label + ':' : '診斷 '}${txt}${need > 1 ? `,共 ${hits.length} 筆` : ''})${more}`,
+        { hits: [{ ref: spec.$list || null, label: label || '診斷', codes: codesHit }] });
     }
     return T(false, `${label || '診斷'}:${hits.length ? `僅 ${hits.length} 筆,需 ${need} 筆` : '無紀錄'}`);
   },
@@ -120,7 +134,7 @@ const LEAVES = {
     if (!sourceOk(ctx.facts, 'summary')) return T(null, '病人資訊摘要未取得', { sources: ['summary'] });
     const has = (ctx.facts.flags?.values || []).includes(spec);
     const txt = ctx.facts.flags?.evidence?.[spec];
-    return T(has, has ? `病人資訊:${txt || spec}` : `病人資訊無 ${spec}`);
+    return T(has, has ? `病人資訊:${txt || spec}` : `病人資訊無 ${spec}`, has ? { hits: [{ ref: `flag:${spec}`, label: `病人資訊 ${spec}` }] } : {});
   },
   inSeason(spec, ctx) {
     const s = ctx.vaccine?.season;
@@ -142,7 +156,7 @@ const LEAVES = {
     }
     if (def.evidence && !ctx.inEvidence) {
       const e = evalCond(def.evidence, { ...ctx, inEvidence: true, assumeManual: false });
-      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why }] });
+      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why, hits: e.hits }] });
     }
     if (ctx.assumeManual) return T(true, `${def.label}(若符合)`, { manual: [key] });
     return T(null, `${def.label}:未確認`, { manual: [key] });
@@ -153,7 +167,7 @@ export function evalCond(node, ctx) {
   if (!node || typeof node !== 'object') throw new Error('條件節點格式錯誤');
   const [k] = Object.keys(node);
   if (k === 'all' || k === 'any') return combine(k, node[k].map((c) => evalCond(c, ctx)));
-  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [] }; }
+  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [], hits: [] }; }
   const f = LEAVES[k];
   if (!f) throw new Error(`未知條件:${k}`);
   return f(node[k], ctx);

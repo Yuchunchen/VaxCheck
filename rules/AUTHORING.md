@@ -63,3 +63,12 @@ dosing:
 - 間隔:`minInterval: { years, months, days }` 走曆法(同月同日,閏年 2/29 起算則落到 3/1,取保守的較晚日),`minIntervalDays` 走天數;`intervalFrom` 指定從哪些疫苗的最近一劑起算。
 - 沒有任何 case 命中 → 引擎回 `needs_review`(接種史組合未定義),不會靜默放行。
 - 接種紀錄沒有日期 → 掛 `NEED_DATE_CONFIRMATION`,並以「今日可打」保守輸出。
+
+## 接種對象別代碼(reportCodes,只供填報顯示)
+
+疫苗層 `reportCodes.table` 放官方代碼表(例:流感工作手冊附件14);群組層 `reportCodes` 指定該群對應代碼:
+- 單一字串 `[F03A]` → 直接顯示。
+- 多個字串 `[F07A, F07B, F07C]` → 醫師擇一。
+- 物件 `{ code: F06A, evidence: [FLU_CHRONIC_DX, "flag:dialysis"] }` → 依病歷命中的代碼清單或旗標決定;都沒命中(醫師手動勾)→ 全部列為擇一。
+- `occupationalFirst: true`:多群符合時職業別(`occupational: true`)優先,其次依表列順序。
+- 不影響資格與劑次;建置時檢查代碼存在於表內、證據清單與旗標存在。

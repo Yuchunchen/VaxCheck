@@ -7,10 +7,11 @@ const canon = (x) => (Array.isArray(x) ? `[${x.map(canon).join(',')}]`
 
 /** 既有欄位(v0.4.10 就有的)*/
 export function legacyView(v) {
-  const { display, decisiveManual, dosing, ...rest } = v;
+  const { display, decisiveManual, dosing, report, ...rest } = v;   // report:v0.4.14 新增(接種對象別代碼)
   let d = dosing;
   if (dosing) { const { fallback, upgrade, ...dr } = dosing; d = dr; }
-  return { ...rest, dosing: d };
+  const evidence = rest.evidence?.map(({ hits, ...e }) => e);        // hits:v0.4.14 新增(命中清單結構)
+  return { ...rest, ...(evidence && { evidence }), dosing: d };
 }
 export const legacyHash = (v) => createHash('sha256').update(canon(legacyView(v))).digest('hex').slice(0, 16);
 export const summary = (v) => ({ verdict: v.verdict, opensOn: v.opensOn || null, dosing: v.dosing?.status || null, ask: v.decisiveManual.map((m) => m.key) });

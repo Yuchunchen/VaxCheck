@@ -51,7 +51,7 @@ function legacyVerdict(vaccine, vctx, groups) {
     vaccineId: vaccine.vaccineId, name: vaccine.name?.zh || vaccine.vaccineId,
     groupTrace: groups.map(({ g, t, state, win }) => groupOut(g, t, state, win)),
     matchedGroups: [], decisiveManual: [], evidence: [], missingSources: [], reminders: [], precautions: [],
-    dosing: null, opensOn: null, reasons: [],
+    dosing: null, opensOn: null, reasons: [], report: null,
   };
   const active = groups.filter((x) => x.state === 'active');
   const matched = active.filter((x) => x.t.v === true);
@@ -68,6 +68,7 @@ function legacyVerdict(vaccine, vctx, groups) {
       else if (t.v === null && c.manual) out.reminders.push({ id: c.id, key: c.manual, label: c.label });
     }
     if (out.verdict) return out;
+    out.report = reportOf(vaccine, matched);
     const override = matched.find((x) => x.g.dosingOverride)?.g.dosingOverride;
     const d = computeDosing(override || vaccine.dosing, vaccine, vctx);
     out.dosing = d;
@@ -81,7 +82,7 @@ function legacyVerdict(vaccine, vctx, groups) {
   const upcoming = groups.filter((x) => x.state === 'scheduled' && x.t.v !== false);
   out.upcoming = upcoming.map(({ g, t, state, win }) => groupOut(g, t, state, win));
   const sched = upcoming.filter((x) => x.t.v === true).sort((a, b) => a.win.from.localeCompare(b.win.from));
-  if (sched.length) { out.verdict = 'scheduled'; out.opensOn = sched[0].win.from; out.matchedGroups = [groupOut(sched[0].g, sched[0].t, 'scheduled', sched[0].win)]; return out; }
+  if (sched.length) { out.report = reportOf(vaccine, sched.filter((x) => x.win.from === sched[0].win.from)); out.verdict = 'scheduled'; out.opensOn = sched[0].win.from; out.matchedGroups = [groupOut(sched[0].g, sched[0].t, 'scheduled', sched[0].win)]; return out; }
   if (groups.length && groups.every((x) => x.state === 'expired')) { out.verdict = 'out_of_season'; return out; }
 
   // 尚未開打(所有群組都還沒到期間):仍算出「若符合哪些條件」供事先確認
@@ -107,6 +108,45 @@ function legacyVerdict(vaccine, vctx, groups) {
   else out.verdict = 'ineligible';
   out.reasons = active.filter((x) => x.t.v === false).map((x) => `${x.g.label}:${x.t.why.join(';')}`);
   return out;
+}
+
+// NIIS 接種對象別代碼(填報用,不影響資格):
+// 每個符合的群 → 代碼;有 evidence 的依病歷命中清單決定,否則多碼 = 醫師擇一(basis: choose)
+// 排序:職業別優先(occupationalFirst),其次依代碼表順序
+function reportOf(vaccine, matched) {
+  const rc = vaccine.reportCodes;
+  if (!rc?.table?.length) return null;
+  const table = new Map(rc.table.map((r, i) => [r.code, { ...r, order: i }]));
+  const options = [];
+  for (const { g, t } of matched) {
+    const entries = (g.reportCodes || []).map((e) => (typeof e === 'string' ? { code: e } : e));
+    if (!entries.length) continue;
+    const refs = new Set(t.evidence.flatMap((e) => (e.hits || []).map((h) => h.ref)).filter(Boolean));
+    const byEv = entries.filter((e) => e.evidence?.some((r) => refs.has(r)));
+    const chosen = byEv.length ? byEv : entries;
+    const basis = byEv.length ? 'evidence' : chosen.length > 1 ? 'choose' : 'group';
+    for (const e of chosen) {
+      const row = table.get(e.code) || { code: e.code, label: e.code, order: 999 };
+      const hits = t.evidence.flatMap((x) => x.hits || []).filter((h) => e.evidence?.includes(h.ref));
+      options.push({ code: row.code, label: row.label, occupational: !!row.occupational, note: row.note || null, order: row.order,
+        groupId: g.groupId, groupLabel: g.label, basis, icd: hits.flatMap((h) => (h.codes || []).map((c) => c.code)) });
+    }
+  }
+  if (!options.length) return null;
+  const seen = new Set();
+  const uniqOpts = options
+    .sort((a, b) => (rc.occupationalFirst ? (b.occupational - a.occupational) : 0) || a.order - b.order)
+    .filter((o) => (seen.has(o.code) ? false : seen.add(o.code)));
+  const first = uniqOpts[0];
+  const primary = first.basis === 'choose'
+    ? uniqOpts.filter((o) => o.groupId === first.groupId && o.basis === 'choose').sort((a, b) => a.order - b.order)
+    : [first];
+  const pset = new Set(primary.map((o) => o.code));
+  const others = uniqOpts.filter((o) => !pset.has(o.code));
+  const hasOccInTable = rc.table.some((r) => r.occupational);
+  const hint = rc.occupationalFirst && hasOccInTable && !primary.some((o) => o.occupational)
+    ? '職業別優先填報:若為醫事人員、托育或機構照顧工作人員、防疫或禽畜業人員,改填對應 F02B/F04B/F07 代碼' : null;
+  return { label: rc.label || '接種對象別', sourceRef: rc.sourceRef || null, primary, others, choose: primary.length > 1, hint };
 }
 
 function fill(tpl, vars) { return tpl.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? '')); }

@@ -430,3 +430,50 @@ test('vaccination 條件 before:只看該日前,無日期視為較早', () => {
   const g = patient({ birth: '2024-06-01', vacc: [['COVID', null]] });
   assert.equal(evalCond({ vaccination: { vaccineCodes: ['COVID'], maxDoses: 0, before: '2026-10-01' } }, ctx(g, '2026-10-20')).v, false);
 });
+
+test('流感潛在疾病:列出所有命中的 ICD(去重、最近在前)', () => {
+  const at = '2026-10-05';
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['E1165', '2026-06-01'], ['E1165', '2026-03-01'], ['J449', '2026-08-01'], ['I10', '2026-08-01']] }), at), 'FLU');
+  assert.equal(v.verdict, 'eligible');
+  const why = v.evidence[0].why.join('|');
+  assert.match(why, /J449\(2026-08-01\)、E1165\(2026-06-01\)/, '兩碼都列出,最近在前,同碼合併取最近');
+  assert.ok(!/I10/.test(why), '單純高血壓不在附件1,不列');
+  const hit = v.evidence[0].hits.find((h) => h.ref === 'FLU_CHRONIC_DX');
+  assert.deepEqual(hit.codes.map((c) => c.code), ['J449', 'E1165']);
+});
+
+test('流感 NIIS 接種對象別代碼(工作手冊附件14)', () => {
+  const at = '2026-10-05';
+  const R = (p) => V(run(patient({ vacc: [], ...p }), at), 'FLU').report;
+  // 65 歲以上 → F03A,附 F03B 提示與職業別提醒
+  const e = R({ birth: '1958-01-01' });
+  assert.deepEqual(e.primary.map((o) => o.code), ['F03A']);
+  assert.match(e.primary[0].note, /F03B/);
+  assert.ok(e.hint);
+  // 慢性病證據 → F06A,附 ICD
+  const dm = R({ birth: '1986-01-01', dx: [['E1165', '2026-06-01']] });
+  assert.deepEqual(dm.primary.map((o) => o.code), ['F06A']);
+  assert.deepEqual(dm.primary[0].icd, ['E1165']);
+  // 同時慢性病 + 重大傷病 → F06A 為主,F06C 列為亦符合
+  const both = R({ birth: '1986-01-01', dx: [['E1165', '2026-06-01'], ['C50911', '2026-03-01']] });
+  assert.equal(both.primary[0].code, 'F06A');
+  assert.ok(both.others.some((o) => o.code === 'F06C'));
+  // 只有重大傷病 → F06C;只有罕病 → F06B
+  assert.equal(R({ birth: '1986-01-01', dx: [['C50911', '2026-03-01']] }).primary[0].code, 'F06C');
+  assert.equal(R({ birth: '1996-01-01', dx: [['Q8711', '2026-04-01']] }).primary[0].code, 'F06B');
+  // 醫師手動勾潛在疾病(無病歷證據,如 BMI≥30)→ F06A/F06B/F06C 擇一
+  const m = R({ birth: '1986-01-01', manual: { fluUnderlyingCondition: true } });
+  assert.equal(m.choose, true);
+  assert.deepEqual(m.primary.map((o) => o.code), ['F06A', 'F06B', 'F06C']);
+  // 職業別優先:68 歲醫事人員 → F07A/B/C 擇一,F03A 列為亦符合,不再出職業別提醒
+  const hcw = R({ birth: '1958-01-01', manual: { healthcareWorker: true } });
+  assert.deepEqual(hcw.primary.map((o) => o.code), ['F07A', 'F07B', 'F07C']);
+  assert.ok(hcw.others.some((o) => o.code === 'F03A'));
+  assert.equal(hcw.hint, null);
+  // 未開打前(scheduled)也給代碼
+  assert.equal(V(run(patient({ birth: '1958-01-01', vacc: [] }), '2026-09-28'), 'FLU').report.primary[0].code, 'F03A');
+  // 不符合者不給
+  assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [] }), at), 'FLU').report, null);
+  // 肺鏈、COVID 無代碼表 → null
+  assert.equal(V(run(patient({ birth: '1958-01-01', vacc: [] }), at), 'PNEUMO_PCV20_21').report, null);
+});
