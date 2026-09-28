@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.20)
+# 疫苗檢核程式 — 進度(v0.4.21)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -18,6 +18,7 @@
 - 2026-09-27:罕見疾病改用國健署完整名單(115-07-23)作病歷證據(YC;取代同日稍早「不另建清單」之決定)。通用碼不作證據,見 v0.4.8。
 
 ## 已完成
+- **v0.4.21**(2026-09-28):分支整合。main 快轉併入 claude/system-architecture-dynamic-dashed(架構圖動態虛線 + GIF);自 claude/vaccine-checker-chrome-extension 取 docs/VaxCheck的故事.md(主圖改 vaxcheck-lockup-vertical-zh.png,舊 official-logo 已於 v0.4.18 淘汰);該分支的舊標誌、icon128 與 icons 測試已被 v0.4.18 取代,不併入。刪除已合併的 claude/* 分支;rules 分支保留(線上規則發佈通道)。src 與規則未動。
 - **v0.4.20**(2026-09-28):docs/使用說明 加 docs/img/install-toolbar.png、install-extension-card.png(YC 院內截圖,2 倍放大加紅框標註;只含擴充功能 ID,無病患資料);舊圖示描述更新。
 - **v0.4.19**(2026-09-28):工具列 16/24/32 px 改為 make-brand.py 繪製的方形小圖示(16 格網格、8 倍超取樣;藍 #003A9C 底、白針筒、黃 #DEAD01 勾含藍色間隔;刻度 ≥24 px 才畫);48/128 仍為 mark-sticker。make-brand.py 同時產生 docs/img/toolbar-icon.png,移除 numpy 依賴。
 - **v0.4.18**(2026-09-28):標誌改用 assets/source 原圖。scripts/make-brand.py(Pillow+numpy,產物提交)產生 assets/icons 16–128(≤32 用 mark-flat-shadow 去陰影、48/128 用 mark-sticker)與 assets/brand 3 張(lockup-vertical-zh、lockup-horizontal、mark)。刪 assets/logo.svg、logo-small.svg、alternatives/、舊 brand 6 張(其中 project-logo、vaxcheck-full 與 icons/icon128 為損毀檔)、docs/img/logo-alternatives.png、demo-page.png、options-page.png;toolbar-icon.png 重產。移除 devDependency @resvg/resvg-js。tests/icons.test.mjs 改為逐 chunk CRC + IDAT inflate 檢查 assets 下全部 PNG。

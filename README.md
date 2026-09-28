@@ -4,7 +4,7 @@
 
 門診插健保卡 → 按瀏覽器標題列的 VaxCheck 圖示 → 看這位病患現在能公費打哪些疫苗、為什麼、確認哪些條件就能打。**使用說明(醫師/護理):[docs/使用說明.md](docs/使用說明.md)**。版本與變更見 `CHANGELOG.md`。
 
-系統架構與判定流程圖:[docs/architecture/VaxCheck架構圖.drawio](docs/architecture/VaxCheck架構圖.drawio)(draw.io,四頁;同資料夾有 PNG 預覽)。第 1 頁帶圈號 ①–⑦ 的主要流程為動態虛線,可在 draw.io 開啟,或看動態預覽 [1-整體架構.gif](docs/architecture/1-整體架構.gif)。
+為什麼做這個工具、怎麼判斷:**[VaxCheck 的故事](docs/VaxCheck的故事.md)**。系統架構與判定流程圖:[docs/architecture/VaxCheck架構圖.drawio](docs/architecture/VaxCheck架構圖.drawio)(draw.io,四頁;同資料夾有 PNG 預覽)。第 1 頁帶圈號 ①–⑦ 的主要流程為動態虛線,可在 draw.io 開啟,或看動態預覽 [1-整體架構.gif](docs/architecture/1-整體架構.gif)。
 
 - 涵蓋:肺炎鏈球菌 PCV20/21、流感 115 年度、COVID-19 115–116 年度(皆為疾管署正式規則)。
 - 面板四組:**可接種 → 待確認 → 尚未開打 → 不符合**。「待確認」只放確認後今天就能打的疫苗;需確認的條件有「是/否」鈕。
