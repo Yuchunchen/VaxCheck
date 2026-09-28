@@ -1,7 +1,7 @@
 # 品牌素材原檔(assets/source)
 
 VaxCheck 標誌的**原始素材**,2026-09-28 由 YC 以 ChatGPT 圖像生成後提供,依圖形內容重新命名。
-這裡是**唯一的標誌來源**。`python3 scripts/make-brand.py` 由這裡產生 `assets/icons/`(擴充功能圖示,用 `mark-sticker` 與 `mark-flat-shadow`)與 `assets/brand/`(用 `lockup-vertical-zh`、`lockup-horizontal`、`mark-sticker`);建置流程不直接讀本資料夾。
+這裡是**唯一的標誌來源**。`python3 scripts/make-brand.py` 由這裡產生 `assets/icons/`(48/128 px 用 `mark-sticker`;16/24/32 px 工具列小圖示為腳本繪製的方形版,色票取自原圖)與 `assets/brand/`(用 `lockup-vertical-zh`、`lockup-horizontal`、`mark-sticker`);建置流程不直接讀本資料夾。
 
 ![總覽](_overview.png)
 

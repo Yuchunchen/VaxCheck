@@ -184,7 +184,7 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 - `assets/brand/vaxcheck-lockup-vertical-zh.png`:README 主圖(標誌 + 字標 + 中文標語)。
 - `assets/brand/vaxcheck-lockup-horizontal.png`:橫式(標誌 + 字標)。
 - `assets/brand/vaxcheck-mark.png`:純圖形 512 px。
-- `assets/icons/icon{16,24,32,48,128}.png`:擴充功能圖示,不含文字;48/128 px 用白描邊版,16/24/32 px 用平面版去陰影(工具列尺寸較清楚)。`scripts/icons.mjs` 建置時直接複製。
+- `assets/icons/icon{16,24,32,48,128}.png`:擴充功能圖示,不含文字。16/24/32 px(工具列)為方形小圖示「藍底 + 白色針筒 + 黃勾」,由腳本繪製;48/128 px(擴充功能清單)用原圖白描邊版。預覽見 `docs/img/toolbar-icon.png`。`scripts/icons.mjs` 建置時直接複製。
 
 ## 目錄
 ```
