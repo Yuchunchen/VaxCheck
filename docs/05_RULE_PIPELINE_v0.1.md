@@ -99,7 +99,7 @@ CDC 頁面變了 → 機器改 YAML → 兩道自動閘門 → 低風險自動�
 
 ### 3.7 外掛取用
 - `manifest.json` 新增 `host_permissions: https://<帳號>.github.io/*`;只有 background 抓,content script 不直連。
-- 節奏:開面板時若快取超過 6 小時 → 抓 manifest;版本較新才下載規則檔;sha256 不符 → 丟棄並記錄。
+- 節奏(v0.4.15 起):每天一次(chrome.alarms 每 24 小時 + 瀏覽器啟動 + 開面板時快取滿一天)→ 抓 manifest;設定頁「立即更新規則」強制重抓;抓不到沿用快取;版本較新才下載規則檔;sha256 不符 → 丟棄並記錄。
 - 快取:`chrome.storage.local.rules[<jurisdiction>]`(規則不是病患資料;病患資料仍只在 session)。
 - 後備順序:快取 → 外掛內建(每次 dist 建置都同時打包當時的規則)。抓不到網路 = 不更新,不報錯給醫師,只在面板底部標「規則版本 x(離線)」。
 - 釘住:`chrome.storage.sync.pinRuleSetVersion` 可鎖定版本(緊急用);面板顯示「已釘住」。

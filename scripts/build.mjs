@@ -47,7 +47,7 @@ fs.writeFileSync(path.join(EXT, 'manifest.json'), JSON.stringify({
   version: pkg.version,
   description: '門診插卡後一鍵檢核公費疫苗資格(健保雲端 + NIIS 接種史)。病患資料只留在瀏覽器。',
   minimum_chrome_version: '116',
-  permissions: ['storage'],
+  permissions: ['storage', 'alarms'],   // alarms:線上規則每天自動更新(無安裝警示)
   host_permissions: ['https://medcloud2.nhi.gov.tw/*', 'https://10.241.219.35/*', 'https://raw.githubusercontent.com/*'],   // 最後一項:線上規則預設來源
   optional_host_permissions: ['https://*.github.io/*'],
   background: { service_worker: 'background.js' },

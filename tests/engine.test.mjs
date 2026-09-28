@@ -477,3 +477,11 @@ test('流感 NIIS 接種對象別代碼(工作手冊附件14)', () => {
   // 肺鏈、COVID 無代碼表 → null
   assert.equal(V(run(patient({ birth: '1958-01-01', vacc: [] }), at), 'PNEUMO_PCV20_21').report, null);
 });
+
+test('命中 ICD 只列 3 碼(YC 2026-09-28),多的以「等 N 碼」表示', () => {
+  const dx = [['E1165', '2026-06-01'], ['J449', '2026-08-01'], ['I509', '2026-07-01'], ['G20', '2026-05-01']];
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx }), '2026-10-05'), 'FLU');
+  const w = v.evidence[0].why.find((x) => /附件1/.test(x));
+  assert.match(w, /J449\(2026-08-01\)、I509\(2026-07-01\)、E1165\(2026-06-01\) 等 4 碼$/);
+  assert.ok(!/G20/.test(w));
+});

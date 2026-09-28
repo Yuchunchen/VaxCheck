@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULTS, DEFAULT_RULES_BASE, readOptions } from '../src/workspace/options.js';
-import { rejectRemote, versionLess } from '../src/rulesource.js';
+import { rejectRemote, versionLess, needsRefresh, REFRESH_MS } from '../src/rulesource.js';
 import { ENGINE_VERSION } from '../src/engine/evaluate.js';
 import { buildAll, writeDist } from '../scripts/lib/rules.mjs';
 import fs from 'node:fs';
@@ -37,4 +37,13 @@ test('線上規則取捨:需要較新引擎、比內建舊 → 用內建;同版�
   assert.match(rejectRemote({ latest: {} }, bundled, 'TW', '0.4.13'), /缺該管轄/);
   assert.equal(rejectRemote({ latest: { TW: { version: 'R3', file: 'f', sha256: 's' } } }, bundled, 'TW', '0.4.13'), null, '舊格式 manifest(無 minEngine/publishedAt)仍可用');
   assert.ok(versionLess('0.4.9', '0.4.12') && !versionLess('0.4.12', '0.4.12') && versionLess('0.4.12', '0.5'));
+});
+
+test('線上規則每天檢查一次;手動更新強制重抓', () => {
+  const now = Date.parse('2026-09-28T08:00:00Z');
+  assert.equal(REFRESH_MS, 24 * 3600e3);
+  assert.equal(needsRefresh(null, now), true, '沒有快取');
+  assert.equal(needsRefresh({ fetchedAt: now - 23 * 3600e3 }, now), false, '未滿一天不重抓');
+  assert.equal(needsRefresh({ fetchedAt: now - 24 * 3600e3 }, now), true, '滿一天重抓');
+  assert.equal(needsRefresh({ fetchedAt: now - 60e3 }, now, { force: true }), true, '手動更新');
 });

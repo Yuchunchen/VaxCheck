@@ -83,7 +83,7 @@ const LEAVES = {
         else if (!c.name && d.name) c.name = d.name;
       }
       const codesHit = [...by.values()].sort((a, b) => b.date.localeCompare(a.date) || a.code.localeCompare(b.code));
-      const MAX = 5;
+      const MAX = 3;   // YC 2026-09-28:只列 3 碼
       const txt = codesHit.slice(0, MAX).map((c) => `${c.code}${c.name ? ' ' + c.name : ''}(${c.date || '日期不明'}`).join(')、');
       const more = codesHit.length > MAX ? ` 等 ${codesHit.length} 碼` : '';
       return T(true, `${label ? label + ':' : '診斷 '}${txt}${need > 1 ? `,共 ${hits.length} 筆` : ''})${more}`,

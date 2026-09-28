@@ -155,7 +155,7 @@ export function renderPanel(wrap, state, on) {
           h('div', { class: 'vx-code-main' }, h('span', { class: 'vx-code-k' }, rp.label),
             rp.primary.flatMap((o, i) => [i ? h('span', { class: 'vx-code-or' }, '/') : null, h('b', { class: 'vx-code-v' }, o.code)]),
             h('span', {}, rp.choose ? `(擇一:${rp.primary.map(opt).join('、')})` : rp.primary[0].label)),
-          rp.primary.some((o) => o.icd.length) && h('small', {}, `依據 ICD:${[...new Set(rp.primary.flatMap((o) => o.icd))].join('、')}`),
+          rp.primary.some((o) => o.icd.length) && h('small', {}, ((icd) => `依據 ICD:${icd.slice(0, 3).join('、')}${icd.length > 3 ? ` 等 ${icd.length} 碼` : ''}`)([...new Set(rp.primary.flatMap((o) => o.icd))])),
           rp.others.length > 0 && h('small', {}, `亦符合:${rp.others.map(opt).join('、')}`),
           notes.map((n) => h('small', {}, n)),
           rp.hint && h('small', {}, rp.hint)));

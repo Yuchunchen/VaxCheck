@@ -2,7 +2,7 @@
 // 病患資料只放 chrome.storage.session(關瀏覽器即清);規則快取放 local(非病患資料)。
 import { NIIS_ORIGIN, migrateOptions, readOptions } from './workspace/options.js';
 import { createWorkspace } from './workspace/workspace.js';
-import { rejectRemote } from './rulesource.js';
+import { rejectRemote, needsRefresh, REFRESH_MS } from './rulesource.js';
 import { ENGINE_VERSION } from './engine/evaluate.js';
 
 const S = chrome.storage.session;
@@ -25,34 +25,62 @@ async function sha256Hex(text) {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+/**
+ * 抓線上規則並寫入快取。force = 設定頁「立即更新」。
+ * 回 { ok, source: 'remote'|'cache', version, fetchedAt } 或 { ok:false, error }
+ */
+async function refreshRemote(o, bundledManifest, { force = false } = {}) {
+  const pickCode = (m) => (m.latest[o.jurisdiction] ? o.jurisdiction : 'TW');
+  const cache = (await chrome.storage.local.get('rulesCache')).rulesCache;
+  if (!needsRefresh(cache, Date.now(), { force })) return { ok: true, source: 'cache', version: cache.manifest.latest[cache.code]?.version, fetchedAt: cache.fetchedAt };
+  const base = o.remoteRulesBase.replace(/\/?$/, '/');
+  const m = await (await fetch(base + 'manifest.json', { cache: 'no-store' })).json();
+  const code = pickCode(m);
+  const why = rejectRemote(m, bundledManifest, code, ENGINE_VERSION);
+  if (why) throw new Error(why);
+  const txt = await (await fetch(base + m.latest[code].file, { cache: 'no-store' })).text();
+  if ((await sha256Hex(txt)) !== m.latest[code].sha256) throw new Error('規則檔雜湊不符');
+  const fetchedAt = Date.now();
+  await chrome.storage.local.set({ rulesCache: { fetchedAt, manifest: m, code, body: txt } });
+  return { ok: true, source: 'remote', version: m.latest[code].version, fetchedAt };
+}
+
+const bundledManifestOf = async () => (await fetch(chrome.runtime.getURL('rules/manifest.json'))).json();
+const remoteEnabled = (o) => o.remoteRulesBase && !o.pinBundled;
+
 async function loadRules() {
   const o = await opts();
-  const bundledManifest = await (await fetch(chrome.runtime.getURL('rules/manifest.json'))).json();
+  const bundledManifest = await bundledManifestOf();
   const pickCode = (m) => (m.latest[o.jurisdiction] ? o.jurisdiction : 'TW');
   let source = 'bundled';
   let manifest = bundledManifest;
   let body = null;
-  if (o.remoteRulesBase && !o.pinBundled) {
+  if (remoteEnabled(o)) {
+    let r = null;
+    try { r = await refreshRemote(o, bundledManifest); } catch (e) { console.warn('[疫苗檢核] 線上規則更新失敗,沿用快取或內建', e); }
+    // 抓不到時沿用既有快取(仍須通過取捨檢查);快取也不行才用內建
     const cache = (await chrome.storage.local.get('rulesCache')).rulesCache;
-    const fresh = cache && Date.now() - cache.fetchedAt < 6 * 3600e3;
-    try {
-      if (!fresh) {
-        const base = o.remoteRulesBase.replace(/\/?$/, '/');
-        const m = await (await fetch(base + 'manifest.json', { cache: 'no-store' })).json();
-        const code = pickCode(m);
-        const why = rejectRemote(m, bundledManifest, code, ENGINE_VERSION);
-        if (why) throw new Error(why);
-        const txt = await (await fetch(base + m.latest[code].file, { cache: 'no-store' })).text();
-        if ((await sha256Hex(txt)) !== m.latest[code].sha256) throw new Error('規則檔雜湊不符');
-        await chrome.storage.local.set({ rulesCache: { fetchedAt: Date.now(), manifest: m, code, body: txt } });
-        manifest = m; body = txt; source = 'remote';
-      } else if (cache.code === pickCode(cache.manifest) && !rejectRemote(cache.manifest, bundledManifest, cache.code, ENGINE_VERSION)) { manifest = cache.manifest; body = cache.body; source = 'cache'; }
-    } catch (e) { console.warn('[疫苗檢核] 線上規則失敗,改用內建', e); }
+    if (cache && cache.code === pickCode(cache.manifest) && !rejectRemote(cache.manifest, bundledManifest, cache.code, ENGINE_VERSION)) {
+      manifest = cache.manifest; body = cache.body; source = r?.source === 'remote' ? 'remote' : 'cache';
+    }
   }
-  const code = pickCode(manifest);
   if (!body) body = await (await fetch(chrome.runtime.getURL(`rules/${bundledManifest.latest[pickCode(bundledManifest)].file}`))).text();
   const names = Object.fromEntries(Object.entries(manifest.latest).map(([k, v]) => [k, v.name || k]));
-  return { ok: true, rules: JSON.parse(body), meta: { source, code, names } };
+  return { ok: true, rules: JSON.parse(body), meta: { source, code: pickCode(manifest), names } };
+}
+
+/** 規則狀態(設定頁顯示);force = 立即更新 */
+async function rulesStatus({ force = false } = {}) {
+  const o = await opts();
+  const bundledManifest = await bundledManifestOf();
+  const code = bundledManifest.latest[o.jurisdiction] ? o.jurisdiction : 'TW';
+  const out = { ok: true, remoteEnabled: !!remoteEnabled(o), bundled: bundledManifest.latest[code]?.version, error: null };
+  if (out.remoteEnabled && force) {
+    try { await refreshRemote(o, bundledManifest, { force: true }); } catch (e) { out.error = String(e.message || e); }
+  }
+  const cache = (await chrome.storage.local.get('rulesCache')).rulesCache;
+  if (cache) { out.cached = cache.manifest.latest[cache.code]?.version; out.fetchedAt = cache.fetchedAt; out.nextCheck = cache.fetchedAt + REFRESH_MS; }
+  return out;
 }
 
 async function handle(msg, sender) {
@@ -112,6 +140,10 @@ async function handle(msg, sender) {
     case 'workspace:ready': return workspace.medcloudReady(sender.tab?.id, msg.opId, msg.idHash);
     case 'options:get': return { ok: true, options: await opts() };
     case 'rules:get': return loadRules();
+    case 'rules:status': return rulesStatus();
+    case 'rules:refresh':
+      if (!fromExtensionPage(sender)) return { ok: false, reason: 'forbidden' };
+      return rulesStatus({ force: true });
     default: return { ok: false, reason: 'unknown_message' };
   }
 }
@@ -124,3 +156,14 @@ const migrate = () => migrateOptions(chrome.storage.sync).then((changed) => { if
 chrome.runtime.onInstalled.addListener(migrate);
 migrate();
 chrome.tabs.onRemoved.addListener((tabId) => { workspace.tabRemoved(tabId).catch(() => {}); });
+// 線上規則每天自動更新一次:alarm 每天觸發 + 瀏覽器啟動時檢查(未滿一天不重抓)
+const autoRefresh = async () => {
+  const o = await opts();
+  if (!remoteEnabled(o)) return;
+  try { const r = await refreshRemote(o, await bundledManifestOf()); if (r.source === 'remote') console.info(`[疫苗檢核] 線上規則已更新 ${r.version}`); }
+  catch (e) { console.warn('[疫苗檢核] 每日規則更新失敗', e); }
+};
+// 已存在就不重建(create 會重設計時,service worker 常被喚醒)
+chrome.alarms?.get('rules-daily').then((a) => a || chrome.alarms.create('rules-daily', { periodInMinutes: 24 * 60, delayInMinutes: 1 })).catch(() => {});
+chrome.alarms?.onAlarm.addListener((a) => { if (a.name === 'rules-daily') autoRefresh(); });
+chrome.runtime.onStartup.addListener(autoRefresh);

@@ -7,7 +7,7 @@
 - 判定原則:預設不可;資料查不到回「需確認/資料不足」,不會誤判成可打。能自動判可打就不再問;只問勾了會改變結果的條件;病歷有證據的條件先自動勾選並標依據,醫師可取消(docs/10)。
 - 規則:`rules/vaccines.yaml` 是唯一來源;IPD 高風險證據用疾管署官方 ICD 參考表(docs/11)。規則怎麼被執行見 `rules/EXECUTION.md`。
 - 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console。唯一的外部連線是下載線上規則(不帶任何病患資料)。
-- 線上規則:預設從本 repo 的 `rules` 分支下載(每 6 小時檢查一次),發行時才更新。讀不到、雜湊不符、比內建舊、或需要較新版外掛時,自動改用外掛內建規則;面板頁尾「來源」顯示線上/快取/內建。設定頁勾「只用內建規則」可停用。
+- 線上規則:預設從本 repo 的 `rules` 分支下載(每天自動檢查一次;設定頁可「立即更新規則」),發行時才更新。讀不到、雜湊不符、比內建舊、或需要較新版外掛時,自動改用外掛內建規則;面板頁尾「來源」顯示線上/快取/內建。設定頁勾「只用內建規則」可停用。
 
 ## 院內安裝(未封裝)
 1. 到 GitHub Releases 下載最新版 `vaxcheck-ext-<版號>.zip`(或 Actions → 最新 ci 執行 → vaxcheck-dist → ext)。
@@ -41,7 +41,7 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 2. 本機跑上面四個指令(含 e2e)全過 → commit、推 main,等 ci 綠燈。
 3. 觸發 release workflow(二擇一):`git tag v<版號> && git push origin v<版號>`;或 GitHub → Actions → release → Run workflow(分支選 main)。workflow 重跑驗證/測試/建置,建立 tag 與 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。同版號已發行會失敗,要發新版先升版號。
 
-外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。發行時 workflow 會把建置後的規則推到本 repo 的 `rules` 分支(`https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`),已安裝的外掛約 6 小時內換新;repo 須為公開,外掛才讀得到(讀不到就用內建)。`ENGINE_VERSION`(src/engine/evaluate.js)只在引擎本身改動時才升:它寫進規則 manifest 的 `minEngine`,較舊的外掛遇到需要新引擎的規則會自動用內建。
+外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。發行時 workflow 會把建置後的規則推到本 repo 的 `rules` 分支(`https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`),已安裝的外掛一天內換新(或在設定頁按「立即更新規則」);repo 須為公開,外掛才讀得到(讀不到就用內建)。`ENGINE_VERSION`(src/engine/evaluate.js)只在引擎本身改動時才升:它寫進規則 manifest 的 `minEngine`,較舊的外掛遇到需要新引擎的規則會自動用內建。
 
 ## 目錄
 ```

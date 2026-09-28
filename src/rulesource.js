@@ -20,3 +20,10 @@ export function rejectRemote(remote, bundled, code, engineVersion) {
   if (b && b.version !== r.version && remote.publishedAt && bundled.publishedAt && remote.publishedAt < bundled.publishedAt) return `線上規則 ${r.version} 比內建 ${b.version} 舊`;
   return null;
 }
+
+/** 線上規則每天檢查一次(v0.4.15;原 6 小時) */
+export const REFRESH_MS = 24 * 3600e3;
+/** 快取是否需要重抓:沒有快取、強制、或已超過一天 */
+export function needsRefresh(cache, now, { force = false } = {}) {
+  return force || !cache?.fetchedAt || now - cache.fetchedAt >= REFRESH_MS;
+}

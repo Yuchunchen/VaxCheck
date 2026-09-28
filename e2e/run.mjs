@@ -134,6 +134,13 @@ await sleep(500);
 check('設定頁載入縣市選單', (await opt.locator('#jur option').count()) >= 1);
 check('設定頁顯示外掛版號', (await opt.locator('#ver').textContent()) === `v${PKG_VER}`);
 check('設定頁有兩個網址欄與換卡開關', (await opt.inputValue('#medcloud')).startsWith(`${MC}/imu/`) && (await opt.inputValue('#niis')) === `${NIIS}/` && await opt.isChecked('#switch'));
+await opt.waitForFunction(() => document.querySelector('#rstat')?.textContent !== '讀取中…', null, { timeout: 5000 }).catch(() => {});
+check('設定頁顯示規則狀態', /內建 /.test(await opt.textContent('#rstat')), await opt.textContent('#rstat'));
+await opt.click('#refresh');
+await opt.waitForFunction(() => /已更新|更新失敗/.test(document.querySelector('#rmsg')?.textContent || ''), null, { timeout: 20000 }).catch(() => {});
+check('立即更新規則有回應(成功或明確失敗)', /已更新|更新失敗/.test(await opt.textContent('#rmsg')), await opt.textContent('#rmsg'));
+const alarm = await sw.evaluate(() => chrome.alarms.get('rules-daily'));
+check('每日規則更新 alarm 已排程(1440 分)', alarm?.periodInMinutes === 1440, JSON.stringify(alarm));
 
 // ───────── B. 標題列 icon → 工作區(以 workspace:open 觸發)─────────
 await page.close(); await niis.close();

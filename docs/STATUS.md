@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.14)
+# 疫苗檢核程式 — 進度(v0.4.15)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -16,6 +16,7 @@
 - 2026-09-27:罕見疾病改用國健署完整名單(115-07-23)作病歷證據(YC;取代同日稍早「不另建清單」之決定)。通用碼不作證據,見 v0.4.8。
 
 ## 已完成
+- **v0.4.15**(2026-09-28):(YC)病歷證據 ICD 最多列 3 碼(conditions.js MAX=3;面板依據 ICD 同)。線上規則每天更新一次:rulesource.js REFRESH_MS=24h、needsRefresh();background 拆 refreshRemote()、chrome.alarms `rules-daily`(1440 分,已存在不重建)+ onStartup;抓不到沿用快取(仍過 rejectRemote)。設定頁規則狀態 + 「立即更新規則」(rules:status / rules:refresh,後者限外掛頁)。權限加 alarms。單元與情境 124/124、端對端 56/56。
 - **v0.4.14**(2026-09-28):規則 2026.09.28-v0412。(1)病歷證據列出所有命中 ICD(去重、最近在前、每碼筆數,最多 5 碼),面板逐條顯示;(2)流感可打/尚未開打者顯示 NIIS 接種對象別代碼(工作手冊 115 年 7 月附件14):潛在疾病依命中清單分 F06A 慢性病/F06B 罕病/F06C 重大傷病,醫師手勾則三者擇一;醫事 F07A/B/C、機構 F04A/B、學生 F02A01–03 為擇一;職業別優先(第四章壹五(四)),非職業別間手冊未定序 → 依附件14 表列順序;F03A 附「社區/到宅改 F03B」。schema 新增 vaccine.reportCodes、eligibilityGroup.reportCodes,建置檢查代碼與證據引用。單一代碼時證據文字與 v0.4.10 相同;回歸快照 top 改 v0412、legacyView 排除新欄位 report 與 evidence.hits。單元與情境 122/122、端對端 53/53。
 - **v0.4.13**(2026-09-28):repo 轉公開(YC);移除 docs/internal(結構筆記,無個資;仍在 git 歷史)。使用說明 docs/使用說明.md(含示範頁截圖)。線上規則預設開啟,來源 `https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`(release workflow 以 GITHUB_TOKEN 推 rules 分支,只在發行時)。取捨(src/rulesource.js):雜湊不符、manifest `minEngine` 高於本外掛引擎、或版本不同且發布時間早於內建 → 用內建。空白位址視同預設;停用改勾 pinBundled。host_permissions 加 raw.githubusercontent.com。單元與情境 120/120。
 - **發行**(2026-09-28):v0.4.12 為院內第一個正式發行版(GitHub Release,未封裝安裝;YC 決定走院內,商店未列出另議)。新增 CHANGELOG.md、.github/workflows/release.yml(推 tag vX.Y.Z 自動發行:zip、單檔示範頁、SHA256SUMS)、scripts/release-notes.mjs;README 改寫(安裝/更新/回復/發行);移除過期的 docs/manifest.draft.json。src 與規則未動。
