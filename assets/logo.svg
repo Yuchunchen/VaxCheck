@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>VaxCheck</title>
+  <!-- VaxCheck 標誌(原創):盾牌 = 疫苗保護,勾 = 檢核;盾底淡綠山稜與浪線 = 東台灣山海。
+       配色同面板 CSS 變數 ink #1C2B3A、go #1E7B4F、go-wash #E7F3EC(src/panel/panel.css.js)。48/128 px 圖示由此檔產生;16/24/32 px 用 logo-small.svg。 -->
+  <defs><clipPath id="field"><path d="M64 17C53 23 39 27 24 28V60C24 85 41 100 64 111C87 100 104 85 104 60V28C89 27 75 23 64 17Z"/></clipPath></defs>
+  <path d="M64 5C51 13 34 17 13 18V60C13 92 35 111 64 124C93 111 115 92 115 60V18C94 17 77 13 64 5Z" fill="#1C2B3A"/>
+  <path d="M64 17C53 23 39 27 24 28V60C24 85 41 100 64 111C87 100 104 85 104 60V28C89 27 75 23 64 17Z" fill="#FFFFFF"/>
+  <g clip-path="url(#field)">
+    <path d="M20 128V90L34 84L46 76L56 83L70 72L82 81L92 77L108 86V128Z" fill="#E7F3EC"/>
+    <path d="M30 99q8.5-5 17 0t17 0t17 0t17 0" fill="none" stroke="#1E7B4F" stroke-width="3.2" stroke-linecap="round" opacity=".7"/>
+  </g>
+  <path d="M40 58L57 75L89 41" fill="none" stroke="#1E7B4F" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

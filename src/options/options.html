@@ -1,8 +1,9 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>VaxCheck 設定</title>
+<link rel="icon" href="icons/icon32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{font:15px/1.6 "Microsoft JhengHei","PingFang TC",system-ui,sans-serif;color:#1C2B3A;max-width:640px;margin:32px auto;padding:0 20px}
-h1{font-size:22px;margin:0 0 4px} p.lead{color:#5B6775;margin:0 0 24px}
+h1{font-size:22px;margin:0 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap} h1 img{width:36px;height:36px;flex:none} p.lead{color:#5B6775;margin:0 0 24px}
 label{display:block;margin:18px 0 4px;font-weight:700} small{display:block;color:#5B6775;font-weight:400}
 select,input[type=text]{font:inherit;padding:6px 8px;border:1px solid #D9DEE4;border-radius:4px;width:100%;box-sizing:border-box}
 .row{display:flex;gap:8px;align-items:center;font-weight:400} .row input{width:18px;height:18px}
@@ -12,7 +13,7 @@ button{font:inherit;padding:8px 16px;border:0;border-radius:4px;background:#1C2B
 #problem{background:#FFF4D6;color:#7A5B00;padding:8px 10px;border-radius:4px;margin:0 0 8px}
 input.bad{border-color:#B3261E}
 </style></head><body>
-<h1>VaxCheck 疫苗檢核 設定 <small id="ver" style="display:inline;font-size:14px;color:#5B6775"></small></h1>
+<h1><img src="icons/logo-small.svg" alt="">VaxCheck 疫苗檢核 設定 <small id="ver" style="display:inline;font-size:14px;color:#5B6775"></small></h1>
 <p class="lead">每台門診電腦設定一次。病患資料不存在這裡。</p>
 <label for="jur">適用縣市規則<small>決定載入中央規則,或中央加上縣市擴大對象</small></label>
 <select id="jur"></select>
