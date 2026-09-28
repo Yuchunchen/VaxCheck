@@ -1,6 +1,6 @@
-<p><img src="assets/logo.svg" width="88" height="88" alt="VaxCheck 標誌"></p>
+<p align="center"><img src="assets/brand/project-logo.png" width="420" alt="VaxCheck｜115年 臺灣公費疫苗檢核"></p>
 
-# VaxCheck 疫苗檢核程式
+# VaxCheck｜115年 臺灣公費疫苗檢核
 
 門診插健保卡 → 按瀏覽器標題列的 VaxCheck 圖示 → 看這位病患現在能公費打哪些疫苗、為什麼、確認哪些條件就能打。**使用說明(醫師/護理):[docs/使用說明.md](docs/使用說明.md)**。版本與變更見 `CHANGELOG.md`。
 
@@ -165,7 +165,7 @@ Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ �
 npm ci
 npm run validate-rules   # schema + 語意檢查(代碼清單、人工條件、疫苗代碼白名單、縣市 overlay 規範)
 npm test                 # 引擎、規則、adapters、面板分組單元與臨床情境測試;install.ps1 與 README 同步(有 pwsh 時另做語法與實跑)
-npm run build            # dist/ext(外掛,圖示由 assets/*.svg 產生)、dist/vaxcheck-ext-<版號>.zip、dist/web/index.html(示範頁)
+npm run build            # dist/ext(外掛,圖示直接使用 assets/icons/*.png)、dist/vaxcheck-ext-<版號>.zip、dist/web/index.html(示範頁)
 node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造健保雲端與 NIIS;另跑示範頁四組流程
 ```
 
@@ -176,14 +176,22 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 
 外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。發行時 workflow 會把建置後的規則推到本 repo 的 `rules` 分支(`https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`),已安裝的外掛一天內換新(或在設定頁按「立即更新規則」);repo 須為公開,外掛才讀得到(讀不到就用內建)。`ENGINE_VERSION`(src/engine/evaluate.js)只在引擎本身改動時才升:它寫進規則 manifest 的 `minEngine`,較舊的外掛遇到需要新引擎的規則會自動用內建。
 
-## 標誌
-原創圖形(未使用、未仿製任何機關徽章):盾牌 = 疫苗保護,勾 = 檢核,盾底淡綠山稜與浪線 = 東台灣山海;配色同面板(深藍 `#1C2B3A`、綠 `#1E7B4F`)。`assets/logo.svg` 產生 48/128 px,`assets/logo-small.svg`(16 格繪製、無山海細節)產生 16/24/32 px 工具列圖示;建置時由 `scripts/icons.mjs`(resvg)轉 PNG,不手繪。備選方向見 `docs/img/logo-alternatives.png`(原檔 `assets/alternatives/`),要換只需替換這兩個 SVG。
+## 品牌與圖示
+目前識別以「臺灣輪廓 + 疫苗針劑 + 勾選」為核心；配色採藍、綠、金色調。Chrome 擴充功能圖示一律不放文字；文字只留在大型品牌素材。
 
-![工具列圖示 16 px 放大檢視](docs/img/toolbar-icon.png)
+品牌 PNG 位於 `assets/brand/`:
+- `project-logo.png`: README／專案主標誌。
+- `taiwan-mark.png`: 中間臺灣圖形。
+- `taiwan-vaxcheck.png`: 中間臺灣 + VaxCheck。
+- `taiwan-115-zh.png`: 中間臺灣 + `115年 臺灣公費疫苗檢核`。
+- `vaxcheck-full.png`: 中間臺灣 + VaxCheck + `115年 臺灣公費疫苗檢核`。
+- `vaxcheck-115-zh.png`: VaxCheck + `115年 臺灣公費疫苗檢核`。
+
+Chrome extension 圖示位於 `assets/icons/`: `icon16.png`、`icon24.png`、`icon32.png`、`icon48.png`、`icon128.png`。建置時 `scripts/icons.mjs` 直接複製這些已校正尺寸的 PNG；16/24/32 px 用於工具列及縮放，48/128 px 用於擴充功能清單與較大顯示。
 
 ## 目錄
 ```
-assets/       標誌 SVG 原檔(圖示 PNG 由建置產生)
+assets/       品牌 PNG 與 Chrome extension 圖示(16/24/32/48/128 px)
 rules/        規則 YAML、schema、NIIS 代碼表、官方 ICD 清單(codelists/)
 src/engine/   判定引擎(純函式,Node 可測);display.js = 保底/升級與面板分組
 src/adapters/ 健保雲端 JSON、NIIS 結果頁 → facts

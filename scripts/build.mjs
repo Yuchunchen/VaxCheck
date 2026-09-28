@@ -19,9 +19,8 @@ fs.copyFileSync(path.join(ROOT, 'src/options/options.html'), path.join(EXT, 'opt
 for (const f of fs.readdirSync(D('rules')).filter((f) => f !== 'niis-vaccine-codes.json')) fs.copyFileSync(D('rules', f), path.join(EXT, 'rules', f));
 for (const f of ['LICENSE', 'NOTICE']) fs.copyFileSync(path.join(ROOT, f), path.join(EXT, f));
 
-// 圖示:assets/logo.svg、assets/logo-small.svg → PNG(scripts/icons.mjs);設定頁標題用 SVG 原檔
+// 圖示:預先產生的 assets/icons/*.png → dist/ext/icons(scripts/icons.mjs);小尺寸均不放文字
 const allIcons = writeIcons(path.join(EXT, 'icons'));
-fs.copyFileSync(path.join(ROOT, 'assets/logo-small.svg'), path.join(EXT, 'icons', 'logo-small.svg'));
 const icons = { 16: allIcons[16], 32: allIcons[32], 48: allIcons[48], 128: allIcons[128] };
 const toolbarIcons = { 16: allIcons[16], 24: allIcons[24], 32: allIcons[32] };   // 工具列 16 DIP(100%/150%/200% 縮放)
 fs.writeFileSync(path.join(EXT, 'manifest.json'), JSON.stringify({
