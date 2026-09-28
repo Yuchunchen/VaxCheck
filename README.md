@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/brand/project-logo.png" width="420" alt="VaxCheck｜115年 臺灣公費疫苗檢核"></p>
+<p align="center"><img src="assets/brand/vaxcheck-lockup-vertical-zh.png" width="420" alt="VaxCheck｜115年 臺灣公費疫苗檢核"></p>
 
 # VaxCheck｜115年 臺灣公費疫苗檢核
 
@@ -179,19 +179,16 @@ node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造
 ## 品牌與圖示
 目前識別以「臺灣輪廓 + 疫苗針劑 + 勾選」為核心；配色採藍、綠、金色調。Chrome 擴充功能圖示一律不放文字；文字只留在大型品牌素材。
 
-品牌 PNG 位於 `assets/brand/`:
-- `project-logo.png`: README／專案主標誌。
-- `taiwan-mark.png`: 中間臺灣圖形。
-- `taiwan-vaxcheck.png`: 中間臺灣 + VaxCheck。
-- `taiwan-115-zh.png`: 中間臺灣 + `115年 臺灣公費疫苗檢核`。
-- `vaxcheck-full.png`: 中間臺灣 + VaxCheck + `115年 臺灣公費疫苗檢核`。
-- `vaxcheck-115-zh.png`: VaxCheck + `115年 臺灣公費疫苗檢核`。
+標誌原圖放在 `assets/source/`(10 張,依圖形命名,見該資料夾 README 與總覽圖)。以下檔案由 `python3 scripts/make-brand.py` 從原圖產生後提交,建置時不需重跑:
 
-Chrome extension 圖示位於 `assets/icons/`: `icon16.png`、`icon24.png`、`icon32.png`、`icon48.png`、`icon128.png`。建置時 `scripts/icons.mjs` 直接複製這些已校正尺寸的 PNG；16/24/32 px 用於工具列及縮放，48/128 px 用於擴充功能清單與較大顯示。
+- `assets/brand/vaxcheck-lockup-vertical-zh.png`:README 主圖(標誌 + 字標 + 中文標語)。
+- `assets/brand/vaxcheck-lockup-horizontal.png`:橫式(標誌 + 字標)。
+- `assets/brand/vaxcheck-mark.png`:純圖形 512 px。
+- `assets/icons/icon{16,24,32,48,128}.png`:擴充功能圖示,不含文字;48/128 px 用白描邊版,16/24/32 px 用平面版去陰影(工具列尺寸較清楚)。`scripts/icons.mjs` 建置時直接複製。
 
 ## 目錄
 ```
-assets/       品牌 PNG 與 Chrome extension 圖示(16/24/32/48/128 px);assets/source/ 為標誌素材原檔(不進建置)
+assets/       source/ 標誌原圖;brand/ 與 icons/ 由 scripts/make-brand.py 產生
 rules/        規則 YAML、schema、NIIS 代碼表、官方 ICD 清單(codelists/)
 src/engine/   判定引擎(純函式,Node 可測);display.js = 保底/升級與面板分組
 src/adapters/ 健保雲端 JSON、NIIS 結果頁 → facts

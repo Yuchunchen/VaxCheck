@@ -1,6 +1,6 @@
 {
   "name": "vaxcheck",
-  "version": "0.4.17",
+  "version": "0.4.18",
   "private": true,
   "type": "module",
   "description": "疫苗檢核程式 VaxCheck — 插卡一鍵檢核公費疫苗資格(Chrome 外掛)",
@@ -13,7 +13,6 @@
     "eval": "node scripts/eval.mjs"
   },
   "devDependencies": {
-    "@resvg/resvg-js": "^2.6.2",
     "ajv": "^8.17.1",
     "esbuild": "^0.24.0",
     "js-yaml": "^4.1.0",

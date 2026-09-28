@@ -1,7 +1,7 @@
 # 品牌素材原檔(assets/source)
 
 VaxCheck 標誌的**原始素材**,2026-09-28 由 YC 以 ChatGPT 圖像生成後提供,依圖形內容重新命名。
-這裡只做保存與挑選;外掛實際使用的是 `assets/icons/`(工具列圖示)與 `assets/brand/`(README 等處的壓縮版),不會被建置流程讀取。
+這裡是**唯一的標誌來源**。`python3 scripts/make-brand.py` 由這裡產生 `assets/icons/`(擴充功能圖示,用 `mark-sticker` 與 `mark-flat-shadow`)與 `assets/brand/`(用 `lockup-vertical-zh`、`lockup-horizontal`、`mark-sticker`);建置流程不直接讀本資料夾。
 
 ![總覽](_overview.png)
 
@@ -22,6 +22,6 @@ VaxCheck 標誌的**原始素材**,2026-09-28 由 YC 以 ChatGPT 圖像生成後
 `vaxcheck-<類型>-<變化>.png`:`lockup` = 圖形加文字組合;`mark` = 只有圖形;`wordmark` = 只有文字;`alt` = 其他設計方向;`-zh` = 含中文標語。
 
 ## 使用注意
-- AI 生成圖形邊緣為點陣,放大或印刷前應以 `assets/logo.svg` 向量檔重繪,不要直接拉伸這些 PNG。
+- AI 生成圖形為點陣,最大約 1254 px;海報或印刷需更大尺寸時,應請設計重繪為向量檔,不要直接拉伸。
 - 16/24/32 px 工具列圖示不可含文字,由 `assets/icons/` 提供。
 - 圖形為原創,未使用醫院或輔導會官方院徽。

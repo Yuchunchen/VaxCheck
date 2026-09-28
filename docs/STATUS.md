@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.17)
+# 疫苗檢核程式 — 進度(v0.4.18)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -18,6 +18,7 @@
 - 2026-09-27:罕見疾病改用國健署完整名單(115-07-23)作病歷證據(YC;取代同日稍早「不另建清單」之決定)。通用碼不作證據,見 v0.4.8。
 
 ## 已完成
+- **v0.4.18**(2026-09-28):標誌改用 assets/source 原圖。scripts/make-brand.py(Pillow+numpy,產物提交)產生 assets/icons 16–128(≤32 用 mark-flat-shadow 去陰影、48/128 用 mark-sticker)與 assets/brand 3 張(lockup-vertical-zh、lockup-horizontal、mark)。刪 assets/logo.svg、logo-small.svg、alternatives/、舊 brand 6 張(其中 project-logo、vaxcheck-full 與 icons/icon128 為損毀檔)、docs/img/logo-alternatives.png、demo-page.png、options-page.png;toolbar-icon.png 重產。移除 devDependency @resvg/resvg-js。tests/icons.test.mjs 改為逐 chunk CRC + IDAT inflate 檢查 assets 下全部 PNG。
 - **v0.4.17**(2026-09-28):assets/source/ 標誌素材原檔 10 張(依圖形命名)+ _overview.png + README(尺寸、SHA-256、原始檔名)。不進建置。
 - **v0.4.16**(2026-09-28):(YC)scripts/install.ps1(PowerShell 5.1 相容;GitHub API releases/latest 取 `vaxcheck-ext-*.zip`、SHA256SUMS 校驗、桌面\vaxcheck 保留資料夾只清內容、攤平多一層、防誤刪非 VaxCheck 資料夾、Set-Clipboard、開 chrome://extensions)與 README 貼上區塊;tests/install-script.test.mjs 檢查兩者同步、5.1 語法限制、不動登錄檔,有 pwsh 時解析 + 本機假 API 實跑。標誌 assets/logo.svg(48/128)、assets/logo-small.svg(16/24/32),scripts/icons.mjs 以 @resvg/resvg-js(新 devDependency)產生 PNG,取代 build.mjs 手繪 PNG;manifest icons 加 32、action.default_icon 16/24/32;設定頁標題、示範頁 favicon。截圖 docs/img/toolbar-icon.png、options-page.png、demo-page.png、logo-alternatives.png。v0.4.14–0.4.15 未單獨發行,隨本版發行(線上規則 v0412)。單元與情境 132/132、端對端 56/56。
 - **v0.4.15**(2026-09-28):(YC)病歷證據 ICD 最多列 3 碼(conditions.js MAX=3;面板依據 ICD 同)。線上規則每天更新一次:rulesource.js REFRESH_MS=24h、needsRefresh();background 拆 refreshRemote()、chrome.alarms `rules-daily`(1440 分,已存在不重建)+ onStartup;抓不到沿用快取(仍過 rejectRemote)。設定頁規則狀態 + 「立即更新規則」(rules:status / rules:refresh,後者限外掛頁)。權限加 alarms。單元與情境 124/124、端對端 56/56。
