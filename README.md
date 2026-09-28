@@ -191,7 +191,7 @@ Chrome extension 圖示位於 `assets/icons/`: `icon16.png`、`icon24.png`、`ic
 
 ## 目錄
 ```
-assets/       品牌 PNG 與 Chrome extension 圖示(16/24/32/48/128 px)
+assets/       品牌 PNG 與 Chrome extension 圖示(16/24/32/48/128 px);assets/source/ 為標誌素材原檔(不進建置)
 rules/        規則 YAML、schema、NIIS 代碼表、官方 ICD 清單(codelists/)
 src/engine/   判定引擎(純函式,Node 可測);display.js = 保底/升級與面板分組
 src/adapters/ 健保雲端 JSON、NIIS 結果頁 → facts
