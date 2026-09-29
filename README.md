@@ -3,8 +3,8 @@
 # VaxCheck｜115年 臺灣公費疫苗檢核
 
 > **保護個人資料與隱私是本工具的前提**
-> - **雙卡認證、僅限醫師操作**:必須先以**醫師卡 + 健保卡**登入健保雲端才能使用;本工具不提供任何繞過登入的方式,也只能由登入的醫師操作。
-> - **只協助判斷、不保存資料**:病患資料只暫存在瀏覽器記憶體(`chrome.storage.session`),關閉瀏覽器即清除;不寫入硬碟、不建立資料庫、不留紀錄。
+> - **雙卡認證、僅限醫師操作**:必須先以**醫師卡 + 健保卡**登入健保雲端和透過加密網路(VPN)才能使用;本工具不提供任何繞過登入的方式,也只能由登入的醫師操作。
+> - **只協助判斷、不保存資料**:病患資料關閉瀏覽器即清除;不寫入硬碟、不建立資料庫、不留紀錄。只有查詢期間會短暫存在瀏覽器記憶體(`chrome.storage.session`)。
 > - **不上傳、不連任何雲端**:不設伺服器、不回傳病患資料,沒有分析或追蹤程式。僅會連線醫師本來就在用的健保署系統(健保雲端、NIIS),以及下載公開的疫苗規則檔(不帶任何病患資料),降低資料外洩風險。
 
 門診插健保卡 → 按瀏覽器標題列的 VaxCheck 圖示 → 看這位病患現在能公費打哪些疫苗、為什麼、確認哪些條件就能打。**使用說明(醫師/護理):[docs/使用說明.md](docs/使用說明.md)**。版本與變更見 `CHANGELOG.md`。
@@ -29,7 +29,6 @@ Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ �
 3. 把資料夾路徑複製到剪貼簿,用 Chrome 開 `chrome://extensions`。
 4. 印出下一步:**首次安裝** → 右上開「開發人員模式」→「載入未封裝項目」→ 貼上路徑 →「選擇資料夾」,再按工具列拼圖圖示把 VaxCheck 釘選;**更新** → 在擴充功能頁按 VaxCheck 的「重新載入」。
 
-**為什麼更新一定要用同一個資料夾**:未封裝外掛的 ID 由資料夾路徑決定。換路徑等於裝一個新外掛,原本的設定(`chrome.storage.sync`:健保雲端入口、NIIS 網址、適用縣市、線上規則等)全部不見。所以腳本更新時不換位置、不改名,只換裡面的檔案。已照舊說明手動裝在其他資料夾(例 `C:\VaxCheck\ext`)的電腦,請繼續手動更新那個資料夾;改用腳本等於新裝一個,要重新設定並移除舊的。
 
 <!-- install.ps1 開始:與 scripts/install.ps1 內容相同(tests/install-script.test.mjs 檢查),改一邊要同步另一邊 -->
 ```powershell
@@ -145,10 +144,6 @@ Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ �
 | 找不到 Chrome | 檔案已放好;自行開 Chrome,網址列輸入 `chrome://extensions`。 |
 | 「載入未封裝項目」反灰或不見 | 院內政策停用了開發人員模式,需資訊室派送(見下節)。 |
 
-### 為什麼不能全自動
-- Chrome 137 起,官方版 Google Chrome 移除 `--load-extension` 命令列參數,程式無法代為載入未封裝外掛;「開發人員模式」「載入未封裝項目」「重新載入」只能在 Chrome 裡手動按。
-- 要全自動(不必按任何鈕、也不用開發人員模式),需資訊室以群組原則 `ExtensionInstallForcelist` 派送:上架 Chrome 線上應用程式商店(可設不公開)後派送商店 ID;或自架 CRX 與更新資訊檔(update manifest),但 Windows 上自架來源只對加入網域的電腦有效。
-- 本腳本不改登錄檔、不改 Chrome 設定,也不繞過 Chrome 的任何安全機制。
 
 ### 手動安裝
 1. 到 GitHub Releases 下載最新版 `vaxcheck-ext-<版號>.zip`(或 Actions → 最新 ci 執行 → vaxcheck-dist → ext)。
@@ -166,32 +161,6 @@ Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ �
 
 ### 回報問題
 院區/電腦、外掛版號、步驟、截圖、F12 Console 中 `[疫苗檢核]` 開頭的訊息。需要時按面板「匯出診斷檔」(已排除姓名與身分證,但仍是病歷資料,傳送前請去識別)。院內測試步驟見 `docs/TESTING_v0.4.md`。
-
-## 開發
-```
-npm ci
-npm run validate-rules   # schema + 語意檢查(代碼清單、人工條件、疫苗代碼白名單、縣市 overlay 規範)
-npm test                 # 引擎、規則、adapters、面板分組單元與臨床情境測試;install.ps1 與 README 同步(有 pwsh 時另做語法與實跑)
-npm run build            # dist/ext(外掛,圖示直接使用 assets/icons/*.png)、dist/vaxcheck-ext-<版號>.zip、dist/web/index.html(示範頁)
-node e2e/run.mjs         # 需全域 playwright:真 Chromium 載入外掛,偽造健保雲端與 NIIS;另跑示範頁四組流程
-```
-
-## 發行(維護者)
-1. `npm version <版號> --no-git-tag-version`;`CHANGELOG.md` 加 `## v<版號>(日期)` 一節;`docs/STATUS.md` 加一行。
-2. 本機跑上面四個指令(含 e2e)全過 → commit、推 main,等 ci 綠燈。
-3. 觸發 release workflow(二擇一):`git tag v<版號> && git push origin v<版號>`;或 GitHub → Actions → release → Run workflow(分支選 main)。workflow 重跑驗證/測試/建置,建立 tag 與 GitHub Release(外掛 zip、單檔示範頁、SHA256SUMS.txt;說明取自 CHANGELOG 該節)。同版號已發行會失敗,要發新版先升版號。
-
-外掛版本與規則版本分開:改規則也要升外掛 patch 版號,院內才看得出差別。發行時 workflow 會把建置後的規則推到本 repo 的 `rules` 分支(`https://raw.githubusercontent.com/Yuchunchen/VaxCheck/rules/`),已安裝的外掛一天內換新(或在設定頁按「立即更新規則」);repo 須為公開,外掛才讀得到(讀不到就用內建)。`ENGINE_VERSION`(src/engine/evaluate.js)只在引擎本身改動時才升:它寫進規則 manifest 的 `minEngine`,較舊的外掛遇到需要新引擎的規則會自動用內建。
-
-## 品牌與圖示
-目前識別以「臺灣輪廓 + 疫苗針劑 + 勾選」為核心；配色採藍、綠、金色調。Chrome 擴充功能圖示一律不放文字；文字只留在大型品牌素材。
-
-標誌原圖放在 `assets/source/`(10 張,依圖形命名,見該資料夾 README 與總覽圖)。以下檔案由 `python3 scripts/make-brand.py` 從原圖產生後提交,建置時不需重跑:
-
-- `assets/brand/vaxcheck-lockup-vertical-zh.png`:README 主圖(標誌 + 字標 + 中文標語)。
-- `assets/brand/vaxcheck-lockup-horizontal.png`:橫式(標誌 + 字標)。
-- `assets/brand/vaxcheck-mark.png`:純圖形 512 px。
-- `assets/icons/icon{16,24,32,48,128}.png`:擴充功能圖示,不含文字。16/24/32 px(工具列)為方形小圖示「藍底 + 白色針筒 + 黃勾」,由腳本繪製;48/128 px(擴充功能清單)用原圖白描邊版。預覽見 `docs/img/toolbar-icon.png`。`scripts/icons.mjs` 建置時直接複製。
 
 ## 目錄
 ```
