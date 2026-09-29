@@ -1,4 +1,4 @@
-# 疫苗檢核程式 — 進度(v0.4.21)
+# 疫苗檢核程式 — 進度(v0.4.22)
 
 > 正本在 Cowork Project「疫苗檢核程式」的 claude/STATUS.md;此檔為 repo 建立時的快照。
 
@@ -18,6 +18,7 @@
 - 2026-09-27:罕見疾病改用國健署完整名單(115-07-23)作病歷證據(YC;取代同日稍早「不另建清單」之決定)。通用碼不作證據,見 v0.4.8。
 
 ## 已完成
+- **v0.4.22**(2026-09-29):新增 `sources/` 官方來源原檔封存(YC 決定;來源為官方公開文件,無著作權疑慮)。7 份 PDF + pdftotext 文字檔:流感計畫全文、工作手冊(115 年 7 月版)、附件 1 高風險慢性病 ICD;COVID-19 115–116 計畫(1150727)、高風險 ICD 參考表(1140829);成人公費肺鏈計畫(115-08-10 起);健保重大傷病 ICD(2023 版)。`sources/manifest.yaml` 記 sha256、頁數、發布/生效日、官方網頁、對應規則來源 id 與 codelist;`tests/sources.test.mjs` 驗證雜湊、無未登錄檔案、ruleSourceIds 存在、codelist 的 sourceSha256 與封存檔相符(重大傷病、流感附件 1 相符)。PDF 標 binary(.gitattributes)、不進建置。**未放**:① 疾管署 NIIS 介接 API 規格書 5 份(HIS 廠商用文件,含內部主機資訊,repo 已公開,是否可公開待 YC 確認);② 國健署罕病名單 115-07-23 版(規則實際依據,sourceSha256 3406bda4…,Dropbox 只有 114-01-23 舊版)與疾管署 IPD ICD 表 1140310(sourceSha256 8f353edb…)——原檔待 YC 補。規則與程式未動。
 - **v0.4.21**(2026-09-28):分支整合。main 快轉併入 claude/system-architecture-dynamic-dashed(架構圖動態虛線 + GIF);自 claude/vaccine-checker-chrome-extension 取 docs/VaxCheck的故事.md(主圖改 vaxcheck-lockup-vertical-zh.png,舊 official-logo 已於 v0.4.18 淘汰);該分支的舊標誌、icon128 與 icons 測試已被 v0.4.18 取代,不併入。刪除已合併的 claude/* 分支;rules 分支保留(線上規則發佈通道)。src 與規則未動。
 - **v0.4.20**(2026-09-28):docs/使用說明 加 docs/img/install-toolbar.png、install-extension-card.png(YC 院內截圖,2 倍放大加紅框標註;只含擴充功能 ID,無病患資料);舊圖示描述更新。
 - **v0.4.19**(2026-09-28):工具列 16/24/32 px 改為 make-brand.py 繪製的方形小圖示(16 格網格、8 倍超取樣;藍 #003A9C 底、白針筒、黃 #DEAD01 勾含藍色間隔;刻度 ≥24 px 才畫);48/128 仍為 mark-sticker。make-brand.py 同時產生 docs/img/toolbar-icon.png,移除 numpy 依賴。

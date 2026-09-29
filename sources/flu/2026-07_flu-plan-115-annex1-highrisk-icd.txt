@@ -1,0 +1,293 @@
+  115 年度流感疫苗接種計畫                                                           附件 1
+
+              高風險慢性病人疾病代碼一覽表
+ICD-10                ICD-10-CM
+       分類名稱   中文病名                             英文病名 (ICD-10-CM)
+ 大類                      編碼
+                                    B20: Human immunodeficiency virus [HIV]
+              人類免疫不
+                                    disease
+ B    感染症     全病毒疾病    B20,Z21
+                                    Z21: Asymptomatic human immunodeficiency
+               或感染
+                                    virus [HIV] infection status
+                                    D80: Immunodeficiency with predominantly
+                                    antibody defects
+                                    D81: Combined immunodeficiencies
+     血液和造
+          免疫缺乏症        D80-84       D82: Immunodeficiency associated with other
+     血器官及
+                                    major defects
+ D   涉及免疫
+                                    D83: Common variable immunodeficiency
+     機轉的疾
+                                    D84: Other immunodeficiencies
+       患
+                                    D86: Sarcoidosis
+              類肉瘤病與
+                       D86,D89      D89: Other disorders involving the immune
+                其他
+                                    mechanism, not elsewhere classified
+                                    E08: Diabetes mellitus due to underlying
+                                    condition
+                                    E09: Drug or chemical induced diabetes mellitus
+     內分泌、      糖尿病     E08-13
+                                    E10: Type 1 diabetes mellitus
+ E   營養和代
+                                    E11: Type 2 diabetes mellitus
+      謝疾病
+                                    E13: Other specified diabetes mellitus
+               肥胖症       E66        E66: Obesity
+              類澱粉變性      E85        E85: Amyloidosis
+              中樞神經系
+                                    G09: Sequelae of inflammatory diseases of
+              統發炎性疾     G09
+                                    central nervous system
+              病的後遺症
+          帕金森氏病         G20         G20: Parkinson's disease
+     神經系統
+                       G30-32
+ G   與感覺器                           G30: Alzheimer's disease
+          阿茲海默氏
+     官的疾病                           G31: Other degenerative diseases of nervous
+          病與其他神
+                                    system, not elsewhere classified
+          經退化性疾
+                                    G32: Other degenerative disorders of nervous
+            病
+                                    system in diseases classified elsewhere
+
+
+
+
+                               18
+  115 年度流感疫苗接種計畫
+
+
+ICD-10                ICD-10-CM
+       分類名稱   中文病名                             英文病名 (ICD-10-CM)
+ 大類                      編碼
+                                    G35: Multiple sclerosis
+              多發性硬化
+                                    G36: Other acute disseminated demyelination
+              症與其他脫    G35-37
+                                    G37: Other demyelinating diseases of central
+               髓鞘疾病
+                                    nervous system
+              癲癇及重覆
+                         G40        G40: Epilepsy and recurrent seizures
+                發作
+              短暫性腦缺
+                                    G45: Transient cerebral ischemic attacks and
+              血發作與腦
+                                    related syndromes
+              血管疾病所    G45-46
+                                    G46: Vascular syndromes of brain in
+              致的腦血管
+                                    cerebrovascular diseases
+               症候群
+              發炎性及毒
+                                    G65: Sequelae of inflammatory and toxic
+              性多發神經      G65
+                                    polyneuropathies
+              病變後遺症
+                                    G70: Myasthenia gravis and other myoneural
+              重症肌無力      G70
+                                    disorders
+              其他及未特
+                         G72        G72: Other and unspecified myopathies
+              定之肌病變
+                                    I00: Rheumatic fever without heart involvement
+                                    I01: Rheumatic fever with heart involvement
+                                    I02: Rheumatic chorea
+              風濕熱與慢
+                       I00-02,      I05: Rheumatic mitral valve diseases
+              性風濕性心
+                       I05-09       I06: Rheumatic aortic valve diseases
+                臟病
+                                    I07: Rheumatic tricuspid valve diseases
+                                    I08: Multiple valve diseases
+                                    I09: Other rheumatic heart diseases
+     循環系統
+ I                                  I11: Hypertensive heart disease
+      疾病
+                                    I12: Hypertensive chronic kidney disease
+              高血壓疾病     I11-13
+                                    I13: Hypertensive heart and chronic kidney
+                                    disease
+                                    I20: Angina pectoris
+              心絞痛與其                 I21: ST elevation (STEMI) and non-ST elevation
+                       I20-22,
+              他缺血性心                 (NSTEMI) myocardial infarction
+                       I24-25
+                臟病                  I22: Subsequent ST elevation (STEMI) and non-
+                                    ST elevation (NSTEMI) myocardial infarction
+
+
+                               19
+  115 年度流感疫苗接種計畫
+
+
+ICD-10                ICD-10-CM
+       分類名稱   中文病名                               英文病名 (ICD-10-CM)
+ 大類                      編碼
+                                    I5A: Non-ischemic myocardial injury (non-
+                                    traumatic)
+                                    I24: Other acute ischemic heart diseases
+                                    I25: Chronic ischemic heart disease
+                                    I27: Other pulmonary heart diseases
+              肺性心臟病     I27-28
+                                    I28: Other diseases of pulmonary vessels
+                                    I34: Nonrheumatic mitral valve disorders
+                                    I35: Nonrheumatic aortic valve disorders
+              瓣膜疾病      I34-37
+                                    I36: Nonrheumatic tricuspid valve disorders
+                                    I37: Nonrheumatic pulmonary valve disorders
+                                    I42: Cardiomyopathy
+              心肌病變      I42-43      I43: Cardiomyopathy in diseases classified
+                                    elsewhere
+                                    I44: Atrioventricular and left bundle-branch
+                                    block
+              心臟傳導     I44-45,      I45: Other conduction disorders
+               疾病       I47-49      I47: Paroxysmal tachycardia
+                                    I48: Atrial fibrillation and flutter
+                                    I49: Other cardiac arrhythmias
+                                    I50: Heart failure
+              心衰竭與
+                        I50-51      I51: Complications and ill-defined descriptions
+               其他
+                                    of heart disease
+                                    I60: Nontraumatic subarachnoid hemorrhage
+              非外傷性腦                 I61: Nontraumatic intracerebral hemorrhage
+                        I60-62
+                出血                  I62: Other and unspecified nontraumatic
+                                    intracranial hemorrhage
+                                    I63: Cerebral infarction
+               腦梗塞       I63
+                                    P91: Neonatal cerebral infarction
+                                    I67: Other cerebrovascular diseases
+              其他腦血管
+                                    I68: Cerebrovascular disorders in diseases
+              疾病或其後     I67-69
+                                    classified elsewhere
+                遺症
+                                    I69: Sequelae of cerebrovascular disease
+              動脈粥樣硬
+                         I70        Atherosclerosis
+                化
+                                    I71: Aortic aneurysm and dissection
+               動脈瘤      I71,72
+                                    I72: Other aneurysm
+                               20
+  115 年度流感疫苗接種計畫
+
+
+ICD-10                ICD-10-CM
+       分類名稱   中文病名                               英文病名 (ICD-10-CM)
+ 大類                      編碼
+                                     I73: Other peripheral vascular diseases
+                                     I74: Arterial embolism and thrombosis
+              其他血管      I73-74,
+                                     I77: Other disorders of arteries and arterioles
+               疾病       I77, I79
+                                     I79: Disorders of arteries, arterioles and
+                                     capillaries in diseases classified elsewhere
+                                     J40: Bronchitis, not specified as acute or chronic
+                                     J41: Simple and mucopurulent chronic bronchitis
+              支氣管炎與                  J42: Unspecified chronic bronchitis
+              其他慢性阻     J40-45       J43: Emphysema
+              塞性肺疾病                  J44: Other chronic obstructive pulmonary
+                                     disease
+                                     J45: Asthma
+               支氣管
+                          J47        J47: Bronchiectasis
+               擴張症
+                                     J60: Coalworker's pneumoconiosis
+                                     J61: Pneumoconiosis due to asbestos and other
+                                     mineral fibers
+                                     J62: Pneumoconiosis due to dust containing
+                                     silica
+                                     J63: Pneumoconiosis due to other inorganic dusts
+     呼吸系統
+ J                                   J64: Unspecified pneumoconiosis
+      疾病
+              肺沉著症及                  J65: Pneumoconiosis associated with
+              外因所致之     J60-70       tuberculosis
+               肺疾病                   J66: Airway disease due to specific organic dust
+                                     J67: Hypersensitivity pneumonitis due to organic
+                                     dust
+                                     J68: Respiratory conditions due to inhalation of
+                                     chemicals, gases, fumes and vapors
+                                     J69: Pneumonitis due to solids and liquids
+                                     J70: Respiratory conditions due to other external
+                                     agents
+                                   J82: Pulmonary eosinophilia, not elsewhere
+                                   classified
+              其他肺部    J82,J84,J96,
+                                   J84: Other interstitial pulmonary diseases
+               疾病       J98,J99
+                                   J96: Respiratory failure, not elsewhere classified
+                                     J98: Other respiratory disorders
+                                21
+  115 年度流感疫苗接種計畫
+
+
+ICD-10                   ICD-10-CM
+       分類名稱    中文病名                                 英文病名 (ICD-10-CM)
+ 大類                         編碼
+                                        J99: Respiratory disorders in diseases classified
+                                        elsewhere
+                                        K70: Alcoholic liver disease
+                                        K71: Toxic liver disease
+                                        K72: Hepatic failure, not elsewhere classified
+                           K70-72,      K73: Chronic hepatitis, unspecified
+     消化系統 慢性肝炎與
+ K                         K73-76,      K74: Fibrosis
+      疾病   肝硬化
+                           B18-19       K75: Other inflammatory disease of liver K76:
+                                        Other diseases of liver
+                                        B18: Chronic viral hepatitis
+                                        B19: Unspecified viral hepatitis
+                                        M05: Rheumatoid arthritis with rheumatoid
+              類風濕性關
+                           M05-06       factor
+                節炎
+                                        M06: Other rheumatoid arthritis
+                                        M30: Polyarteritis nodosa and related conditions
+     肌肉骨骼
+                                        M31: Other necrotizing vasculopathies
+     系統及結 全身性自體            M30-31,
+ M                                      M32: Systemic lupus erythematosus (SLE)
+     締組織疾 免疫症候群            M32-34
+                                        M33: Dermatopolymyositis
+       病
+                                        M34: Systemic sclerosis [scleroderma]
+                               M35: Other systemic involvement of connective
+              其他結締組
+                    M35, M94.1 tissue
+               織疾病
+                               M94.1: Relapsing polychondritis
+                                        N00: Acute nephritic syndrome
+                           N00-01,
+                                        N01: Rapidly progressive nephritic syndrome
+              腎炎症候群         N03,
+                                        N03: Chronic nephritic syndrome
+                            N05
+                                        N05: Unspecified nephritic syndrome
+     生殖泌尿 腎病症候群              N04        N04: Nephrotic syndrome
+ N
+     系統疾病 慢性腎衰竭
+                                        N18: Chronic kidney disease (CKD)
+          及腎衰竭未            N18-19
+                                        N19: Unspecified kidney failure
+           明示者
+                                        N26: Unspecified contracted kidney
+               腎臟萎縮        N26-27
+                                        N27: Small kidney of unknown cause
+     先天性畸
+     形、變形 先天或後天            Q89.01,      Q89.01: Asplenia (congenital)
+ Q
+     與染色體 脾臟缺損             Z90.81       Z90.81: Post-surgical absence of spleen
+      異常
+                                   22
+

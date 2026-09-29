@@ -1,0 +1,128 @@
+# VaxCheck 來源封存清單(機器可讀)。每筆的 sha256 由 tests/sources.test.mjs 驗證。
+# 規則與 codelist 引用來源時以 id / ruleSourceIds 對照;PDF 為官方公開文件原檔,不修改。
+schemaVersion: 1
+archivedAt: "2026-09-29"
+files:
+  - id: CDC_FLU_PLAN_115
+    vaccine: FLU
+    kind: plan
+    title: "115 年度流感疫苗接種計畫(全文)"
+    issuer: "衛生福利部"
+    published: "2026-07"
+    file: flu/2026-07_flu-plan-115-full.pdf
+    textFile: flu/2026-07_flu-plan-115-full.txt
+    sha256: 51648bddcf953e35643497bb914d07dae597ebd826085d559fc28fd916dc4a7a
+    bytes: 523182
+    pages: 27
+    originalName: "115年度流感疫苗接種計畫-全文.pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    sourcePage: https://www.cdc.gov.tw/Category/MPage/JNTC9qza3F_rgt9sRHqV2Q
+    ruleSourceIds: [SRC_CDC_FLU_PLAN_115]
+    note: "PDF 內文封面「中華民國 115 年 7 月」;檔案建立 2026-07-16。"
+  - id: CDC_FLU_WORKBOOK_115
+    vaccine: FLU
+    kind: workbook
+    title: "流感疫苗接種計畫工作手冊(115 年 7 月版)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-07"
+    file: flu/2026-07_flu-workbook-115.pdf
+    textFile: flu/2026-07_flu-workbook-115.txt
+    sha256: b99aa663a5be5284054b5766b50fcac45287d3d74885adae9787f4c6128e0b38
+    bytes: 4286713
+    pages: 124
+    originalName: "115年流感疫苗接種計畫工作手冊(115年7月版).pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    sourcePage: https://www.cdc.gov.tw/Category/MPage/JNTC9qza3F_rgt9sRHqV2Q
+    fileUrl: https://www.cdc.gov.tw/Uploads/0b31ae58-9a38-4a24-8f2a-34d088c72e14.pdf
+    ruleSourceIds: [SRC_CDC_FLU_MANUAL_115]
+    note: "附件14 接種對象代碼對照表;第四章壹五(四)。fileUrl 取自 SOURCES_WATCH,未逐次驗證。"
+  - id: CDC_FLU_ANNEX1_115
+    vaccine: FLU
+    kind: annex
+    title: "115 年度流感疫苗接種計畫 附件 1 高風險慢性病人疾病代碼一覽表"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-07"
+    file: flu/2026-07_flu-plan-115-annex1-highrisk-icd.pdf
+    textFile: flu/2026-07_flu-plan-115-annex1-highrisk-icd.txt
+    sha256: 55e7fb596a1706f1c25c6ad8cc2786af84e5bd547c5e2395648d3043876f315e
+    bytes: 286136
+    pages: 5
+    originalName: "115年高風險慢性病人疾病代碼一覽表.pdf(Dropbox 另有同內容 流感計畫_附件1-… 副本)"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    fileUrl: https://www.cdc.gov.tw/File/Get/om1fPXrhC0oM-kq9v-m4VQ
+    ruleSourceIds: [SRC_CDC_FLU_ANNEX1_115]
+    codelists: [rules/codelists/flu-highrisk-chronic.cdc-115.json]
+    note: "與 rules/codelists/flu-highrisk-chronic.cdc-115.json 記錄的 sourceSha256 相符。"
+  - id: CDC_COVID_PLAN_115_116
+    vaccine: COVID
+    kind: plan
+    title: "115-116 年度 COVID-19 疫苗接種計畫(1150727 全文)"
+    issuer: "衛生福利部"
+    published: "2026-07-27"
+    file: covid19/2026-07_covid19-plan-115-116.pdf
+    textFile: covid19/2026-07_covid19-plan-115-116.txt
+    sha256: 723f3f0b49d5fa8736f7e6bfa3cb24ed59638a074bc913ad493fbfa0ca689812
+    bytes: 572188
+    pages: 21
+    originalName: "115-116年度COVID-19疫苗接種計畫-1150727.pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    sourcePage: https://www.cdc.gov.tw/Category/Page/pleXgqX_qXM_Q79Yt_QVZQ
+    ruleSourceIds: [SRC_CDC_COVID_PLAN_115]
+    note: "PDF 內文封面「中華民國 115 年 7 月」;檔案建立 2026-07-30。"
+  - id: CDC_COVID_HIGHRISK_ICD_1140829
+    vaccine: COVID
+    kind: annex
+    title: "COVID-19 高風險對象(結核病、失能、精神疾病及失智症患者)疾病代碼(ICD code)參考表(1140829)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2025-08-29"
+    file: covid19/2025-08_covid19-highrisk-icd-ref.pdf
+    textFile: covid19/2025-08_covid19-highrisk-icd-ref.txt
+    sha256: 136b7cf05c5c3bb1c7fd04fea5334882b92beee8898038401f7b827d45dd0922
+    bytes: 749478
+    pages: 25
+    originalName: "COVID-19高風險對象(結核病、失能、精神疾病及失智症患者)ICD code參考表_1140829.pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    sourcePage: https://www.cdc.gov.tw/Category/Page/pleXgqX_qXM_Q79Yt_QVZQ
+    ruleSourceIds: [SRC_CDC_COVID_PLAN_115]
+    note: "COVID 其他風險 ICD 證據的依據(STATUS v0.4.5、v0.4.11 轉錄,YC 2026-09-28 核准)。日期取自檔名 1140829 與 PDF 建立日。"
+  - id: CDC_PNEUMO_ADULT_PLAN_20260810
+    vaccine: PNEUMO
+    kind: plan
+    title: "成人公費肺炎鏈球菌疫苗接種計畫(自 115 年 8 月 10 日起適用;PCV20+21)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-07-17"
+    effectiveFrom: "2026-08-10"
+    file: pneumo/2026-08_pneumo-adult-plan-pcv20-21.pdf
+    textFile: pneumo/2026-08_pneumo-adult-plan-pcv20-21.txt
+    sha256: 8606d8cd2f7a36b614284cbab1cb79e670c4202dc8176480a3790328097d3c9f
+    bytes: 523698
+    pages: 9
+    originalName: "成人公費肺炎鏈球菌疫苗接種計畫(自115年8月10日起適用).pdf(Dropbox 另有同內容 115年… 副本)"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    sourcePage: https://www.cdc.gov.tw/Category/ListContent/PiUlO1cbz0SD6d4S7ycpcA?uaid=EEWg-6treo0pkD14SYcIKA
+    ruleSourceIds: [SRC_CDC_PLAN_20260810]
+    note: "PDF 標題含「1150717_附件_…(奉核)」,發布日以檔案建立 2026-07-17 為準;115 年 8 月 10 日起適用。"
+  - id: NHI_CATASTROPHIC_ILLNESS_1140101
+    vaccine: COMMON
+    kind: regulation
+    title: "全民健康保險保險對象免自行負擔費用辦法第二條附表一修正規定(重大傷病項目;114-01-01 起適用,ICD-10-CM 2023 版)"
+    issuer: "衛生福利部"
+    published: "2024-09-16"
+    effectiveFrom: "2025-01-01"
+    file: common/2024-09_nhi-catastrophic-illness-icd2023.pdf
+    textFile: common/2024-09_nhi-catastrophic-illness-icd2023.txt
+    sha256: b1ae6b72b53ee001bd66a618fea8a6494199b9d89073bd467bc7a2a65a3a6011
+    bytes: 1148417
+    pages: 27
+    originalName: "1130916_公告大傷病診斷碼2023年版.pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;Dropbox 3.Project.YuLi/20260916.疫苗施打檢核)"
+    archivedAt: "2026-09-29"
+    ruleSourceIds: [SRC_NHI_CATASTROPHIC_1140101]
+    codelists: [rules/codelists/catastrophic-illness.nhi-1140101.json]
+    note: "與 rules/codelists/catastrophic-illness.nhi-1140101.json 記錄的 sourceSha256 相符。"
