@@ -18,7 +18,41 @@
 - 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console。唯一的外部連線是下載線上規則(不帶任何病患資料)。
 - 線上規則:預設從本 repo 的 `rules` 分支下載(每天自動檢查一次;設定頁可「立即更新規則」),發行時才更新。讀不到、雜湊不符、比內建舊、或需要較新版外掛時,自動改用外掛內建規則;面板頁尾「來源」顯示線上/快取/內建。設定頁勾「只用內建規則」可停用。
 
+## 環境設定說明
+
+使用 VaxCheck 前,門診電腦需先安裝並執行下列**兩個讀卡程式**(健保署系統與 NIIS 讀取健保卡、醫事人員卡用)。兩個都裝好後,再照下一節安裝外掛。
+
+### 1. CDC 讀卡程式(CDCServiSign)
+用於疾管署「全國性預防接種資訊管理系統」的**醫療院所預防接種資料查詢系統**(NIIS)。
+
+- 網址:<https://10.241.219.42/>(院內網路位址,需在院內網路或 VPN 下開啟)
+- 安裝檔:`CDCPKI_Setup.exe`。首次使用時,網站會顯示「系統所需安裝檔(非IE)」頁,依頁面連結下載。
+
+安裝步驟:
+1. **安裝前關閉所有應用程式**,包含所有 IE、Chrome、其他瀏覽器(頁面紅字提醒)。
+2. 執行 `CDCPKI_Setup.exe`。安裝視窗標題為 CDCServiSignAdapterSetup,輸出資料夾為 `C:\Program Files (x86)\CDC\CDCServiSign`,跑完進度條即完成。
+3. 回到上述頁面,點「系統元件檢查」確認安裝成功。
+4. 到工作列右下角「顯示隱藏的圖示」(`^`),出現 **CDCServiSign** 圖示,表示程式已在執行。
+
+<img src="docs/img/env-niis-cdc-install.png" width="600" alt="NIIS「系統所需安裝檔(非IE)」頁,與 CDCServiSignAdapterSetup 安裝中的畫面">
+
+<img src="docs/img/env-cdc-servisign-tray.png" width="263" alt="工作列隱藏圖示區出現 CDCServiSign 圖示">
+
+### 2. 健保署讀卡機控制軟體(Windows 版)
+- 版本:**5.1.5.7 版、5.1.5.8 版**(111.9.26 更新)
+- 下載:<https://www.nhi.gov.tw/ch/cp-5143-3d82a-2693-1.html>
+- 安裝後,工作列隱藏圖示區出現綠色圓形 **H** 圖示(滑鼠移上去,提示文字結尾為「控制軟體主控台-NHI」),表示程式已在執行。
+
+<img src="docs/img/env-nhi-reader-tray.png" width="294" alt="工作列隱藏圖示區的健保署讀卡機控制軟體圖示(綠色 H)">
+
+### 確認清單
+- [ ] 工作列隱藏圖示區同時看得到 **CDCServiSign** 與**綠色 H(健保署讀卡機控制軟體)**兩個圖示。
+- [ ] 讀卡機已接上,醫事人員卡與健保卡可插入。
+- [ ] Chrome ≥ 116。
+
 ## 院內安裝(未封裝)
+
+前置條件:已依上一節裝好兩個讀卡程式。
 
 ### 一鍵下載(PowerShell)
 Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ 把下面整段貼上(Ctrl+V 或按右鍵)→ 按 Enter。不需要系統管理員權限;Windows PowerShell 5.1(Windows 10/11 內建)即可。
