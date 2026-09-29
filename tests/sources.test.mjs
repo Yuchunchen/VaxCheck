@@ -34,6 +34,7 @@ test('來源封存:文字檔存在;沒有未登錄的檔案', () => {
     assert.ok(fs.existsSync(path.join(dir, f.textFile)), `缺文字檔:${f.textFile}`);
     listed.add(f.file);
     listed.add(f.textFile);
+    if (f.rawTextFile) { assert.ok(fs.existsSync(path.join(dir, f.rawTextFile)), `缺文字檔:${f.rawTextFile}`); listed.add(f.rawTextFile); }   // pdftotext -raw(供腳本解析)
   }
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.relative(dir, path.join(d, e.name)).split(path.sep).join('/')]));
   const extra = walk(dir).filter((p) => /\.(pdf|txt)$/i.test(p) && !listed.has(p));

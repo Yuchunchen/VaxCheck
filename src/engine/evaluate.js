@@ -5,7 +5,7 @@ import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 import { computeDisplay, decisiveKeys } from './display.js';
 
-export const ENGINE_VERSION = '0.4.12';
+export const ENGINE_VERSION = '0.4.24';   // 0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -47,7 +47,7 @@ function evaluateVaccine(vaccine, ctx) {
   out.display = computeDisplay(vaccine, vctx, groups, out);
   out.decisiveManual = decisiveKeys(out.display, out.decisiveManual);
   if (out.display.upgrade) out.display.upgrade.items = out.display.upgrade.requires.map((k) => (ctx.manualDefs[k]
-    ? { key: k, type: 'manual', label: ctx.manualDefs[k].label || k, hint: ctx.manualDefs[k].hint }
+    ? { key: k, type: 'manual', label: ctx.manualDefs[k].label || k, hint: ctx.manualDefs[k].hint, ...askEvidence(k, ctx) }
     : { key: k, type: 'source', label: k }));
   return finish(out, vaccine, ctx);
 }
@@ -157,9 +157,19 @@ function reportOf(vaccine, matched) {
   return { label: rc.label || '接種對象別', sourceRef: rc.sourceRef || null, primary, others, choose: primary.length > 1, hint };
 }
 
+// 問題卡旁的診斷證據:人工條件的病歷證據只有寬泛碼(不預勾)時,列出命中的寬泛碼供醫師核對;沒有則不加欄位
+function askEvidence(key, ctx) {
+  const def = ctx.manualDefs[key];
+  if (!def?.evidence || ctx.facts.manual?.[key] === true || ctx.facts.manual?.[key] === false) return {};
+  const e = evalCond(def.evidence, { ...ctx, inEvidence: true, assumeManual: false });
+  if (e.v === true || !e.weak.length) return {};
+  const seen = new Set();
+  return { evidence: e.weak.filter((w) => { const k = normCode(w.code); return seen.has(k) ? false : seen.add(k); }) };
+}
+
 function fill(tpl, vars) { return tpl.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? '')); }
 function finish(out, vaccine, ctx) {
-  const labels = (keys) => keys.map((k) => ({ key: k, label: ctx.manualDefs[k]?.label || k, hint: ctx.manualDefs[k]?.hint }));
+  const labels = (keys) => keys.map((k) => ({ key: k, label: ctx.manualDefs[k]?.label || k, hint: ctx.manualDefs[k]?.hint, ...askEvidence(k, ctx) }));
   out.decisiveManual = labels(out.decisiveManual);
   out.reminders = out.reminders.map((r) => ({ ...r, label: r.label }));
   out.providedBy = uniq(out.matchedGroups.map((g) => g.providedBy));

@@ -83,6 +83,7 @@ function evidenceBlock(items, fmtDate) {
     h('b', {}, e.code), e.label && ` ${e.label}`,
     h('small', {}, [EVIDENCE_CATEGORY[e.category] ? `${EVIDENCE_CATEGORY[e.category]}${e.validity ? `(${e.validity})` : ''}` : e.list,
       e.lastDate && `最近 ${fmtDate(e.lastDate)}`, `${e.count} 筆`].filter(Boolean).join(' · ')),
+    e.broad && h('small', { class: 'vx-dx-broad' }, '寬泛碼,需核對'),   // 罕見疾病名單的寬泛碼:只顯示、不預勾
     e.note && h('small', { class: 'vx-dx-note' }, e.note));
   return h('div', { class: 'vx-dx' },
     h('ul', { class: 'vx-dx-l' }, sp.shown.map(row)),
@@ -185,7 +186,7 @@ export function renderPanel(wrap, state, on) {
       const yn = (items) => {
         const man = items.filter((i) => i.type === 'manual');
         return [...man.map((m) => h('div', { class: 'vx-check', role: 'group', 'aria-label': m.label },
-          h('span', {}, m.label, m.hint && h('small', {}, m.hint)),
+          h('span', {}, m.label, m.hint && h('small', {}, m.hint), m.evidence?.length > 0 && evidenceBlock(m.evidence, fmtDate)),   // 只有寬泛碼證據時:列出命中的碼,勾選維持未確認
           h('span', { class: 'vx-yn' },
             h('button', { type: 'button', class: 'vx-yes', 'aria-pressed': String(manual[m.key] === true), onclick: () => on.manual(m.key, manual[m.key] === true ? null : true) }, '是'),
             h('button', { type: 'button', class: 'vx-no', 'aria-pressed': String(manual[m.key] === false), onclick: () => on.manual(m.key, manual[m.key] === false ? null : false) }, '否')))),

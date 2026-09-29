@@ -126,3 +126,21 @@ files:
     ruleSourceIds: [SRC_NHI_CATASTROPHIC_1140101]
     codelists: [rules/codelists/catastrophic-illness.nhi-1140101.json]
     note: "與 rules/codelists/catastrophic-illness.nhi-1140101.json 記錄的 sourceSha256 相符。"
+  - id: HPA_RARE_DISEASE_ICD_1150723
+    vaccine: COMMON
+    kind: list
+    title: "公告罕見疾病名單暨 ICD-10-CM 編碼一覽表(115 年 7 月 23 日衛授國字第 1150461436 號公告版;依疾病分類排序 + 依英文字母排序,249 項)"
+    issuer: "衛生福利部國民健康署"
+    published: "2026-07-23"
+    file: hpa/2026-07_hpa-rare-disease-icd-1150723.pdf
+    textFile: hpa/2026-07_hpa-rare-disease-icd-1150723.txt
+    rawTextFile: hpa/2026-07_hpa-rare-disease-icd-1150723.raw.txt
+    sha256: 3406bda4aec53f768a1ffa19007a8cb17b7edbf87cb5973ac8588769f755d9ae
+    bytes: 1139315
+    pages: 33
+    originalName: "公告罕見疾病名單暨ICD-10-CM編碼一覽表1150723.pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知);v0.4.8 起為規則實際依據,v0.4.24 歸檔"
+    archivedAt: "2026-09-29"
+    ruleSourceIds: [SRC_HPA_RARE_1150723]
+    codelists: [rules/codelists/rare-disease.hpa-1150723.json]
+    note: "rules/codelists/rare-disease.hpa-1150723.json 由 scripts/build-rare-disease.mjs 自本檔產生。textFile 為 pdftotext -layout(供人讀);rawTextFile 為 pdftotext -raw(內容串流順序,每頁第一行是頁碼,腳本解析用)。備註內的舊碼(G40.311、G37.8、E25.0、G12.9、M31.1、G12.2、E72.8、E74.8、F78、Q87.1 等)一律不用。"

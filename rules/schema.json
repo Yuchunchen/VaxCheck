@@ -1180,6 +1180,27 @@
           "type": "array",
           "items": { "type": "string" },
           "description": "建置時寫入:與 codes 逐項對應的中文名稱(來源檔 zh 欄,無則空字串)"
+        },
+        "broadEvidence": {
+          "enum": ["display-only"],
+          "description": "display-only:來源檔標為 broad 的寬泛碼,病歷只命中它們時只顯示證據、不預勾(不計入人工條件判定);需引擎 ≥ 0.4.24"
+        },
+        "meta": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "broad": { "type": "boolean" },
+                  "otherCount": { "type": "integer", "minimum": 1, "description": "共用碼:除第一個病名外,還有幾種疾病使用同一個碼" }
+                }
+              }
+            ]
+          },
+          "description": "建置時寫入:與 codes 逐項對應的註記(寬泛碼、共用碼),沒有註記為 null"
         }
       },
       "oneOf": [
