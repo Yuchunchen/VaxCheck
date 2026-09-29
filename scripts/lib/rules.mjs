@@ -19,7 +19,8 @@ export function inlineCodeLists(rs, baseDir = R()) {
     const doc = JSON.parse(fs.readFileSync(path.join(baseDir, f), 'utf8'));
     const sec = doc.sections?.[section];
     if (!sec) throw new Error(`codeList ${name}:${cl.file} 找不到 section`);
-    rs.codeLists[name] = { label: cl.label || sec.label, system: cl.system, codes: sec.codes.map((c) => c.code), source: { id: doc.id, sha256: doc.sourceSha256 }, threeCharAsCategory: cl.threeCharAsCategory };
+    rs.codeLists[name] = { label: cl.label || sec.label, system: cl.system, codes: sec.codes.map((c) => c.code), names: sec.codes.map((c) => c.zh || ''), source: { id: doc.id, sha256: doc.sourceSha256 }, threeCharAsCategory: cl.threeCharAsCategory,
+      ...(cl.category && { category: cl.category }), ...(cl.validity && { validity: cl.validity }), ...(cl.evidenceNote && { evidenceNote: cl.evidenceNote }) };
   }
   for (const cl of Object.values(rs.codeLists || {})) {
     if (!cl.threeCharAsCategory) continue;

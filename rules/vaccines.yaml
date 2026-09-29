@@ -128,12 +128,12 @@ codeLists:
     system: ATC
     codes: ["L01*"]
   # --- 流感 115 附件1 高風險慢性病人(逐類轉錄;門/住診紀錄 1 筆即可)---
-  FLU_CHRONIC_DX:    { label: 高風險慢性病(流感計畫附件1), system: ICD-10-CM, file: codelists/flu-highrisk-chronic.cdc-115.json#chronic, threeCharAsCategory: true }   # 附件1 的 E66、I63 等為類目(v0.4.5 前誤作完整碼,漏 E66.01、I63.9)
+  FLU_CHRONIC_DX:    { label: 高風險慢性病(流感計畫附件1), system: ICD-10-CM, file: codelists/flu-highrisk-chronic.cdc-115.json#chronic, threeCharAsCategory: true, category: chronic }   # 附件1 的 E66、I63 等為類目(v0.4.5 前誤作完整碼,漏 E66.01、I63.9)
   # --- 健保重大傷病項目(114-01-01 起,2023 版)— 診斷碼推估,以重大傷病證明為準 ---
-  NHI_CATASTROPHIC_DX:      { label: 重大傷病項目診斷碼(推估), system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#general }
-  NHI_CATASTROPHIC_1Y_DX:   { label: "重大傷病項目診斷碼(一年內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within365 }
-  NHI_CATASTROPHIC_6M_DX:   { label: "重大傷病項目診斷碼(六個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within183 }
-  NHI_CATASTROPHIC_1M_DX:   { label: "重大傷病項目診斷碼(急性一個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within31 }
+  NHI_CATASTROPHIC_DX:      { label: 重大傷病項目診斷碼(推估), system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#general, category: catastrophic, validity: 長期, evidenceNote: "診斷碼推估,以證明為準" }
+  NHI_CATASTROPHIC_1Y_DX:   { label: "重大傷病項目診斷碼(一年內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within365, category: catastrophic, validity: 一年, evidenceNote: "診斷碼推估,以證明為準" }
+  NHI_CATASTROPHIC_6M_DX:   { label: "重大傷病項目診斷碼(六個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within183, category: catastrophic, validity: 六個月, evidenceNote: "診斷碼推估,以證明為準" }
+  NHI_CATASTROPHIC_1M_DX:   { label: "重大傷病項目診斷碼(急性一個月內,推估)", system: ICD-10-CM, file: codelists/catastrophic-illness.nhi-1140101.json#within31, category: catastrophic, validity: 一個月, evidenceNote: "診斷碼推估,以證明為準" }
   # --- COVID-19 計畫第二章壹五(二):結核病、失能、精神疾病、失智症「經醫師評估」— 病歷證據只預勾,醫師可取消 ---
   # 計畫未附代碼表;以下為 Claude 依病名轉錄(ICD-10-CM),YC 2026-09-28 核准
   COVID_TB_DX:
@@ -176,7 +176,7 @@ codeLists:
     system: ICD-10-CM
     codes: [B20, Z21]
   # --- 國健署公告罕見疾病(115-07-23)— 診斷碼推估,以健保卡註記或證明為準;通用碼 9 個與組合碼成分 E74.31 不作證據(見 JSON excluded)---
-  RARE_DISEASE_DX:   { label: "罕見疾病(國健署公告名單,推估)", system: ICD-10-CM, file: codelists/rare-disease.hpa-1150723.json#rare }
+  RARE_DISEASE_DX:   { label: "罕見疾病(國健署公告名單,推估)", system: ICD-10-CM, file: codelists/rare-disease.hpa-1150723.json#rare, category: rare }
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
     label: 透析相關診斷

@@ -39,3 +39,16 @@ test('判定依據:✓ → 未確認 → ✗,同值維持規則順序', () => {
   assert.deepEqual(sortTrace(t).map((x) => x.id), [3, 5, 2, 6, 1, 4]);
   assert.deepEqual(t.map((x) => x.id), [1, 2, 3, 4, 5, 6], '不改原陣列');
 });
+
+test('診斷證據:上限 3 筆,第四筆起為「另 N 項」,零筆不顯示', async () => {
+  const { splitEvidence, EVIDENCE_LIMIT } = await import('../src/panel/order.js');
+  assert.equal(EVIDENCE_LIMIT, 3);
+  const items = ['A', 'B', 'C', 'D', 'E'].map((code) => ({ code }));
+  const s = splitEvidence(items);
+  assert.deepEqual(s.shown.map((e) => e.code), ['A', 'B', 'C']);
+  assert.deepEqual(s.rest.map((e) => e.code), ['D', 'E']);
+  assert.equal(splitEvidence(items.slice(0, 3)).rest.length, 0);
+  assert.equal(splitEvidence([]), null);
+  assert.equal(splitEvidence(undefined), null);
+  assert.equal(splitEvidence(items, 1).rest.length, 4, '上限是參數,可調');
+});

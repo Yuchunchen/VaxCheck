@@ -1,6 +1,6 @@
 // 結果面板:原生 DOM + Shadow DOM,外掛與示範頁共用。只負責畫,不做判定。
 import { CSS } from './panel.css.js';
-import { groupVaccines, sortTrace } from './order.js';
+import { groupVaccines, sortTrace, splitEvidence, EVIDENCE_CATEGORY } from './order.js';
 
 const SRC_NAMES = { medication: '用藥', lab: '檢驗', allergy: '過敏', lftp: '特殊給付', summary: '病人資訊', niis: '接種史' };
 const SRC_STATE = { ok: '已取得', nodata: '無資料', not_queried: '未查詢', error: '讀取失敗', unknown_shape: '格式不符', unavailable: '未實作', loading: '讀取中' };
@@ -73,6 +73,20 @@ function display(v, fmtDate) {
   if (dp.bucket === 'ineligible' && fb?.kind === 'not_funded' && v.verdict !== 'not_funded') return ['不再公費', 'no', caseNote(v)];
   if (dp.bucket === 'ineligible' && v.verdict === 'not_open') return ['不可打', 'no', `目前不符合公費對象;${fmtDate(v.opensOn)} 開打`];
   return null;
+}
+
+// 診斷證據列:代碼、中文名、類別(重大傷病附有效期別與推估註記)、最近日期、筆數;前 N 筆,其餘「另 N 項」
+function evidenceBlock(items, fmtDate) {
+  const sp = splitEvidence(items);
+  if (!sp) return null;
+  const row = (e) => h('li', { class: 'vx-dx-i' },
+    h('b', {}, e.code), e.label && ` ${e.label}`,
+    h('small', {}, [EVIDENCE_CATEGORY[e.category] ? `${EVIDENCE_CATEGORY[e.category]}${e.validity ? `(${e.validity})` : ''}` : e.list,
+      e.lastDate && `最近 ${fmtDate(e.lastDate)}`, `${e.count} 筆`].filter(Boolean).join(' · ')),
+    e.note && h('small', { class: 'vx-dx-note' }, e.note));
+  return h('div', { class: 'vx-dx' },
+    h('ul', { class: 'vx-dx-l' }, sp.shown.map(row)),
+    sp.rest.length > 0 && h('details', { class: 'vx-dx-more' }, h('summary', {}, `另 ${sp.rest.length} 項`), h('ul', { class: 'vx-dx-l' }, sp.rest.map(row))));
 }
 
 const h = (tag, attrs = {}, ...kids) => {
@@ -220,7 +234,7 @@ export function renderPanel(wrap, state, on) {
         h('ul', {}, sortTrace(v.groupTrace).map((g) => h('li', { class: `g-${g.value === true ? 'y' : g.value === false ? 'n' : 'u'}` },
           h('b', {}, g.value === true ? '符合' : g.value === false ? '不符' : '未確認'),
           ` ${g.label}`, g.providedBy === 'county' ? `(${PROVIDER(g, names)})` : '', g.state !== 'active' ? `〔${g.state === 'scheduled' ? `${fmtDate(g.window.from)} 起` : '已結束'}〕` : '',
-          h('small', {}, g.why.join(';'))))),
+          h('small', {}, g.why.join(';')), evidenceBlock(g.value === true ? g.evidence : null, fmtDate)))),
         v.dosing?.case && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.case.label}(${v.dosing.case.sourceRef || ''})`),
         v.dosing?.variant && h('p', { class: 'vx-sub' }, `劑次依據:${v.dosing.variant.label};本季應接種 ${v.dosing.dosesRequired} 劑,季前累計 ${v.dosing.variant.priorDoses} 劑`)));
       list.append(li);

@@ -26,3 +26,13 @@ export function sortTrace(trace) {
   const rank = (x) => (x.value === true ? 0 : x.value === false ? 2 : 1);
   return (trace || []).map((g, i) => [g, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(([g]) => g);
 }
+
+// ---------- 診斷證據(v0.4.23):判定依據下列出命中的診斷 ----------
+export const EVIDENCE_LIMIT = 3;   // 面板預設只列前 N 筆,其餘收在「另 N 項」
+export const EVIDENCE_CATEGORY = { chronic: '高風險慢性病', catastrophic: '重大傷病', rare: '罕見疾病' };
+
+/** 前 limit 筆 + 其餘;零筆回 null(不顯示證據區) */
+export function splitEvidence(items, limit = EVIDENCE_LIMIT) {
+  if (!items?.length) return null;
+  return { shown: items.slice(0, limit), rest: items.slice(limit) };
+}
