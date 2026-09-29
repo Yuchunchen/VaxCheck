@@ -1,5 +1,6 @@
 // evaluate(facts, rules, { asOf }) → Result。純函式:不碰 DOM、不碰 chrome API。
 import { evalCond } from './conditions.js';
+import { normCode } from './codes.js';
 import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 import { computeDisplay, decisiveKeys } from './display.js';
@@ -18,9 +19,16 @@ function stateOf(win, asOf) {
   if (win.to && asOf > win.to) return 'expired';
   return 'active';
 }
+// 診斷證據:只在該群判定為符合時附上;依評估順序、同代碼只留第一筆(v0.4.23,純顯示,不影響判定)
+function groupEvidence(t) {
+  if (t.v !== true) return [];
+  const seen = new Set();
+  return (t.dxEvidence || []).filter((e) => { const k = normCode(e.code); return seen.has(k) ? false : seen.add(k); });
+}
 const groupOut = (g, t, state, win) => ({
   groupId: g.groupId, label: g.label, state, window: win, value: t.v, why: t.why,
   providedBy: g.providedBy || 'central', jurisdiction: g.jurisdiction || 'TW', sourceIds: g.sourceIds || [],
+  evidence: groupEvidence(t),
 });
 
 const DOSING_TO_VERDICT = {

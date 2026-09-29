@@ -34,6 +34,11 @@ export const CSS = `
 .vx-evid-t { display:flex; flex-wrap: wrap; gap: 4px 8px; justify-content: space-between; align-items: baseline; }
 .vx-evid-l { margin: 4px 0 0; padding-left: 18px; }
 .vx-evid-l li { margin: 2px 0; word-break: break-word; }
+.vx-dx { margin-top: 4px; font-size: 12px; }
+.vx-dx-l { margin: 2px 0 0; padding-left: 16px; }
+.vx-dx-i { margin: 2px 0; word-break: break-word; }
+.vx-dx-i small { display: block; }
+.vx-dx-more summary { cursor: pointer; }
 .vx-code { margin-top: 8px; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 6px; font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
 .vx-code-main { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; }
 .vx-code-k { color: var(--muted); }

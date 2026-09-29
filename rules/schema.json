@@ -1163,6 +1163,23 @@
         "source": {
           "type": "object",
           "description": "建置時寫入:官方清單來源與雜湊"
+        },
+        "category": {
+          "enum": ["chronic", "catastrophic", "rare"],
+          "description": "診斷證據類別(面板證據列顯示用):高風險慢性病 / 重大傷病 / 罕見疾病;不填 = 只顯示清單名稱"
+        },
+        "validity": {
+          "type": "string",
+          "description": "重大傷病有效期別(長期/一年/六個月/一個月),證據列顯示用"
+        },
+        "evidenceNote": {
+          "type": "string",
+          "description": "證據列附註(例如重大傷病:診斷碼推估,以證明為準)"
+        },
+        "names": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "建置時寫入:與 codes 逐項對應的中文名稱(來源檔 zh 欄,無則空字串)"
         }
       },
       "oneOf": [

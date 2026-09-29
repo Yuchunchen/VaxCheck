@@ -328,6 +328,18 @@ lay = await dLayout();
 flu = await dCard('流感');
 check('C6 9/28 55 歲:流感在「尚未開打」,選填提示可提早至 115/10/01,不列入待確認', where(lay, '流感') === '尚未開打' && /可提早至 115\/10\/01/.test(flu.opt) && flu.asks.length === 0, flu.opt);
 await demo.screenshot({ path: path.join(SHOTS, '15-demo-3b-flu-0928.png'), fullPage: true });
+
+// D. 診斷證據(v0.4.23):流感潛在疾病命中 → 判定依據出現證據列;無相關診斷 → 不出現證據區
+await setAsOf('2026-10-15');
+const dxOf = (name) => demo.evaluate((n) => {
+  const li = [...document.querySelector('#panel-host').shadowRoot.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n));
+  return { rows: [...li.querySelectorAll('.vx-dx-i')].map((x) => x.textContent), more: li.querySelector('.vx-dx-more summary')?.textContent || '', block: !!li.querySelector('.vx-dx') };
+}, name);
+await pick('G');
+const dxG = await dxOf('流感');
+check('D1 流感潛在疾病命中:判定依據出現證據列(代碼、中文名、類別、最近日期、筆數)', dxG.rows.length === 1 && /E119/.test(dxG.rows[0]) && /高風險慢性病/.test(dxG.rows[0]) && /115\/04\/10/.test(dxG.rows[0]) && /2 筆/.test(dxG.rows[0]), dxG.rows.join('|'));
+await pick('F');
+check('D2 無相關診斷:不出現證據區', !(await dxOf('流感')).block);
 await demo.close();
 
 await ctx.close();

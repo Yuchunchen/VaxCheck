@@ -1,10 +1,10 @@
 // 條件樹求值:三值邏輯 true / false / null(未知)。
-// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾), hits[](命中的清單/旗標與代碼) }
+// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾), hits[](命中的清單/旗標與代碼), dxEvidence[](診斷證據,面板逐項列出;v0.4.23) }
 import { addInterval, addDays, ageYears, split } from './dates.js';
 import { matchCode, normCode } from './codes.js';
 
 const OK = new Set(['ok', 'nodata']);
-const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], hits: [], ...extra });
+const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], hits: [], dxEvidence: [], ...extra });
 const uniq = (a) => [...new Set(a)];
 
 export function sourceOk(facts, name) { return OK.has(facts.sourceStatus?.[name]); }
@@ -21,6 +21,7 @@ function combine(kind, kids) {
     sources: uniq(rel.flatMap((k) => k.sources)),
     evidence: kids.filter((k) => k.v === true).flatMap((k) => k.evidence),
     hits: kids.filter((k) => k.v === true).flatMap((k) => k.hits),
+    dxEvidence: kids.filter((k) => k.v === true).flatMap((k) => k.dxEvidence),   // 保持評估順序
   };
 }
 
@@ -29,6 +30,15 @@ function listCodes(ctx, spec) {
   const l = ctx.rules.codeLists?.[spec.$list];
   if (!l) throw new Error(`codeList 不存在:${spec.$list}`);
   return { codes: l.codes, label: l.label || spec.$list };
+}
+// 清單中文名:比對到的清單項(完整碼優先,其次區間/前綴)的名稱;清單沒有名稱 → ''(不外補)
+function listName(list, code) {
+  const names = list?.names;
+  if (!names) return '';
+  const n = normCode(code);
+  let i = list.codes.findIndex((c, k) => names[k] && normCode(c) === n);
+  if (i < 0) i = list.codes.findIndex((c, k) => names[k] && matchCode(code, [c]));
+  return i < 0 ? '' : names[i];
 }
 const within = (ctx, date, days) => !days || (date && date >= addDays(ctx.asOf, -days));
 
@@ -79,15 +89,26 @@ const LEAVES = {
       for (const d of hits) {
         const k = normCode(d.code);
         const c = by.get(k);
-        if (!c || (d.date || '') > c.date) by.set(k, { code: d.code, name: d.name || c?.name || '', date: d.date || '' });
-        else if (!c.name && d.name) c.name = d.name;
+        if (!c) by.set(k, { code: d.code, name: d.name || '', date: d.date || '', count: 1 });
+        else {
+          c.count += 1;
+          if ((d.date || '') > c.date) { c.code = d.code; c.date = d.date || ''; }
+          if (!c.name && d.name) c.name = d.name;
+        }
       }
       const codesHit = [...by.values()].sort((a, b) => b.date.localeCompare(a.date) || a.code.localeCompare(b.code));
       const MAX = 3;   // YC 2026-09-28:只列 3 碼
       const txt = codesHit.slice(0, MAX).map((c) => `${c.code}${c.name ? ' ' + c.name : ''}(${c.date || '日期不明'}`).join(')、');
       const more = codesHit.length > MAX ? ` 等 ${codesHit.length} 碼` : '';
+      // 診斷證據(v0.4.23):同清單內日期新到舊;名稱只取清單(病歷自帶名稱為備援),沒有就只有代碼
+      const list = spec.$list ? ctx.rules.codeLists?.[spec.$list] : null;
+      const dxEvidence = codesHit.map((c) => ({
+        code: c.code, label: listName(list, c.code) || c.name, category: list?.category || null, list: label || null,
+        lastDate: c.date, count: c.count,
+        ...(list?.validity && { validity: list.validity }), ...(list?.evidenceNote && { note: list.evidenceNote }),
+      }));
       return T(true, `${label ? label + ':' : '診斷 '}${txt}${need > 1 ? `,共 ${hits.length} 筆` : ''})${more}`,
-        { hits: [{ ref: spec.$list || null, label: label || '診斷', codes: codesHit }] });
+        { hits: [{ ref: spec.$list || null, label: label || '診斷', codes: codesHit }], dxEvidence });
     }
     return T(false, `${label || '診斷'}:${hits.length ? `僅 ${hits.length} 筆,需 ${need} 筆` : '無紀錄'}`);
   },
@@ -156,7 +177,7 @@ const LEAVES = {
     }
     if (def.evidence && !ctx.inEvidence) {
       const e = evalCond(def.evidence, { ...ctx, inEvidence: true, assumeManual: false });
-      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why, hits: e.hits }] });
+      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why, hits: e.hits }], dxEvidence: e.dxEvidence });
     }
     if (ctx.assumeManual) return T(true, `${def.label}(若符合)`, { manual: [key] });
     return T(null, `${def.label}:未確認`, { manual: [key] });
@@ -167,7 +188,7 @@ export function evalCond(node, ctx) {
   if (!node || typeof node !== 'object') throw new Error('條件節點格式錯誤');
   const [k] = Object.keys(node);
   if (k === 'all' || k === 'any') return combine(k, node[k].map((c) => evalCond(c, ctx)));
-  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [], hits: [] }; }
+  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [], hits: [], dxEvidence: [] }; }   // not 底下的證據不顯示
   const f = LEAVES[k];
   if (!f) throw new Error(`未知條件:${k}`);
   return f(node[k], ctx);

@@ -485,3 +485,69 @@ test('命中 ICD 只列 3 碼(YC 2026-09-28),多的以「等 N 碼」表示', ()
   assert.match(w, /J449\(2026-08-01\)、I509\(2026-07-01\)、E1165\(2026-06-01\) 等 4 碼$/);
   assert.ok(!/G20/.test(w));
 });
+
+// ---------- v0.4.23 診斷證據(面板判定依據下列出命中診斷;純顯示層)----------
+const grpOf = (v, id) => v.groupTrace.find((g) => g.groupId === id);
+
+test('診斷證據:跨類別依規則樹順序(慢性病 → 重大傷病 → 罕見疾病),同類別日期新到舊', () => {
+  // E1165 附件1 慢性病;C73 甲狀腺癌(重大傷病長期);E75.00 罕見(僅在罕病清單)
+  const dx = [['E75.00', '2026-09-01'], ['C73', '2026-08-01'], ['E1165', '2026-03-01'], ['J449', '2026-07-01']];
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx }), '2026-10-05'), 'FLU');
+  const ev = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.deepEqual(ev.map((e) => e.code), ['J449', 'E1165', 'C73', 'E75.00'], '慢性病(新→舊)→ 重大傷病 → 罕見');
+  assert.deepEqual(ev.map((e) => e.category), ['chronic', 'chronic', 'catastrophic', 'rare']);
+});
+
+test('診斷證據:同碼多次就診去重,count 與 lastDate 正確;欄位齊全', () => {
+  const dx = [['E1165', '2026-03-01'], ['E1165', '2026-06-01'], ['E1165', '2025-12-01']];
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx }), '2026-10-05'), 'FLU');
+  const ev = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.equal(ev.length, 1);
+  assert.equal(ev[0].count, 3);
+  assert.equal(ev[0].lastDate, '2026-06-01');
+  assert.equal(ev[0].code, 'E1165');
+  assert.ok(ev[0].label, '清單有中文名稱');
+  assert.equal(ev[0].category, 'chronic');
+});
+
+test('診斷證據:重大傷病帶有效期別與推估註記;一年內只在時效內命中', () => {
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['C73', '2026-08-01']] }), '2026-10-05'), 'FLU');
+  const [e] = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.equal(e.category, 'catastrophic');
+  assert.equal(e.validity, '長期');
+  assert.match(e.note, /推估.*以證明為準/);
+  const v2 = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['T31.20', '2026-05-01']] }), '2026-10-05'), 'FLU');
+  assert.equal(grpOf(v2, 'FLU_UNDERLYING').evidence[0].validity, '一年');
+});
+
+test('診斷證據:清單沒有名稱 → label 為空、只有代碼(不外補);非診斷命中(醫師勾選)不帶證據', () => {
+  const rs = structuredClone(rules());
+  rs.codeLists.FLU_CHRONIC_DX.names = rs.codeLists.FLU_CHRONIC_DX.names.map(() => '');
+  const v = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['E1165', '2026-06-01']] }), '2026-10-05', rs), 'FLU');
+  assert.equal(grpOf(v, 'FLU_UNDERLYING').evidence[0].label, '');
+  const m = V(run(patient({ birth: '1986-01-01', vacc: [], manual: { fluUnderlyingCondition: true } }), '2026-10-05'), 'FLU');
+  assert.deepEqual(grpOf(m, 'FLU_UNDERLYING').evidence, []);
+});
+
+test('診斷證據:零命中、unknown(用藥資料未取得)不帶證據;判定結果不變', () => {
+  const none = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['I10', '2026-06-01']] }), '2026-10-05'), 'FLU');
+  assert.ok(none.groupTrace.every((g) => g.evidence.length === 0));
+  const unk = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['E1165', '2026-06-01']], sources: { medication: 'error' } }), '2026-10-05'), 'FLU');
+  assert.ok(unk.groupTrace.every((g) => g.evidence.length === 0), 'unknown 不顯示證據');
+});
+
+test('診斷證據:通用機制 — 肺鏈 IPD、COVID 也帶證據;IPD 惡性腫瘤(+抗癌藥)命中', () => {
+  const p = patient({ birth: '1970-01-01', vacc: [], dx: [['C50.911', '2026-05-01'], ['C50.911', '2026-06-01']], meds: [['L01XX01', '2026-08-01']] });
+  const res = run(p, '2026-10-05');
+  const ipd = V(res, 'PNEUMO_PCV20_21');
+  const ev = ipd.groupTrace.flatMap((g) => g.evidence);
+  assert.ok(ev.some((e) => /^C50/.test(e.code) && e.count === 2), 'IPD 群帶惡性腫瘤證據');
+  assert.ok(V(res, 'COVID').groupTrace.flatMap((g) => g.evidence).length > 0, 'COVID 群也帶');
+});
+
+test('診斷證據:不影響判定(證據移除後 verdict、劑次同)', async () => {
+  const { legacyHash } = await import('./snapshot-util.mjs');
+  const a = V(run(patient({ birth: '1986-01-01', vacc: [], dx: [['E1165', '2026-06-01'], ['E1165', '2026-05-01']] }), '2026-10-05'), 'FLU');
+  const strip = (v) => JSON.parse(JSON.stringify(v, (k, x) => (k === 'evidence' && Array.isArray(x) && x.every((e) => e.count) ? undefined : x)));
+  assert.equal(legacyHash(a), legacyHash(strip(a)));
+});
