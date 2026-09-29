@@ -235,11 +235,11 @@ const rareAsk = (v) => v.decisiveManual.find((m) => m.key === 'fluUnderlyingCond
 const AT = '2026-10-05';
 const adult = (dx, extra = {}) => patient({ birth: '1996-01-01', vacc: [], dx: dx.map((c) => [c, '2026-04-01']), ...extra });
 
-test('罕見疾病名單:333 碼、寬泛碼 27 碼只顯示不預勾;比對形式與其他清單相同', () => {
+test('罕見疾病名單:333 碼、寬泛碼 34 碼只顯示不預勾;比對形式與其他清單相同', () => {
   const l = rules().codeLists.RARE_DISEASE_DX;
   assert.equal(l.codes.length, 333);
   assert.equal(l.broadEvidence, 'display-only');
-  assert.equal(l.meta.filter((m) => m?.broad).length, 27);
+  assert.equal(l.meta.filter((m) => m?.broad).length, 34);
   assert.match(l.evidenceNote, /診斷碼推估.*以證明為準/);
   for (const c of ['Q87.11', 'E75.21', 'E74.04', 'E74.01', 'M61.122', 'M61.129', 'G40.833', 'E75.244', 'H47.22', 'E74.4']) assert.ok(matchCode(c, l.codes), c);
   for (const c of ['E74.31', 'E71.22', 'E72.113', 'E76.2194']) assert.ok(!matchCode(c, l.codes), `${c} 不在名單(E74.31 僅為組合碼成分;其餘為頁碼黏碼)`);
@@ -324,12 +324,17 @@ test('罕見疾病:不接進肺鏈 IPD(疾管署定義不得擴張)', () => {
   }
 });
 
-// 高風險差異(YC 2026-09-29 待決):v0.4.8 曾排除的 7 個通用碼,依固定寬泛清單(不含它們)現為非寬泛碼 → 預勾
-test('高風險差異:v0.4.8 排除的 7 個通用碼現為預勾(待 YC 決定是否列入寬泛清單)', () => {
-  for (const c of ['E7800', 'E7801', 'E161', 'E230', 'E2749', 'K831', 'D698']) {
-    assert.equal(V(run(adult([c]), AT), 'FLU').verdict, 'eligible', `${c} 預勾`);
+// v0.4.8 曾排除的 7 個通用碼:YC 2026-09-29 核可列入寬泛清單 → 只顯示、不預勾(E78.00 高膽固醇血症門診極常見)
+test('通用碼(v0.4.8 排除,現列寬泛):只顯示不預勾,證據標寬泛碼', () => {
+  for (const [c, name] of [['E7800', '豆固醇血症(植物性)'], ['E7801', '同合子家族性高膽固醇血症'], ['E161', '持續性幼兒型胰島素過度分泌低血糖症'], ['E230', 'Kallmann 氏症候群'],
+    ['E2749', '腎上腺皮促素抗性'], ['K831', '進行性家族性肝內膽汁滯留症'], ['D698', '史托摩根症候群']]) {
+    const v = V(run(adult([c]), AT), 'FLU');
+    assert.equal(v.verdict, 'needs_input', `${c} 不預勾`);
+    const [e] = rareAsk(v).evidence;
+    assert.deepEqual([e.category, e.broad], ['rare', true], c);
+    assert.ok(e.label.startsWith(name), `${c} 病名 ${e.label}`);
   }
-  // 依規格屬寬泛碼者(K52.89、Q82.8)→ 不預勾(Q82.8 另有重大傷病命中,不在此列)
+  assert.equal(rareAsk(V(run(adult(['E7800']), AT), 'COVID')).evidence[0].label, '豆固醇血症(植物性)');   // E78.00 只對到 A8-03
   assert.equal(V(run(adult(['K5289']), AT), 'FLU').verdict, 'needs_input');
 });
 

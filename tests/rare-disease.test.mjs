@@ -130,13 +130,16 @@ test('共用碼:Q87.89→10、Q87.0→9、Q87.19→7、Q89.8→4;diseases 依序
   assert.equal(codes.get('Q87.89').otherCount, 9);
 });
 
-test('寬泛碼:清單完全等於規格的 27 碼,且都在名單內;JSON 頂層可供審核', () => {
-  const expected = ['F84.8', 'K52.89', 'G71.8', 'G71.9', 'E72.9', 'E70.9', 'E72.89', 'D81.9', 'E79.8', 'E79.9', 'G11.8', 'G11.9', 'E34.8', 'H35.50',
+test('寬泛碼:清單 = 規格的 27 碼 + YC 推送前核可的 7 個通用碼(共 34),且都在名單內;JSON 頂層可供審核', () => {
+  const spec27 = ['F84.8', 'K52.89', 'G71.8', 'G71.9', 'E72.9', 'E70.9', 'E72.89', 'D81.9', 'E79.8', 'E79.9', 'G11.8', 'G11.9', 'E34.8', 'H35.50',
     'Q87.0', 'Q87.19', 'Q87.2', 'Q87.89', 'Q89.8', 'Q82.8', 'Q79.8', 'Q74.8', 'Q28.8', 'Q43.8', 'Q80.8', 'E77.8', 'G31.89'];
-  assert.equal(expected.length, 27);
-  assert.deepEqual(BROAD_CODES, expected);
-  assert.deepEqual(doc.broadCodes, expected);
-  assert.deepEqual(doc.sections.rare.codes.filter((c) => c.broad).map((c) => c.code).sort(), [...expected].sort());
+  const yc7 = ['E78.00', 'E78.01', 'E16.1', 'E23.0', 'E27.49', 'K83.1', 'D69.8'];   // v0.4.8 曾排除;YC 2026-09-29 核可列入寬泛
+  assert.equal(spec27.length, 27);
+  assert.equal(yc7.length, 7);
+  assert.deepEqual(BROAD_CODES, [...spec27, ...yc7], '清單不得自行增減');
+  assert.deepEqual(doc.broadCodes, [...spec27, ...yc7]);
+  assert.deepEqual(doc.sections.rare.codes.filter((c) => c.broad).map((c) => c.code).sort(), [...spec27, ...yc7].sort());
+  assert.equal(new Set(BROAD_CODES).size, 34);
 });
 
 test('已知內容抽查(對照 v0.4.8 手工轉錄:324 碼全數在內,另含當時排除的通用碼 9 個)', () => {

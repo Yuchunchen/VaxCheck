@@ -176,7 +176,7 @@ codeLists:
     system: ICD-10-CM
     codes: [B20, Z21]
   # --- 國健署公告罕見疾病(115-07-23;v0.4.24 起由 scripts/build-rare-disease.mjs 自 PDF 產生)— 診斷碼推估,以健保卡註記或證明為準 ---
-  # broadEvidence: display-only:JSON 頂層 broadCodes(27 碼,YC 審核)命中時只顯示證據、不預勾,證據列標「寬泛碼,需核對」;組合碼成分 E74.31 不納入(見 JSON excluded)
+  # broadEvidence: display-only:JSON 頂層 broadCodes(34 碼,YC 核可)命中時只顯示證據、不預勾,證據列標「寬泛碼,需核對」;組合碼成分 E74.31 不納入(見 JSON excluded)
   RARE_DISEASE_DX:   { label: "罕見疾病(國健署公告名單,推估)", system: ICD-10-CM, file: codelists/rare-disease.hpa-1150723.json#rare, category: rare, evidenceNote: "診斷碼推估,以證明為準", broadEvidence: display-only }
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
