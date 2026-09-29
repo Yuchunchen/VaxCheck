@@ -1,11 +1,13 @@
 // 條件樹求值:三值邏輯 true / false / null(未知)。
-// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾), hits[](命中的清單/旗標與代碼), dxEvidence[](診斷證據,面板逐項列出;v0.4.23) }
+// 每個節點回傳 Trace:{ v, why[], manual[](未答的人工條件), sources[](缺的資料來源), evidence[](病歷預勾), hits[](命中的清單/旗標與代碼), dxEvidence[](診斷證據,面板逐項列出;v0.4.23), weak[](僅命中寬泛碼的診斷證據:只顯示、不參與判定、不進 hits;v0.4.24) }
 import { addInterval, addDays, ageYears, split } from './dates.js';
 import { matchCode, normCode } from './codes.js';
 
 const OK = new Set(['ok', 'nodata']);
-const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], hits: [], dxEvidence: [], ...extra });
+const T = (v, why = [], extra = {}) => ({ v, why: [].concat(why), manual: [], sources: [], evidence: [], hits: [], dxEvidence: [], weak: [], ...extra });
 const uniq = (a) => [...new Set(a)];
+// 已有預勾證據時,其他來源的寬泛碼證據仍附在後面(同代碼只留一筆)
+const withWeak = (dx, weak) => [...dx, ...weak.filter((w) => !dx.some((d) => normCode(d.code) === normCode(w.code)))];
 
 export function sourceOk(facts, name) { return OK.has(facts.sourceStatus?.[name]); }
 
@@ -22,6 +24,7 @@ function combine(kind, kids) {
     evidence: kids.filter((k) => k.v === true).flatMap((k) => k.evidence),
     hits: kids.filter((k) => k.v === true).flatMap((k) => k.hits),
     dxEvidence: kids.filter((k) => k.v === true).flatMap((k) => k.dxEvidence),   // 保持評估順序
+    weak: kids.flatMap((k) => k.weak),                                            // 寬泛碼證據不論該葉是否成立都保留(只顯示)
   };
 }
 
@@ -40,6 +43,15 @@ function listName(list, code) {
   if (i < 0) i = list.codes.findIndex((c, k) => names[k] && matchCode(code, [c]));
   return i < 0 ? '' : names[i];
 }
+// 罕見疾病清單的逐碼註記(meta[i] = { broad?, otherCount? }):病歷碼比對到的所有清單項
+function matchedMeta(list, code) {
+  if (!list?.meta) return [];
+  const n = normCode(code);
+  const idx = list.codes.map((c, k) => k).filter((k) => normCode(list.codes[k]) === n || matchCode(code, [list.codes[k]]));
+  return idx.map((k) => list.meta[k] || {});
+}
+// 共用碼:同一碼對到多種疾病 → 「第一個病名 等 N 種(公告碼)」,N = otherCount + 1;N = 1 只寫病名
+const sharedLabel = (name, otherCount) => (name && otherCount > 0 ? `${name} 等 ${otherCount + 1} 種(公告碼)` : name);
 const within = (ctx, date, days) => !days || (date && date >= addDays(ctx.asOf, -days));
 
 function ageAdd(birth, a, plusOne) {
@@ -80,13 +92,18 @@ const LEAVES = {
   diagnosis(spec, ctx) {
     if (!sourceOk(ctx.facts, 'medication')) return T(null, '用藥紀錄(診斷)未取得', { sources: ['medication'] });
     const { codes, label } = listCodes(ctx, spec);
-    const hits = (ctx.facts.diagnoses || []).filter((d) => within(ctx, d.date, spec.withinDays) && matchCode(d.code, codes));
+    const list = spec.$list ? ctx.rules.codeLists?.[spec.$list] : null;
+    const all = (ctx.facts.diagnoses || []).filter((d) => within(ctx, d.date, spec.withinDays) && matchCode(d.code, codes));
+    // 寬泛碼(broadEvidence: display-only):只命中寬泛碼者為 weak,只顯示、不計入 minRecords、不進 hits(不影響判定與接種對象別代碼)
+    const isWeak = (d) => { if (list?.broadEvidence !== 'display-only') return false; const m = matchedMeta(list, d.code); return m.length > 0 && m.every((x) => x.broad); };
+    const hits = all.filter((d) => !isWeak(d));
+    const weakHits = all.filter(isWeak);
     const need = spec.minRecords || 1;
-    if (hits.length >= need) {
-      // 依代碼去重:每碼取最近一次(代碼照健保雲端原樣),最近者在前 — 醫師要看得到「抓到哪些 ICD」
-      // 單一代碼時文字與 v0.4.10 相同(回歸快照依此比對)
+    // 依代碼去重:每碼取最近一次(代碼照健保雲端原樣),最近者在前 — 醫師要看得到「抓到哪些 ICD」
+    // 單一代碼時文字與 v0.4.10 相同(回歸快照依此比對)
+    const dedupe = (rows) => {
       const by = new Map();
-      for (const d of hits) {
+      for (const d of rows) {
         const k = normCode(d.code);
         const c = by.get(k);
         if (!c) by.set(k, { code: d.code, name: d.name || '', date: d.date || '', count: 1 });
@@ -96,20 +113,31 @@ const LEAVES = {
           if (!c.name && d.name) c.name = d.name;
         }
       }
-      const codesHit = [...by.values()].sort((a, b) => b.date.localeCompare(a.date) || a.code.localeCompare(b.code));
-      const MAX = 3;   // YC 2026-09-28:只列 3 碼
-      const txt = codesHit.slice(0, MAX).map((c) => `${c.code}${c.name ? ' ' + c.name : ''}(${c.date || '日期不明'}`).join(')、');
-      const more = codesHit.length > MAX ? ` 等 ${codesHit.length} 碼` : '';
-      // 診斷證據(v0.4.23):同清單內日期新到舊;名稱只取清單(病歷自帶名稱為備援),沒有就只有代碼
-      const list = spec.$list ? ctx.rules.codeLists?.[spec.$list] : null;
-      const dxEvidence = codesHit.map((c) => ({
-        code: c.code, label: listName(list, c.code) || c.name, category: list?.category || null, list: label || null,
+      return [...by.values()].sort((a, b) => b.date.localeCompare(a.date) || a.code.localeCompare(b.code));
+    };
+    // 診斷證據(v0.4.23):同清單內日期新到舊;名稱只取清單(病歷自帶名稱為備援),沒有就只有代碼
+    // v0.4.24:罕見疾病清單另帶 broad / shared / otherCount;非寬泛碼在前、寬泛碼在後
+    const toEvidence = (c, weak) => {
+      const metas = matchedMeta(list, c.code);
+      const otherCount = Math.max(0, ...metas.map((m) => m.otherCount || 0));
+      const name = listName(list, c.code) || c.name;
+      return {
+        code: c.code, label: list?.meta ? sharedLabel(name, otherCount) : name, category: list?.category || null, list: label || null,
         lastDate: c.date, count: c.count,
         ...(list?.validity && { validity: list.validity }), ...(list?.evidenceNote && { note: list.evidenceNote }),
-      }));
+        ...(list?.meta && { broad: weak, shared: otherCount > 0, otherCount }),
+      };
+    };
+    const strong = dedupe(hits); const weak = dedupe(weakHits);
+    const weakEvidence = weak.map((c) => toEvidence(c, true));
+    if (hits.length >= need) {
+      const MAX = 3;   // YC 2026-09-28:只列 3 碼
+      const txt = strong.slice(0, MAX).map((c) => `${c.code}${c.name ? ' ' + c.name : ''}(${c.date || '日期不明'}`).join(')、');
+      const more = strong.length > MAX ? ` 等 ${strong.length} 碼` : '';
       return T(true, `${label ? label + ':' : '診斷 '}${txt}${need > 1 ? `,共 ${hits.length} 筆` : ''})${more}`,
-        { hits: [{ ref: spec.$list || null, label: label || '診斷', codes: codesHit }], dxEvidence });
+        { hits: [{ ref: spec.$list || null, label: label || '診斷', codes: strong }], dxEvidence: [...strong.map((c) => toEvidence(c, false)), ...weakEvidence], weak: weakEvidence });
     }
+    if (weakEvidence.length) return T(false, `${label || '診斷'}:僅命中寬泛碼(不預勾),需醫師核對`, { weak: weakEvidence });
     return T(false, `${label || '診斷'}:${hits.length ? `僅 ${hits.length} 筆,需 ${need} 筆` : '無紀錄'}`);
   },
   medication(spec, ctx) {
@@ -169,6 +197,7 @@ const LEAVES = {
   },
   manual(key, ctx) {
     const def = ctx.manualDefs[key] || { key, label: key };
+    let weak = [];
     const ans = ctx.facts.manual?.[key];
     if (ans === true || ans === false) return T(ans, `${def.label}:醫師${ans ? '確認' : '排除'}`);
     if (def.askWhen && !ctx.inAskWhen) {
@@ -177,10 +206,11 @@ const LEAVES = {
     }
     if (def.evidence && !ctx.inEvidence) {
       const e = evalCond(def.evidence, { ...ctx, inEvidence: true, assumeManual: false });
-      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why, hits: e.hits }], dxEvidence: e.dxEvidence });
+      if (e.v === true) return T(true, `${def.label}(依病歷自動判定)`, { evidence: [{ key, label: def.label, why: e.why, hits: e.hits }], dxEvidence: withWeak(e.dxEvidence, e.weak) });
+      weak = e.weak;   // 沒有可預勾的證據;僅寬泛碼者保留 → 問題卡旁顯示,勾選維持未確認
     }
-    if (ctx.assumeManual) return T(true, `${def.label}(若符合)`, { manual: [key] });
-    return T(null, `${def.label}:未確認`, { manual: [key] });
+    if (ctx.assumeManual) return T(true, `${def.label}(若符合)`, { manual: [key], weak });
+    return T(null, `${def.label}:未確認`, { manual: [key], weak });
   },
 };
 
@@ -188,7 +218,7 @@ export function evalCond(node, ctx) {
   if (!node || typeof node !== 'object') throw new Error('條件節點格式錯誤');
   const [k] = Object.keys(node);
   if (k === 'all' || k === 'any') return combine(k, node[k].map((c) => evalCond(c, ctx)));
-  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [], hits: [], dxEvidence: [] }; }   // not 底下的證據不顯示
+  if (k === 'not') { const t = evalCond(node.not, ctx); return { ...t, v: t.v === null ? null : !t.v, evidence: [], hits: [], dxEvidence: [], weak: [] }; }   // not 底下的證據不顯示
   const f = LEAVES[k];
   if (!f) throw new Error(`未知條件:${k}`);
   return f(node[k], ctx);

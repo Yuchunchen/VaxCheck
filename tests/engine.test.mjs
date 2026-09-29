@@ -229,17 +229,113 @@ test('代碼比對:三碼類目含所有子碼(附件1 E66、G40、I63、J96;重
   assert.ok(v.matchedGroups.some((g) => g.groupId === 'FLU_UNDERLYING'));
 });
 
-test('罕見疾病名單(115-07-23):診斷碼推估預勾;通用碼不作證據', () => {
-  const rare = rules().codeLists.RARE_DISEASE_DX.codes;
-  assert.equal(rare.length, 324);
-  for (const c of ['Q87.11', 'E75.21', 'E74.04', 'M61.122', 'G40.833', 'E75.244', 'H47.22']) assert.ok(matchCode(c, rare), c);
-  for (const c of ['E78.00', 'E78.01', 'E16.1', 'E23.0', 'E27.49', 'K83.1', 'K52.89', 'D69.8', 'Q82.8', 'E74.31']) assert.ok(!matchCode(c, rare), c);
-  const at = '2026-10-05';
-  const pw = V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['Q8711', '2026-04-01']] }), at), 'FLU');   // Prader-Willi:不在附件1、重大傷病表
-  assert.equal(pw.verdict, 'eligible');
-  assert.match(pw.evidence[0].why.join(), /罕見疾病/);
-  assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['Q8711', '2026-04-01']] }), at), 'COVID').verdict, 'eligible');
-  assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [], dx: [['E7800', '2026-04-01']] }), at), 'FLU').verdict, 'needs_input', '高膽固醇血症不預勾');
+// ---------- 罕見疾病名單(115-07-23;v0.4.24 由腳本產生,寬泛碼只顯示不預勾)----------
+const grpOf = (v, id) => v.groupTrace.find((g) => g.groupId === id);
+const rareAsk = (v) => v.decisiveManual.find((m) => m.key === 'fluUnderlyingCondition');
+const AT = '2026-10-05';
+const adult = (dx, extra = {}) => patient({ birth: '1996-01-01', vacc: [], dx: dx.map((c) => [c, '2026-04-01']), ...extra });
+
+test('罕見疾病名單:333 碼、寬泛碼 34 碼只顯示不預勾;比對形式與其他清單相同', () => {
+  const l = rules().codeLists.RARE_DISEASE_DX;
+  assert.equal(l.codes.length, 333);
+  assert.equal(l.broadEvidence, 'display-only');
+  assert.equal(l.meta.filter((m) => m?.broad).length, 34);
+  assert.match(l.evidenceNote, /診斷碼推估.*以證明為準/);
+  for (const c of ['Q87.11', 'E75.21', 'E74.04', 'E74.01', 'M61.122', 'M61.129', 'G40.833', 'E75.244', 'H47.22', 'E74.4']) assert.ok(matchCode(c, l.codes), c);
+  for (const c of ['E74.31', 'E71.22', 'E72.113', 'E76.2194']) assert.ok(!matchCode(c, l.codes), `${c} 不在名單(E74.31 僅為組合碼成分;其餘為頁碼黏碼)`);
+  assert.ok(matchCode('E7524', l.codes), '雲端截短成 5 碼者仍相符(既有行為)');
+});
+
+test('罕見疾病:非寬泛碼預勾 —— 證據帶 category、broad=false、shared/otherCount;N=1 只寫病名', () => {
+  for (const id of ['FLU', 'COVID']) {
+    const v = V(run(adult(['Q8711']), AT), id);   // Prader-Willi:不在附件1、重大傷病表
+    assert.equal(v.verdict, 'eligible', id);
+    assert.match(v.evidence[0].why.join(), /罕見疾病/);
+  }
+  const v = V(run(adult(['Q8711']), AT), 'FLU');
+  const [e] = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.deepEqual({ code: e.code, label: e.label, category: e.category, broad: e.broad, shared: e.shared, otherCount: e.otherCount },
+    { code: 'Q8711', label: 'Prader-Willi 氏症候群', category: 'rare', broad: false, shared: false, otherCount: 0 });
+  assert.match(e.note, /診斷碼推估,以證明為準/);
+  assert.equal(e.count, 1);
+  assert.equal(e.lastDate, '2026-04-01');
+  assert.equal(v.report.primary[0].code, 'F06B');
+});
+
+test('罕見疾病:共用碼顯示「第一個病名 等 N 種(公告碼)」;預勾', () => {
+  const v = V(run(adult(['G230']), AT), 'FLU');   // G23.0:B1-25 PKAN、B1-26 PLAN、B1-28 BPAN 共用(非寬泛、不在重大傷病/附件1)
+  assert.equal(v.verdict, 'eligible');
+  const [e] = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.equal(e.label, '泛酸鹽激酶關聯之神經退化性疾病 等 3 種(公告碼)');
+  assert.deepEqual([e.category, e.shared, e.otherCount, e.broad], ['rare', true, 2, false]);
+});
+
+test('罕見疾病:只有寬泛碼 —— 顯示證據、不預勾;問題卡旁附證據「寬泛碼」', () => {
+  for (const id of ['FLU', 'COVID']) {
+    const v = V(run(adult(['Q8789']), AT), id);   // Q87.89 共 10 種病;只有這個碼
+    assert.equal(v.verdict, 'needs_input', `${id} 不預勾`);
+    assert.deepEqual(v.evidence, [], `${id} 沒有預勾證據`);
+    assert.ok(v.groupTrace.every((g) => g.value !== true), id);
+    const ask = rareAsk(v);
+    assert.ok(ask, `${id} 仍問「具潛在疾病」`);
+    assert.equal(ask.evidence.length, 1);
+    const [e] = ask.evidence;
+    assert.deepEqual({ code: e.code, label: e.label, category: e.category, broad: e.broad, shared: e.shared, otherCount: e.otherCount },
+      { code: 'Q8789', label: '腦肋小頜症候群 等 10 種(公告碼)', category: 'rare', broad: true, shared: true, otherCount: 9 });
+    assert.match(e.note, /以證明為準/);
+  }
+  const res = run(adult(['Q8789']), AT);
+  assert.equal(res.ask.find((a) => a.key === 'fluUnderlyingCondition').evidence[0].code, 'Q8789', '頂層 ask 也帶證據');
+  // 醫師確認「是」→ 可打;「否」→ 不可打
+  assert.equal(V(run(adult(['Q8789'], { manual: { fluUnderlyingCondition: true } }), AT), 'FLU').verdict, 'eligible');
+  assert.notEqual(V(run(adult(['Q8789'], { manual: { fluUnderlyingCondition: false } }), AT), 'FLU').verdict, 'eligible');
+  assert.equal(rareAsk(V(run(adult(['Q8789'], { manual: { fluUnderlyingCondition: false } }), AT), 'FLU')), undefined);
+});
+
+test('罕見疾病:寬泛碼 + 非寬泛碼 —— 預勾,證據非寬泛在前、寬泛碼在後並標 broad;填報碼只依非寬泛碼', () => {
+  const v = V(run(adult(['Q8789', 'Q8711']), AT), 'FLU');   // Q87.89 較新,仍排在 Q87.11 之後
+  assert.equal(v.verdict, 'eligible');
+  const ev = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.deepEqual(ev.map((e) => [e.code, e.broad]), [['Q8711', false], ['Q8789', true]]);
+  assert.deepEqual(v.report.primary.map((o) => o.code), ['F06B']);
+  assert.deepEqual(v.report.primary[0].icd, ['Q8711'], '依據 ICD 不含寬泛碼');
+});
+
+test('罕見疾病:寬泛碼 + 高風險慢性病 —— 由慢性病預勾,不誤填 F06B;寬泛碼仍列出', () => {
+  const v = V(run(adult(['Q8789', 'E1165']), AT), 'FLU');
+  assert.equal(v.verdict, 'eligible');
+  const codes = [...v.report.primary, ...v.report.others].map((o) => o.code);
+  assert.ok(codes.includes('F06A') && !codes.includes('F06B'), codes.join());
+  const ev = grpOf(v, 'FLU_UNDERLYING').evidence;
+  assert.deepEqual(ev.map((e) => e.code), ['E1165', 'Q8789']);
+  assert.equal(ev[1].broad, true);
+  assert.equal(ev[0].broad, undefined, '慢性病證據沒有 broad 欄位(結構不變)');
+});
+
+test('罕見疾病:不接進肺鏈 IPD(疾管署定義不得擴張)', () => {
+  const pn = rules().vaccines.find((x) => x.vaccineId === 'PNEUMO_PCV20_21');
+  assert.ok(!/RARE_DISEASE/.test(JSON.stringify(pn)), '肺鏈規則不引用罕見疾病清單');
+  for (const dx of [['Q8711'], ['Q8789'], ['E7119']]) {
+    const base = V(run(patient({ birth: '1971-01-01', vacc: [] }), AT), 'PNEUMO_PCV20_21');
+    const got = V(run(adult(dx, { birth: '1971-01-01' }), AT), 'PNEUMO_PCV20_21');
+    assert.equal(got.verdict, base.verdict, dx.join());
+    assert.deepEqual(got.decisiveManual.map((m) => m.key), base.decisiveManual.map((m) => m.key));
+    assert.deepEqual(got.matchedGroups.map((g) => g.groupId), base.matchedGroups.map((g) => g.groupId));
+  }
+});
+
+// v0.4.8 曾排除的 7 個通用碼:YC 2026-09-29 核可列入寬泛清單 → 只顯示、不預勾(E78.00 高膽固醇血症門診極常見)
+test('通用碼(v0.4.8 排除,現列寬泛):只顯示不預勾,證據標寬泛碼', () => {
+  for (const [c, name] of [['E7800', '豆固醇血症(植物性)'], ['E7801', '同合子家族性高膽固醇血症'], ['E161', '持續性幼兒型胰島素過度分泌低血糖症'], ['E230', 'Kallmann 氏症候群'],
+    ['E2749', '腎上腺皮促素抗性'], ['K831', '進行性家族性肝內膽汁滯留症'], ['D698', '史托摩根症候群']]) {
+    const v = V(run(adult([c]), AT), 'FLU');
+    assert.equal(v.verdict, 'needs_input', `${c} 不預勾`);
+    const [e] = rareAsk(v).evidence;
+    assert.deepEqual([e.category, e.broad], ['rare', true], c);
+    assert.ok(e.label.startsWith(name), `${c} 病名 ${e.label}`);
+  }
+  assert.equal(rareAsk(V(run(adult(['E7800']), AT), 'COVID')).evidence[0].label, '豆固醇血症(植物性)');   // E78.00 只對到 A8-03
+  assert.equal(V(run(adult(['K5289']), AT), 'FLU').verdict, 'needs_input');
 });
 
 test('流感 115 潛在疾病證據:附件1、重大傷病推估、時效', () => {
@@ -487,7 +583,6 @@ test('命中 ICD 只列 3 碼(YC 2026-09-28),多的以「等 N 碼」表示', ()
 });
 
 // ---------- v0.4.23 診斷證據(面板判定依據下列出命中診斷;純顯示層)----------
-const grpOf = (v, id) => v.groupTrace.find((g) => g.groupId === id);
 
 test('診斷證據:跨類別依規則樹順序(慢性病 → 重大傷病 → 罕見疾病),同類別日期新到舊', () => {
   // E1165 附件1 慢性病;C73 甲狀腺癌(重大傷病長期);E75.00 罕見(僅在罕病清單)

@@ -1,0 +1,1858 @@
+1
+公告罕見疾病名單暨 ICD-10-CM 編碼一覽表(依疾病分類排序)
+中華民國106年10月25日衛授國字第1060402648號公告
+中華民國107年5月30日衛授國字第1070401231號公告
+中華民國108年1月15日衛授國字第1070403736號公告
+中華民國109年7月31日衛授國字第1090402037號公告
+中華民國109年10月13日衛授國字第1090402740號公告
+中華民國110年8月3日衛授國字第1100460016號公告
+中華民國110年11月23日衛授國字第1100461161號公告
+中華民國110年11月24日衛授國字第1100461168號公告
+中華民國111年1月12日衛授國字第1100461686號公告
+中華民國111年4月13日衛授國字第1110460962號公告
+中華民國111年7月13日衛授國字第1110461992號公告
+中華民國112年1月17日衛授國字第1120460003號公告
+中華民國112年4月19日衛授國字第1120460969號公告
+中華民國112年10月25日衛授國字第1120463037號公告
+中華民國113年1月30日衛授國字第1130460217號公告
+中華民國113年7月15日衛授國字第1130462168號公告
+中華民國113年10月11日衛授國字第1130463224號公告
+中華民國114年1月23日衛授國字第1130464505號公告
+中華民國114年4月11日衛授國字第1140461041號公告
+中華民國114年10月20日衛授國字第1140463341號公告
+中華民國115年3月13日衛授國字第1150460479號公告
+中華民國115年7月23日衛授國字第1150461436號公告
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+A.先天性代謝異常 Inborn errors of metabolism
+◎A1尿素循環代謝異常 Urea cycle disorders
+A1 01 先天性尿素循環代謝障礙 Congenital urea cycle disorders E72.20
+02 瓜胺酸血症 Citrullinemia E72.23
+03 乙醯榖胺酸合成酶缺乏症
+Nitroacetylglutamate synthetase
+deficiency, NAG synthetase deficiency
+E72.29
+04
+鳥胺酸氨甲醯基轉移酶缺
+乏症
+Ornithine transcarbamylase deficiency E72.4
+05
+高鳥胺酸血症-高氨血症-高
+瓜胺酸血症症候群
+Hyperornithinemia-Hyperammonemia-
+Homocitrullinuria syndrome
+E72.4
+◎ A2胺基酸/有機酸代謝異常 Disorders of amino acid/organic acid metabolism
+A2 01 胺基酸代謝疾病
+Amino acid metabolic disorders
+(Aminoacidopathies)
+E72.9
+E70.9
+E72.10
+E72.89
+E71.2
+2
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+E70.89
+02 高胱胺酸尿症 Homocystinuria E72.11
+03 高甲硫胺酸血症 Hypermethioninemia E72.19
+04 非酮性高甘胺酸血症 Nonketotic hyperglycinemia E72.51
+05 苯酮尿症 Phenylketonuria E70.0
+06 四氫基喋呤缺乏症 Tetrahydrobiopterin deficiency E70.1
+07 遺傳性高酪胺酸血症 Hereditary tyrosinemia E70.21
+08 楓糖尿症 Maple syrup urine disease E71.0
+09 有機酸血症 Organic acidemias E71.118
+10 異戊酸血症 Isovaleric acidemia E71.110
+11
+戊二酸尿症，第一型、第
+二型
+Glutaric aciduria type I、II
+type I: E72.3
+typeII: E71.313
+12 丙酸血症 Propionic acidemia E71.121
+13 甲基丙二酸血症 Methylmalonic acidemia E71.120
+14 3-羥基-3-甲基戊二酸血症 3-Hydroxy-3-methylglutaric acidemia E71.118
+15
+典型苯酮尿症合併蔗糖酶
+同麥芽糖酶缺乏症
+PAH type PKU combine with sucrase-
+isomaltase deficiency
+E74.31+E70.0
+16 高離胺酸血症 Hyperlysinemia E72.3
+17 組胺酸血症 Histidinemia E70.41
+18
+三甲基巴豆醯輔酶 A羧化酵
+素缺乏症
+3-Methylcrotonyl-CoA carboxylase
+deficiency
+E71.19
+19 多發性羧化酶缺乏症 Multiple carboxylase deficiency D81.819
+20 高脯胺酸血症 Hyperprolinemia E72.59
+21
+芳香族 L-胺基酸類脫羧基
+酶缺乏症
+Aromatic L-amino acid decarboxylase
+deficiency
+E70.81
+22 酪胺酸羥化酶缺乏症 Tyrosine hydroxylase deficiency E70.20
+23 甲基丙二酸血症併高胱胺
+酸尿症,cb1C 型
+Cobalamin C defect (Methylmalonic
+acidemia and Homocystinuria, cb1C
+type)
+E71.120+E72.11
+3
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+24 原發性高草酸鹽尿症 Primary hyperoxaluria E72.53
+25 黑尿症 Alkaptonuria E70.29
+◎A3溶小體儲積症 Lysosomal storage disorders
+A3 01 高雪氏症 Gaucher disease E75.22
+02
+GM1/GM2神經節苷脂儲積
+症
+GM1/GM2 gangliosidosis
+GM1: E75.19
+GM2: E75.00
+E75.09
+E75.01
+E75.02
+03 Fabry 氏症(法布瑞氏症) Fabry disease E75.21
+04
+Niemann-Pick 氏症，鞘髓磷
+脂儲積症
+Niemann-Pick disease
+E75.240:Type A
+E75.241:Type B
+E75.242:Type C
+E75.243:Type D
+E75.244:Type A/B
+E75.248:other
+E75.249:unspecified
+05 MLD 症候群 Metachromatic leukodystrophy (MLD) E75.25
+06 球細胞腦白質失養症
+Globoid cell leukodystrophy
+(Krabbe’s disease)
+E75.23
+07
+嬰兒型溶酶體酸性脂肪酶
+缺乏症(又稱伍爾曼氏症)
+Infantile form lysosomal acid lipase
+deficiency (Wolman disease)
+E75.5
+08 胱胺酸血症 Cystinosis E72.04
+09 黏多醣症 Mucopolysaccharidoses
+Type I Hurler's
+syndrome E76.01
+Type I Hurler-Scheie
+syndrome E76.02
+Type I Scheie
+syndrome E76.03
+Type II Hunter
+syndrome E76.1
+Type III Sanfilippo
+syndrome E76.22
+Type IVA Morquio
+syndrome E76.210
+Type IVB Morquio
+syndrome E76.211
+Type IV Other
+Morquio syndrome
+E76.219
+4
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+Other MPS E76.29
+Unspecified MPS
+E76.3
+10 岩藻糖代謝異常(儲積症) Fucosidosis E77.1
+11 涎酸酵素缺乏症 Sialidosis E77.1
+12 黏脂質症 Mucolipidosis
+Type I : E77.1
+Type II、III : E77.0
+Type IV : E75.11
+13 神經元蠟樣脂褐質儲積症 Neuronal ceroid lipofuscinosis E75.4
+14 多發性硫酸脂酶缺乏症 Multiple sulfatase deficiency E75.26
+◎A4碳水化合物代謝異常 Disorders of carbohydrate metabolism
+A4 01 半乳糖血症 Galactosemia E74.21
+02 肝醣儲積症 Glycogen storage disease
+E74.09:type 0
+E74.01:Type I
+E74.02:type II
+E74.03:type III
+E74.09:type IV
+E74.04:type V
+E74.09:type VI-XI
+03
+腦血管屏障葡萄糖輸送缺
+陷
+Glut (Glucose transport)1 deficiency
+syndrome
+E74.810
+04 轉醛醇酶缺乏症 Transaldolase deficiency E74.89
+◎A5脂肪酸氧化異常 Disorders of fatty acid oxidation
+A5 01 脂肪酸氧化作用缺陷 Fatty acid oxidation defect
+E71.30
+E71.310
+E71.311
+E71.312
+E71.313
+E71.314
+E71.318
+E71.32
+E71.39
+02 原發性肉鹼缺乏症
+Carnitine deficiency syndrome,
+primary
+E71.41
+03
+中鏈脂肪酸去氫酵素缺乏
+症
+Medium-chain acyl-coenzyme A
+dehydrogenase deficiency (MCAD)
+E71.311
+04 短鏈脂肪酸去氫酶缺乏症
+Short-chain acyl-CoA dehydrogenase
+deficiency
+E71.312
+◎A6粒線體異常 Mitochondrial disorders
+A6 01 粒線體缺陷 Mitochondrial defect E88.40
+02 Kearns-Sayre 氏症候群 Kearns-Sayre syndrome
+H49.811
+H49.812
+H49.813
+H49.819
+5
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+03 Leigh 氏童年期腦脊髓病變 Leigh disease G31.82
+04 MELAS 症候群 MELAS E88.41
+05
+MNGIE 症候群粒線體性神
+經胃腸腦病變症候群
+Mitochondrial neurogastrointestinal
+encephalopathy syndrome
+E88.49
+06 丙酮酸鹽脫氫酶缺乏症 Pyruvate dehydrogenase deficiency E74.4
+07 巴氏症候群 Barth syndrome E78.71
+08 雷伯氏遺傳性視神經病變 Leber hereditary optic neuropathy H47.22
+◎A7維生素代謝異常 Disorders of vitamin metabolism
+A7 01 生物素酶缺乏症 Biotinidase deficiency D81.810
+◎A8膽固醇及脂質代謝異常 Disorders of cholesterol and lipid metabolism
+A8 01
+同合子家族性高膽固醇血
+症
+Homozygous familial
+hypercholesterolemia
+E78.01
+02 家族性高乳糜微粒血症 Familial hyperchylomicronemia E78.3
+03 豆固醇血症(植物性) Sitosterolemia
+E78.00
+E78.01
+04
+先天性全身脂質營養不良
+症
+Congenital generalized lipodystrophy E88.1
+05 腦腱性黃瘤症 Cerebrotendinous xanthomatosis E75.5
+◎A9金屬代謝異常 Disorders of metal metabolism
+A9 01 威爾森氏症 Wilson’s disease E83.01
+02 Menkes 症候群 Menkes syndrome E83.09
+03 鉬輔酶缺乏症 Molybdenum cofactor deficiency E61.5
+◎A10過氧化體異常 Peroxisomal disorders
+A10 01 Zellweger 氏症候群 Zellweger syndrome E71.510
+02 腎上腺腦白質失養症 Adrenoleukodystrophy
+E71.511
+E71.520
+E71.521
+E71.528
+E71.529
+03 肢近端型點狀軟骨發育不
+良
+Rhizomelic chondrodysplasia punctata E71.540
+6
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+◎A11其他代謝異常 Other metabolic disorders
+A11 01 紫質症 Porphyria
+E80.20
+E80.21
+E80.29
+02 Lesch-Nyhan 氏症候群 Lesch-Nyhan syndrome E79.1
+03 亞硫酸鹽氧化酶缺乏 Sulfite oxidase deficiency E72.19
+04 先天性醣基化障礙
+Congenital disorder of glycosylation,
+CDG
+E77.8
+05 三甲基胺尿症 Trimethylaminuria E72.52
+06 低磷酸酯酶症 Hypophosphatasia
+E83.39
+E83.31
+07 Beta 硫解酶缺乏症 Beta-Ketothiolase deficiency E71.19
+08 大腦肌酸缺乏症 Cerebral creatine deficiency E72.89
+09
+硫胺素(維生素 B1)代謝功能
+障礙症候群
+Thiamine metabolism dysfunction
+syndromes
+E51.8
+10 嘌呤合成代謝異常
+Disorders of purine biosynthesis
+metabolism
+E79.8
+E79.9
+B.腦部或神經系統異常 Disorders of the brain or nervous system
+B1 01
+多發性硬化症/泛視神經脊
+髓炎
+Multiple sclerosis, MS/ Neuromyelitis
+optica spectrum disorders, NMOSD
+G35/G36.0
+02 肌萎縮性側索硬化症 Amyotrophic lateral sclerosis (ALS) G12.21
+03
+共濟失調微血管擴張症候
+群
+Ataxia telangiectasia G11.3
+04 亨丁頓氏舞蹈症
+Huntington disease
+(又稱 Huntington's chorea)
+G10
+05 雷特氏症 Rett syndrome F84.2
+06 脊髓性肌肉萎縮症 Spinal muscular atrophy
+G12.0
+G12.1
+07
+脊髓小腦退化性動作協調
+障礙
+Spinocerebellar ataxia
+G11.9
+G11.10
+G11.11
+G11.19
+G11.2
+G11.8
+08 結節性硬化症 Tuberous sclerosis Q85.1
+09
+先天性痛不敏感症合併無
+汗症
+Congenital insensitivity to pain with
+anhidrosis (CIPA)
+L74.4
+7
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+10 神經纖維瘤症候群第二型 Neurofibromatosis type Ⅱ Q85.02
+11 Alexander 氏病 Alexander disease G31.89
+12 僵體症候群 Stiffperson syndrome G25.82
+13 遺傳性痙攣性下身麻痺 Hereditary spastic paraplegia G11.4
+14
+Joubert 氏症候群(家族性小
+腦蚓部發育不全)
+Joubert syndrome Q04.3
+15
+Pelizaeus-Merzbacher 氏症
+(慢性兒童型腦硬化症)
+Pelizaeus-Merzbacher disease E75.29
+16 夏柯-馬利-杜斯氏症 Charcot-Marie-Tooth disease G60.0
+17
+甘迺迪氏症(脊髓延髓性肌
+肉萎縮症)
+Kennedy disease
+G12.20
+G12.24
+G12.29
+18
+家族性澱粉樣多發性神經
+病變
+Familial amyloidotic polyneuropathy E85.1
+19 Moebius 症候群 Moebius syndrome Q87.0
+20 Mcleod 症候群 Mcleod syndrome
+Q97.8
+Q98.8
+21 Aicardi-Goutieres 症候群 Aicardi-Goutieres syndrome E79.8
+22 MECP2綜合症候群
+Methyl CpG binding protein 2
+duplication syndrome
+(MECP2 duplication syndrome)
+Q99.8
+23 Dravet 症候群 Dravet syndrome, DS G40.833
+G40.834
+24 腦白質消失症 Vanishing white matter disease G11.8
+25
+泛酸鹽激酶關聯之神經退
+化性疾病
+Pantothenate kinase associated
+neurodegeneration (PKAN)
+G23.0
+26
+磷脂質脂解酶 A2關聯之神
+經退化性疾病
+Phospholipase A2-associated
+neurodegeneration (PLAN)
+G23.0
+27 皮特-霍普金斯症候群 Pitt-Hopkins syndrome Q87.0
+28
+Beta 螺旋狀蛋白關聯之神經
+退化疾病
+Beta-Propeller protein-associated
+neurodegeneration (BPAN)
+G23.0
+29
+嬰兒型上行性遺傳性痙攣
+性麻痺
+Infantile-onset ascending
+hereditary spastic paralysis, IAHSP
+G12.20
+G12.24
+G12.29
+30
+先天性中樞性換氣不足症
+候群
+Congenital central hypoventilation
+syndrome
+G47.35
+31 Von Hippel-Lindau症候群 Von Hippel-Lindau disease Q85.83
+8
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+32 Basilicata-Akhtar症候群 Basilicata-Akhtar syndrome
+F78.A9
+F84.8
+33 舞蹈症-棘紅細胞增多症 Chorea-acanthocytosis G25.5
+C.呼吸循環系統異常 Disorders of the respiratory/circulation system
+C1 01 特發性嬰兒動脈硬化症
+Idiopathic infantile arterial
+calcification
+Q28.8
+02 囊狀纖維化症 Cystic fibrosis E84.9
+03
+特發性或遺傳性肺動脈高
+壓
+Idiopathic or Heritable pulmonary
+arterial hypertension (IPAH or HPAH)
+I27.0
+04 Holt-Oram 氏症候群 Holt-Oram syndrome Q87.2
+05
+Andersen 氏症候群(心節律
+障 礙 暨 週 期 性 麻 痺 症 候
+群；鉀離子通道病變)
+Andersen syndrome G72.3
+06 遺傳性出血性血管擴張症 Hereditary hemorrhagic telangiectasia I78.0
+07 窒息性胸腔失養症 Asphyxiating thoracic dystrophy Q77.2
+D.消化系統異常 Disorders of the digestive system
+D1 01
+進行性家族性肝內膽汁滯
+留症
+Progressive familial intrahepatic
+cholestasis, PFIC
+K83.1
+02 先天性膽酸合成障礙 Inborn errors of bile acid synthesis E78.70
+03 α1-抗胰蛋白酶缺乏症 α1- Antitrypsin deficiency E88.01
+04
+先天性 Cajal 氏間質細胞增
+生合併腸道神經元發育異
+常
+Congenital interstitial cell of Cajal
+hyperplasia with neuronal intestinal
+dysplasia
+Q43.8
+05 阿拉吉歐症候群 Alagille syndrome Q44.7
+06 髮-肝-腸症候群 Tricho-hepato-enteric syndrome
+Q89.7
+K52.89
+E.腎臟泌尿系統異常 Disorders of the renal/urinary system
+E1 01 Lowe 氏症候群 Lowe syndrome E72.03
+02 Bartter 氏症候群 Bartter’s syndrome E26.81
+03
+體染色體隱性多囊性腎臟
+疾病
+Autosomal recessive polycystic kidney
+disease
+Q61.19
+04 亞伯氏症候群 Alport syndrome Q87.81
+F.皮膚系統異常 Disorders of the cutaneous system
+9
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+F1 01 遺傳性表皮分解性水皰症 Hereditary epidermolysis bullosa
+Q81.0
+Q81.1
+Q81.2
+Q81.8
+Q81.9
+02
+層狀魚鱗癬(自體隱性遺傳
+型)
+Ichthyosis, lamellar recessive Q80.2
+03 膠膜兒 Collodion baby Q80.2
+04 斑色魚鱗癬 Harlequin ichthyosis Q80.4
+05
+水泡型先天性魚鱗癬樣紅
+皮症(表皮鬆解性角化過度
+症)
+Bullous congenital ichthyosiform
+erythoderma (epidermolytic
+hyperkeratosis)
+Q80.3
+06 外胚層增生不良症 Ectodermal dysplasias Q82.4
+07 Meleda 島病 Meleda disease Q82.8
+08 Darier 氏症(毛囊角化病) Darier’s disease Q82.8
+09 先天性角化不全症 Dyskeratosis congenita Q82.8
+10 皮膚過度角化症雅司病
+Diffuse non-epidermolytic
+palmoplantar keratoderma type Unna-
+Thost
+Q82.8
+11 色素失調症 Incontinentia pigmenti Q82.3
+G.肌肉系統異常 Disorders of the muscular system
+G1 01 裘馨氏肌肉失養症 Duchenne muscular dystrophy G71.01
+02 Nemaline 線狀肌肉病變 Nemaline rod myopathy G71.21
+03 Schwartz Jampel 氏症候群 Schwartz Jampel syndrome G71.13
+04 肌肉強直症 Myotonic dystrophy G71.11
+05 面肩胛肱肌失養症
+Facioscapulohumeral muscular
+dystrophy
+G71.02
+06 肌小管病變 Myotubular myopathy G71.220
+07 貝克型肌肉失養症 Becker muscular dystrophy G71.01
+08 Freeman-Sheldon 氏症候群 Freeman-Sheldon syndrome Q87.0
+09 肢帶型肌失養症 Limb-girdle muscular dystrophy
+G71.031
+G71.032
+G71.033
+G71.0340
+G71.0342
+G71.0349
+G71.035
+G71.038
+10
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+G71.0341 G71.039
+10 先天性肌失養症 Congenital muscular dystrophy G71.20
+11 中心軸空肌病 Central core disease G71.29
+12 多微小軸空肌病 Multiminicore disease G71.29
+13 Emery-Dreifuss 肌失養症
+Emery-Dreifuss muscular dystrophy
+(EDMD)
+G71.00
+G71.038
+G71.09
+14 GNE 遠端肌病變 GNE myopathy
+G71.8
+G71.9
+15 史托摩根症候群 Stormorken syndrome D69.8
+H.骨及軟骨異常 Disorders of bone and cartilage
+H1 01 軟骨發育不全症 Achondroplasia Q77.4
+02 成骨不全症 Osteogenesis imperfecta Q78.0
+03 原發性變形性骨炎 Primary Paget disease
+M88.0
+M88.1
+M88.811
+M88.812
+M88.819
+M88.821
+M88.822
+M88.829
+M88.831
+M88.832
+M88.839
+M88.841
+M88.842
+M88.849
+M88.851
+M88.852
+M88.859
+M88.861
+M88.862
+M88.869
+M88.871
+M88.872
+M88.879
+M88.88
+M88.89
+M88.9
+04 鎖骨顱骨發育異常 Cleidocraninal dysplasia Q74.0
+05 進行性骨化性肌炎 Fibrodysplasia ossificans progressiva
+M61.10
+M61.111
+M61.112
+M61.119
+M61.121
+M61.122
+M61.129
+M61.131
+M61.132
+M61.139
+M61.152
+M61.159
+M61.161
+M61.162
+M61.169
+M61.171
+M61.172
+M61.173
+M61.174
+M61.175
+11
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+M61.141
+M61.142
+M61.143
+M61.144
+M61.145
+M61.146
+M61.151
+M61.176
+M61.177
+M61.178
+M61.179
+M61.18
+M61.19
+06 裂手裂足症
+Split-hand/ Split-foot malformation
+(SHFM)
+Q71.60
+Q71.61
+Q71.62
+Q71.63
+Q72.70
+Q72.71
+Q72.72
+Q72.73
+07 骨質石化症 Osteopetrosis Q78.2
+08 假性軟骨發育不全 Pseudoachondroplastic dysplasia Q77.8
+09 多發性骨骺發育不全症 Multiple epiphyseal dysplasia Q77.8
+10 顱骨幹骺端發育不良 Craniometaphyseal dysplasia Q78.8
+11 腦肋小頜症候群 Cerebro-Costo-Mandibular syndrome Q87.89
+12 Crouzon 氏症候群 Crouzon syndrome Q75.1
+13 Pfeiffer 氏症候群 Pfeiffer syndrome Q87.0
+I.結締組織異常 Disorders of the connective tissue
+I1 01 先天結締組織異常第四型 Ehlers Danlos syndrome Ⅳ Q79.63
+J.血液系統異常 Disorders of the hematologic system
+J1 01 重型海洋性貧血 Thalassemia major
+D56.0
+D56.1
+02 血小板無力症 Thrombasthenia D69.1
+03 同基因合子蛋白質 C 缺乏症 Homozygous protein C deficiency D68.59
+04 陣發性夜間血紅素尿症 Paroxysmal nocturnal hemoglobinuria D59.5
+05
+先天性血栓性血小板低下
+紫斑症
+Congenital thrombotic
+thrombocytopenic purpura
+D69.42
+K.免疫系統異常 Disorders of the immune system
+K1 01 原發性慢性肉芽腫病
+Chronic primary granulomatous
+disease
+D71
+02
+先天性高免疫球蛋白 E 症候
+群
+Congenital hyper IgE syndrome D82.4
+12
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+03
+布魯頓氏低免疫球蛋白血
+症
+Bruton’s agammaglobulinemia D80.0
+04 Wiskott-Aldrich 氏症候群 Wiskott-Aldrich syndrome D82.0
+05 嚴重複合型免疫缺乏症 Severe combined immunodeficiency
+D81.0
+D81.1
+D81.2
+D81.31
+D81.9
+06 補體成份8缺乏症 Complement component 8 deficiency D84.1
+07 IPEX 症候群 IPEX syndrome E31.0
+08 高免疫球蛋白 M 症候群 Hyper-IgM syndrome D80.5
+09 γ 干擾素受體1缺陷 Interferon γ receptor 1 deficiency D84.89
+10 遺傳性血管性水腫 Hereditary angioedema (HAE) D84.1
+11 Netherton 症候群 Netherton syndrome Q80.8
+12 非典型性尿毒溶血症候群 Atypical hemolytic uremic syndrome
+D59.32
+D59.39
+L.內分泌系統異常 Disorders of the endocrine system
+L1 01 Kenny-Caffey 氏症候群 Kenny-Caffey syndrome Q87.19
+02 假性副甲狀腺低能症 Pseudohypoparathyroidism E20.1
+03 遺傳性低磷酸鹽佝僂症 Hereditary hypophosphatemic rickets E83.31
+04 Laron 氏侏儒症候群 Laron syndrome (Laron Dwarfism) E34.321
+05 Bardet-Biedl 氏症候群 Bardet-Biedl syndrome Q87.89
+06 Alstrom 氏症候群 Alstrom syndrome Q87.89
+07
+持續性幼兒型胰島素過度
+分泌低血糖症
+Persistent hyperinsulinemic
+hypoglycemia of infancy (PHHI)
+E16.1
+08 Wolfram 氏症候群 Wolfram syndrome, DIDMOAD E34.8
+09 McCune Albright 氏症候群 McCune Albright syndrome Q78.1
+10 短指發育不良及性別顛倒
+Campomelic dysplasia with autosomal
+sex reversal
+Q87.19
+11 腎上腺皮促素抗性 ACTH resistance E27.49
+13
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+12 第一型遺傳性維生素 D 依
+賴型佝僂症
+25-Hydroxyvitamin D 1-alpha-
+hydroxylase deficiency
+E83.32
+13 先天性腎上腺發育不全 Congenital adrenal hypoplasia Q89.1
+14 Kallmann 氏症候群 Kallmann syndrome E23.0
+15 永久性新生兒糖尿病 Permanent neonatal diabetes mellitus P70.2
+16 MIRAGE 症候群 MIRAGE syndrome Q89.8
+17 Werner 症候群 Werner syndrome E34.8
+M.先天畸形/症候群 Congenital malformations/syndromes
+M1 01 Aarskog-Scott 氏症候群 Aarskog-Scott syndrome Q87.19
+02 瓦登伯格氏症候群 Waardenburg syndrome Q87.89
+03 愛伯特氏症 Apert syndrome Q87.0
+04 Smith-Lemli-Opitz 氏症候群 Smith-Lemli-Opitz syndrome E78.72
+05
+Larsen 氏症候群(顎裂-先天
+性脫位症候群)
+Larsen syndrome Q74.8
+06
+Beckwith Wiedemann 氏症候
+群
+Beckwith Wiedemann syndrome Q87.3
+07 Fraser 氏症候群 Fraser syndrome Q87.0
+08 多發性翼狀膜症候群 Multiple pterygium syndrome Q79.8
+09 Cornelia de Lange 氏症候群 Cornelia de Lange syndrome Q87.19
+10 海勒曼-史德萊夫氏症候群 Hallerman-Streiff syndrome Q87.0
+11 Kabuki 症候群 Kabuki syndrome Q89.8
+12 耳-齶-指（趾）症候群 Oto-Palato-Digital syndrome Q87.0
+13
+Conradi-Hunermann 氏症候
+群
+Conradi-Hunermann syndrome Q77.3
+14 Treacher Collins 氏症候群 Treacher Collins syndrome Q75.4
+15 Robinow 氏症候群 Robinow syndrome Q87.19
+16 指（趾）甲髕骨症候群 Nail-Patella syndrome Q87.2
+14
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+17 CFC 症候群 Cardiofaciocutaneous syndrome Q87.89
+18 Peters-Plus 症候群 Peters-Plus syndrome Q13.4
+19 Nager 症候群 Nager syndrome Q75.4
+20 CHARGE 症候群 CHARGE syndrome Q89.8
+21 懷特-薩頓症候群 White-Sutton syndrome Q87.0
+22
+克斯提洛氏彈性蛋白缺陷
+症
+Costello syndrome Q87.89
+23 Ayme-Gripp 症候群 Ayme-Gripp syndrome Q87.89
+24 Coffin-Lowry 症候群 Coffin-Lowry syndrome Q89.8
+25 Myhre 症候群 Myhre syndrome Q87.89
+26 森森布倫納症候群 Sensenbrenner syndrome Q87.5
+27 克片-魯賓斯基症候群 Keppen-Lubinsky syndrome E88.1
+28 Angelman 氏症候群 Angelman syndrome Q93.51
+29 DiGeorge 症候群 DiGeorge syndrome D82.1
+30 Prader-Willi 氏症候群 Prader-Willi syndrome Q87.11
+31
+威爾姆氏腫瘤、無虹膜、
+性器異常、智能障礙症候
+群(WAGR 症候群)
+WAGR syndrome (Wilms’ tumor-
+aniridia-genitourinary anomalies-
+mental retardation)
+Q87.89
+32 Miller Dieker 症候群 Miller Dieker syndrome Q93.88
+33 Rubinstein-Taybi 氏症候群 Rubinstein-Taybi syndrome Q87.2
+34 威廉斯氏症候群 Williams syndrome Q93.82
+35
+Branchio-Oto-Renal 症 候群
+(BOR 症候群)
+Branchio-Oto-Renal syndrome
+(BOR syndrome)
+Q87.89
+36 普洛提斯症候群 Proteus syndrome Q87.3
+37
+Cockayne 氏症候群(柯凱因
+氏症候群)
+Cockayne syndrome Q87.19
+38 早老症 Hutchinson Gilford progeria syndrome E34.8
+39 Schaaf-Yang 症候群 Schaaf-Yang syndrome Q87.19
+15
+分類
+序
+號
+中文病名（僅供參考） 英文病名(縮寫) ICD-10-CM 編碼
+40 Galloway-Mowat 症候群 Galloway-Mowat syndrome Q04.3
+N.眼睛異常 Eye disorders
+N1 01 Stargardt's 氏症 Stargardt's disease H35.50
+02 隱匿性黃斑部失養症 Occult macular dystrophy；OMD H35.50
+03 萊伯氏先天性黑矇症 Leber congenital amaurosis H35.50
+Z.其他未分類或不明原因 Unclassified or unknown
+備註：
+1. 中華民國93年1月7日署授國字第092401548號公告「胰島母細胞瘤（Nesidioblastosis）
+」因屬舊的
+病名用法，自即日起併入罕見疾病序號 L07號 Persistent hyperinsulinemic hypoglycemia of infancy
+（PHHI）名單。
+2. 中華民國95年9月12日署授國字第09504009072號公告「Tyrosinemial Ⅰ、Ⅱ、Ⅲ（酪胺基酸症第一
+型、第二型、第三型）
+」
+，自即日起併入罕見疾病序號 A207號 Hereditary tyrosinemia（遺傳性高酪
+胺酸血症）名單。
+3. 中華民國96年8月22日署授國字第09604006002號修正已公告 Urea cycle disorders 為 Congenital Urea
+cycle disorders。
+4. 中華民國98年7月3日署授國字第0980400742號公告罕見疾病序號 B107號 Spinocerebellar ataxia，
+原中文病名：脊髓小腦性共濟失調，修正為：脊髓小腦退化性動作協調障礙。
+5. 中華民國99年3月19日署授國字第0990400103號公告罕見疾病序號 K102號 Congenital Hyper IgE
+syndrome（先天性高免疫球蛋白 E 症候群）
+，原 ICD-9-CM 編碼：
+「279.9」
+，修正為：
+「288.1」
+。
+6. 中華民國106年10月25日衛授國字第1060402678號公告新增罕見疾病序號 G13號 Emery-Dreifuss 肌
+失養症(Emery-Dreifuss Muscular Dystrophy)：ICD-10-CM 編碼「G71.0」
+、K10號遺傳性血管性水
+腫(Hereditary Angioedema) ：ICD-10-CM 編碼「D84.1」
+。
+7. 中華民國107年5月30日衛授國字第1070401231號公告新增罕見疾病序號 B1-25號 Dravet 症候群
+(Dravet Syndrome, DS)：ICD-10-CM 編碼「G40.311」
+、腦白質消失症(Vanishing White Matter
+Disease)：ICD-10-CM 編碼「G37.8」
+；修正罕見疾病序號 A11-05號臭魚症(Trimethylaminuria)修正
+為 三 甲 基 胺 尿 症 (Trimethylaminuria) 、 序 號 L1-12 號 1α- 羥 化 酶 缺 乏 症 候 群 (1α-hydroxylase
+deficiency)：ICD-10-CM 編碼「E25.0」修正為第一型遺傳性維生素 D 依賴型佝僂症 (25-
+Hydroxyvitamin D 1-Alpha-Hydroxylase Deficiency)：ICD-10-CM 編碼「E83.32」
+、序號 G13號肌失
+養症(Emery–Dreifuss Muscular Dystrophy,EDMD)分類序號修正為 G1-13、序號 K10號遺傳性血管
+性水腫(Hereditary Angioedema,HAE)分類序號修正為 K1-10。
+8. 中華民國108年1月15日衛授國字第1070403736號公告新增罕見疾病序號 G1-14號 GNE 遠端肌病變
+(GNE myopathy)：ICD-10-CM 編碼「G71.8」
+、G1-15號史托摩根症候群(Stormorken syndrome)：
+ICD-10-CM 編碼「D69.8」及 M1-25號克斯提洛氏彈性蛋白缺陷症(Costello syndrome)：ICD-10-
+CM 編碼「Q87.89」
+。
+9. 中華民國109年7月31日衛授國字第1090402037號公告新增罕見疾病序號 M1-26號 Ayme-Gripp 症
+候群(Ayme-Gripp syndrome)：ICD-10-CM 編碼「Q87.89」及 M1-27號 Coffin-Lowry 症候群(Coffin-
+Lowry Syndrome)：ICD-10-CM 編碼「Q89.8」
+，及修正罕見疾病名稱序號 C1-03號原發性肺動脈高
+壓(Primary Pulmonary Hypertension ,PPH)修正為特發性或遺傳性肺動脈高壓(Idiopathic or Heritable
+pulmonary arterial hypertension (IPAH or HPAH）及序號 B1-05號瑞特氏症候群(Rett syndrome)修正
+16
+為雷特氏症(Rett syndrome)。
+10. 中華民國109年10月13日衛授國字第1090402740號公告新增罕見疾病序號 B1-28號磷脂質脂解酶
+A2關聯之神經退化性疾病(Phospholipase A2-associated neurodegeneration,PLAN)：ICD-10-CM 編碼
+「G23.0」
+，及罕見疾病序號 M1-18號泛酸鹽激酶關聯之神經退化性疾病(Pantothenate Kinase
+Associated Neurodegeneration,PKAN）分類序號修正為 B1-27號。
+11. 中華民國110年8月3日衛授國字第1100460016號公告新增罕見疾病序號 A6-08號雷伯氏遺傳性視神
+經病變(Leber hereditary optic neuropathy)：ICD-10-CM 編碼「H47.22」及 B1-29號皮特-霍普金斯
+症候群(Pitt-Hopkins Syndrome)：ICD-10-CM編碼「Q87.0」
+，及修正罕見疾病序號 B1-16號 Charcot
+Maire Tooth 氏症(進行性神經性腓骨萎縮症)( X-linked hypophosphatemic rickets)修正為夏柯-馬利-
+杜斯氏症(Charcot-Marie-Tooth Disease)、序號 L1-03號性連遺傳型低磷酸鹽佝僂症(X-linked
+hypophosphatemic rickets)修正為性聯遺傳型低磷酸鹽佝僂症(X-linked hypophosphatemic rickets)。
+12. 中華民國110年11月23日衛授國字第1100461161號公告新增罕見疾病序號 M1-28號 Myhre 症候群
+(Myhre syndrome)：ICD-10-CM 編碼「Q87.89」
+、Z1-06號萊伯氏先天性黑矇症(Leber Congenital
+Amaurosis)：ICD-10-CM 編碼「H35.50」
+、L1-16號 MIRAGE 症候群(MIRAGE syndrome)：ICD-10-
+CM 編碼「Q89.8」及 E1-04號亞伯氏症候群(Alport Syndrome)：ICD-10-CM 編碼「Q87.81」
+。
+13. 中華民國110年11月24日衛授國字第1100461168號公告修正罕見疾病序號 B1-01號多發性硬化症
+(Multiple sclerosis)：ICD-10-CM 編碼「G35」修正為多發性硬化症泛視神經脊髓炎(Multiple
+Sclerosis ,MS/ Neuromyelitis Optica Spectrum Disorders, NMOSD)：ICD-10-CM 編碼「G35、G36.0」
+。
+14. 中華民國111年1月12日衛授國字第1100461686號公告新增罕見疾病序號 M1-29號森森布倫納症候
+群(Sensenbrenner Syndrome)：ICD-10-CM 編碼「Q87.5」
+、A4-04號轉醛醇酶缺乏症(Transaldolase
+deficiency)： ICD-10-CM 編 碼「 E74.8 」 及 M1-30 號 克片 魯賓 斯 基症 候 群 (Keppen Lubinsky
+Syndrome)：ICD-10-CM 編碼「E88.1」
+，及修正罕見疾病序號 F1-01號遺傳性表皮分解性水皰症
+(Hereditary epidermolysis bullosa)原 ICD-10-CM 編碼：
+「Q81.9」
+，修正為：
+「Q81.0、Q81.1、Q81.2、
+Q81.8、Q81.9」
+。
+15. 中華民國111年4月13日衛授國字第1110460962號公告新增罕見疾病序號 B1-30號 Beta 螺旋狀蛋白
+關聯之神經退化疾病(Beta-Propeller Protein-Associated Neurodegeneration ,BPAN)：ICD-10-CM 編
+碼「G23.0」
+，及修正罕見疾病序號 A2-143號3-羥基-3-甲基戊二酸血症(3-Hydroxy-3-methyl-
+glutaric academia)修正為3-羥基-3-甲基戊二酸血症(3-Hydroxy-3-methylglutaric academia)、序號 A2-
+16號高離氨基酸血症(Hyperlysinemia)修正為高離胺基酸血症(Hyperlysinemia)、罕見疾病序號 D1-
+01號進行性家族性肝內膽汁滯留症(Progressive intrahepatic cholestasis,PFIC)修正為進行性家族性肝
+內膽汁滯留症(Progressive familial intrahepatic cholestasis,PFIC)。
+16. 中華民國111年7月13日衛授國字第1110461992號公告新增罕見疾病序號 H1-10號顱骨幹骺端發育
+不良(CraniometaphysealDysplasia)：ICD-10-CM 編碼「Q78.8」
+、序號 B1-31號嬰兒型上行性遺傳性
+痙 攣 性 麻 痺 (Infantile-Onset AscendingHereditary Spastic Paralysis,IAHSP) ： ICD-10-CM 編 碼
+「G12.2」
+、序號 A11-11號大腦肌酸缺乏症(Cerebral Creatine Deficiency) ICD-10-CM 編碼「E72.8」
+及序號 A11-12號硫胺素(維生素 B1)代謝功能障礙症候群(Thiamine Metabolism Dysfunction
+Syndromes) )：ICD-10-CM 編碼「E51.8」
+，及修正罕見疾病序號 M1-12號歌舞伎症候群(Kabuki
+syndrome)中文名稱為 Kabuki 症候群(Kabuki syndrome)、序號 N1-02號 DiGeorge’s 症候群
+(DiGeorge’s syndrome)名稱為 DiGeorge 症候群(DiGeorge syndrome)。
+17. 中華民國112年1月17日衛授國字第1120460003號公告新增罕見疾病序號 A2-24號原發性高草酸鹽
+尿症(Primary Hyperoxaluria)：ICD-10-CM 編碼「E72.53」
+，及修正罕見疾病序號 B1-06號脊髓性肌
+肉萎縮症(Spinal muscular atrophy) 原 ICD-10-CM 編碼：
+「G12.9」
+，修正為：
+「G12.0、G12.1」
+、序
+號 B1-25號 Dravet 症候群(Dravet syndrome) 原 ICD-10-CM 編碼：
+「G40.311」
+，修正為：
+「G40.803、
+G40.804」
+。
+18. 中華民國112年4月19日衛授國字第1120460969號公告新增罕見疾病序號 A2-25號黑尿症
+(Alkaptonuria)：ICD-10-CM 編碼「E70.29」
+。
+19. 中華民國112年10月25日衛授國字第1120463037號公告新增罕見疾病序號 J1-05號先天性血栓性血
+小板低下紫斑症(Congenital thrombotic thrombocytopenic purpura)：ICD-10-CM 編碼「M31.1」
+，並
+修正罕見疾病分類及序號26類、罕見疾病所屬分類32項及中英文病名84項(含修正英文字大小寫)。
+17
+20. 中華民國113年1月30日衛授國字第1130460217號公告新增罕見疾病序號 M1-39號 Schaaf-Yang 症
+候群(Schaaf-Yang syndrome )：ICD-10-CM 編碼「Q87.1」
+。
+21. 中華民國113年7月15日衛授國字第1130462168號公告新增罕見疾病序號 B1-32號 Basilicate-Akhtar
+症候群(Basilicate-Akhtar syndrome)：ICD-10-CM 編碼為「F78」
+，並修正序號 A3-03之 Fabry 氏症
+(Fabry disease)修正為 Fabry 氏症(法布瑞氏症) (Fabry disease)。
+22. 中華民國113年10月11日衛授國字第1130463224號公告新增罕見疾病序號 B1-33號 舞蹈症-棘紅細
+胞增多症(Chorea-acanthocytosis)：ICD-10-CM 編碼為「G25.5」
+。
+23. 中華民國114年1月23日衛授國字第1130464505號公告修正序號 A11-04之碳水化合缺乏醣蛋白症候
+群 (Carbohydrate-deficiency glycoprotein syndrome)為 先 天性 醣 基化 障礙 (Congenital disorder of
+glycosylation, CDG)；修正序號 M1-37之 Cockayne 氏症候群(Cockayne syndrome)為 Cockayne 氏症
+候群(柯凱因氏症候群) (Cockayne syndrome)；修正罕見疾病 CD-10-CM 編碼共37項，並酌修表格
+文字。
+24. 中華民國114年4月11日衛授國字第1140461041號公告新增罕見疾病序號 M1-40號 Galloway-Mowat
+症候群(Galloway-Mowat syndrome)：ICD-10-CM 編碼為「Q04.3」
+。
+25. 中華民國114年10月20日衛授國字第1140463341號公告修正序號 L1-03之性聯遺傳低磷酸鹽佝僂症
+(X-linked Hypophosphatemic rickets)為遺傳性低磷酸鹽佝僂症(Hereditary hypophosphatemic rickets)。
+26. 中華民國115年3月13日衛授國字第1150460479號公告新增罕見疾病序號 A11-10號嘌呤合成代謝異
+常(Disorders of purine biosynthesis metabolism)：ICD-10-CM 編碼為「E79.8、E79.9」
+；修正罕見疾
+病 ICD-10-CM 編碼共26項。
+27. 中華民國115年7月23日衛授國字第1150461436號公告新增罕見疾病序號 L1-17 Werner 症候群
+(Werner syndrome)：ICD-10-CM 編碼為「E34.8」
+。
+18
+公告罕見疾病名單暨 ICD-10-CM 編碼一覽表(依英文字母排序)
+中華民國106年10月25日衛授國字第1060402648號公告
+中華民國107年5月30日衛授國字第1070401231號公告
+中華民國108年1月15日衛授國字第1070403736號公告
+中華民國109年7月31日衛授國字第1090402037號公告
+中華民國109年10月13日衛授國字第1090402740號公告
+中華民國110年8月3日衛授國字第1100460016號公告
+中華民國110年11月23日衛授國字第1100461161號公告
+中華民國110年11月24日衛授國字第1100461168號公告
+中華民國111年1月12日衛授國字第1100461686號公告
+中華民國111年4月13日衛授國字第1110460962號公告
+中華民國111年7月13日衛授國字第1110461992號公告
+中華民國112年1月17日衛授國字第1120460003號公告
+中華民國112年4月19日衛授國字第1120460969號公告
+中華民國112年10月25日衛授國字第1120463037號公告
+中華民國113年1月30日衛授國字第1130460217號公告
+中華民國113年7月15日衛授國字第1130462168號公告
+中華民國113年10月11日衛授國字第1130463224號公告
+中華民國114年1月23日衛授國字第1130464505號公告
+中華民國114年4月11日衛授國字第1140461041號公告
+中華民國114年10月20日衛授國字第1140463341號公告
+中華民國115年3月13日衛授國字第1150460479號公告
+中華民國115年7月23日衛授國字第1150461436號公告
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+25-Hydroxyvitamin D
+1-alpha-hydroxylase deficiency
+第一型遺傳性維生素 D 依賴型
+佝僂症
+E83.32
+3-Hydroxy-3-methylglutaric
+acidemia
+3-羥基-3-甲基戊二酸血症 E71.118
+3-Methylcrotonyl-CoA
+carboxylase deficiency
+三甲基巴豆醯輔酶 A 羧化酵素
+缺乏症
+E71.19
+α1- Antitrypsin deficiency α1-抗胰蛋白酶缺乏症 E88.01
+Aarskog-Scott syndrome Aarskog-Scott 氏症候群 Q87.19
+Achondroplasia 軟骨發育不全症 Q77.4
+ACTH resistance 腎上腺皮促素抗性 E27.49
+Adrenoleukodystrophy 腎上腺腦白質失養症
+E71.511
+E71.520
+E71.521
+E71.528
+19
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+E71.529
+Aicardi-Goutieres syndrome Aicardi-Goutieres 症候群 E79.8
+Alagille syndrome 阿拉吉歐症候群 Q44.7
+Alexander disease Alexander 氏病 G31.89
+Alkaptonuria 黑尿症 E70.29
+Alport syndrome 亞伯氏症候群 Q87.81
+Alstrom syndrome Alstrom 氏症候群 Q87.89
+Amino acid metabolic disorders
+(Aminoacidopathies)
+胺基酸代謝疾病
+E72.9
+E70.9
+E72.10
+E72.89
+E71.2
+E70.89
+Amyotrophic lateral sclerosis
+(ALS)
+肌萎縮性側索硬化症 G12.21
+Andersen syndrome
+Andersen 氏症候群(心節律障礙
+暨週期性麻痺症候群；鉀離子
+通道病變)
+G72.3
+Angelman syndrome Angelman 氏症候群 Q93.51
+Apert syndrome 愛伯特氏症 Q87.0
+Aromatic L-amino acid
+decarboxylase deficiency
+芳香族 L-胺基酸類脫羧基酶缺
+乏症
+E70.81
+Asphyxiating thoracic
+dystrophy
+窒息性胸腔失養症 Q77.2
+Ataxia telangiectasia 共濟失調微血管擴張症候群 G11.3
+Atypical hemolytic uremic
+syndrome
+非典型性尿毒溶血症候群
+D59.32
+D59.39
+Autosomal recessive polycystic
+kidney disease
+體染色體隱性多囊性腎臟疾病 Q61.19
+Ayme-Gripp syndrome Ayme-Gripp 症候群 Q87.89
+Bardet-Biedl syndrome Bardet-Biedl 氏症候群 Q87.89
+Barth syndrome 巴氏症候群 E78.71
+20
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Bartter’s syndrome Bartter 氏症候群 E26.81
+Basilicata-Akhtar syndrome Basilicata-Akhtar 症候群
+F78.A9
+F84.8
+Becker muscular dystrophy 貝克型肌肉失養症 G71.01
+Beckwith Wiedemann
+syndrome
+Beckwith Wiedemann 氏症候群 Q87.3
+Beta-Ketothiolase deficiency Beta 硫解酶缺乏症 E71.19
+Beta-Propeller protein-
+associated neurodegeneration
+(BPAN)
+Beta 螺旋狀蛋白關聯之神經退
+化疾病
+G23.0
+Biotinidase deficiency 生物素酶缺乏症 D81.810
+Branchio-Oto-Renal syndrome
+(BOR syndrome)
+Branchio-Oto-Renal 症候群
+(BOR 症候群)
+Q87.89
+Bruton’s agammaglobulinemia 布魯頓氏低免疫球蛋白血症 D80.0
+Bullous congenital
+ichthyosiform erythoderma
+(epidermolytic hyperkeratosis)
+水泡型先天性魚鱗癬樣紅皮症
+(表皮鬆解性角化過度症)
+Q80.3
+Campomelic dysplasia with
+autosomal sex reversal
+短指發育不良及性別顛倒 Q87.19
+Cardiofaciocutaneous
+syndrome
+CFC 症候群 Q87.89
+Carnitine deficiency syndrome,
+primary
+原發性肉鹼缺乏症 E71.41
+Central core disease 中心軸空肌病 G71.29
+Cerebral creatine deficiency 大腦肌酸缺乏症 E72.89
+Cerebro-Costo-Mandibular
+syndrome
+腦肋小頜症候群 Q87.89
+Cerebrotendinous
+xanthomatosis
+腦腱性黃瘤症 E75.5
+Charcot-Marie-Tooth disease 夏柯-馬利-杜斯氏症 G60.0
+CHARGE syndrome CHARGE 症候群 Q89.8
+Chorea-acanthocytosis 舞蹈症-棘紅細胞增多症 G25.5
+Chronic primary granulomatous
+disease
+原發性慢性肉芽腫病 D71
+Citrullinemia 瓜胺酸血症 E72.23
+21
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Cleidocraninal dysplasia 鎖骨顱骨發育異常 Q74.0
+Cobalamin C defect
+(Methylmalonic acidemia and
+Homocystinuria, cb1C type)
+甲基丙二酸血症併高胱胺酸尿症,
+cb1C 型
+E71.120+E72.11
+Cockayne syndrome
+Cockayne 氏症候群(柯凱因氏症
+候群)
+Q87.19
+Coffin-Lowry syndrome Coffin-Lowry 症候群 Q89.8
+Collodion baby 膠膜兒 Q80.2
+Complement component 8
+deficiency
+補體成份8缺乏症 D84.1
+Congenital adrenal hypoplasia 先天性腎上腺發育不全 Q89.1
+Congenital central
+hypoventilation syndrome
+先天性中樞性換氣不足症候群 G47.35
+Congenital disorder of
+glycosylation, CDG
+先天性醣基化障礙 E77.8
+Congenital generalized
+lipodystrophy
+先天性全身脂質營養不良症 E88.1
+Congenital hyper IgE syndrome 先天性高免疫球蛋白 E 症候群 D82.4
+Congenital insensitivity to pain
+with anhidrosis (CIPA)
+先天性痛不敏感症合併無汗症 L74.4
+Congenital interstitial cell of
+Cajal hyperplasia with neuronal
+intestinal dysplasia
+先天性 Cajal 氏間質細胞增生合
+併腸道神經元發育異常
+Q43.8
+Congenital muscular dystrophy 先天性肌失養症 G71.20
+Congenital thrombotic
+thrombocytopenic purpura
+先天性血栓性血小板低下紫斑
+症
+D69.42
+Congenital urea cycle disorders 先天性尿素循環代謝障礙 E72.20
+Conradi-Hunermann syndrome Conradi-Hunermann 氏症候群 Q77.3
+Cornelia de Lange syndrome Cornelia de Lange 氏症候群 Q87.19
+Costello syndrome 克斯提洛氏彈性蛋白缺陷症 Q87.89
+Craniometaphyseal dysplasia 顱骨幹骺端發育不良 Q78.8
+Crouzon syndrome Crouzon 氏症候群 Q75.1
+Cystic fibrosis 囊狀纖維化症 E84.9
+22
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Cystinosis 胱胺酸血症 E72.04
+Darier’s disease Darier 氏症(毛囊角化病) Q82.8
+Diffuse non-epidermolytic
+palmoplantar keratoderma type
+Unna-Thost
+皮膚過度角化症雅司病 Q82.8
+DiGeorge syndrome DiGeorge 症候群 D82.1
+Disorders of purine
+biosynthesis metabolism
+嘌呤合成代謝異常
+E79.8
+E79.9
+Dravet syndrome, DS Dravet 症候群
+G40.833
+G40.834
+Duchenne muscular dystrophy 裘馨氏肌肉失養症 G71.01
+Dyskeratosis congenita 先天性角化不全症 Q82.8
+Ectodermal dysplasias 外胚層增生不良症 Q82.4
+Ehlers Danlos syndrome Ⅳ 先天結締組織異常第四型 Q79.63
+Emery-Dreifuss muscular
+dystrophy (EDMD)
+Emery-Dreifuss 肌失養症
+G71.00
+G71.038
+G71.09
+Fabry disease Fabry 氏症(法布瑞氏症) E75.21
+Facioscapulohumeral muscular
+dystrophy
+面肩胛肱肌失養症 G71.02
+Familial amyloidotic
+polyneuropathy
+家族性澱粉樣多發性神經病變 E85.1
+Familial
+hyperchylomicronemia
+家族性高乳糜微粒血症 E78.3
+Fatty acid oxidation defect 脂肪酸氧化作用缺陷
+E71.30
+E71.310
+E71.311
+E71.312
+E71.313
+E71.314
+E71.318
+E71.32
+E71.39
+Fibrodysplasia ossificans
+progressiva
+進行性骨化性肌炎
+M61.10
+M61.111
+M61.112
+M61.119
+M61.121
+M61.131
+M61.132
+M61.139
+M61.141
+M61.142
+M61.152
+M61.159
+M61.161
+M61.162
+M61.169
+M61.171
+M61.172
+M61.173
+M61.174
+M61.175
+23
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+M61.143
+M61.144
+M61.145
+M61.146
+M61.151
+M61.176
+M61.177
+M61.178
+M61.179
+M61.18
+M61.19
+Fraser syndrome Fraser 氏症候群 Q87.0
+Freeman-Sheldon syndrome Freeman-Sheldon 氏症候群 Q87.0
+Fucosidosis 岩藻糖代謝異常(儲積症) E77.1
+Galactosemia 半乳糖血症 E74.21
+Galloway-Mowat syndrome Galloway-Mowat 症候群 Q04.3
+Gaucher disease 高雪氏症 E75.22
+Globoid cell leukodystrophy
+(Krabbe’s disease)
+球細胞腦白質失養症 E75.23
+Glut (Glucose transport)1
+deficiency syndrome
+腦血管屏障葡萄糖輸送缺陷 E74.810
+Glutaric aciduria type Ⅰ、Ⅱ 戊二酸尿症，第一型、第二型
+Type Ⅰ: E72.3
+Type Ⅱ:E71.313
+Glycogen storage disease 肝醣儲積症
+E74.09:Type 0
+E74.01:Type Ⅰ
+E74.02:Type Ⅱ
+E74.03:Type Ⅲ
+E74.09:Type Ⅳ
+E74.4:Type Ⅴ
+E74.09:Type Ⅵ-XI
+E74.01:Von Gierk’s
+GM1/GM2 gangliosidosis GM1/GM2神經節苷脂儲積症
+GM1:E75.19
+GM2:E75.00
+E75.09
+E75.01
+E75.02
+GNE myopathy GNE 遠端肌病變
+G71.8
+G71.9
+Hallerman-Streiff syndrome 海勒曼-史德萊夫氏症候群 Q87.0
+Harlequin ichthyosis 斑色魚鱗癬 Q80.4
+Hereditary angioedema (HAE) 遺傳性血管性水腫 D84.1
+24
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Hereditary epidermolysis
+bullosa
+遺傳性表皮分解性水皰症
+Q81.0
+Q81.1
+Q81.2
+Q81.8
+Q81.9
+Hereditary hemorrhagic
+telangiectasia
+遺傳性出血性血管擴張症 I78.0
+Hereditary hypophosphatemic
+rickets
+遺傳性低磷酸鹽佝僂症 E83.31
+Hereditary spastic paraplegia 遺傳性痙攣性下身麻痺 G11.4
+Hereditary tyrosinemia 遺傳性高酪胺酸血症 E70.21
+Histidinemia 組胺酸血症 E70.41
+Holt-Oram syndrome Holt-Oram 氏症候群 Q87.2
+Homocystinuria 高胱胺酸尿症 E72.11
+Homozygous familial
+hypercholesterolemia
+同合子家族性高膽固醇血症 E78.01
+Homozygous protein C
+deficiency
+同基因合子蛋白質 C 缺乏症 D68.59
+Huntington disease(又稱
+Huntington’s chorea)
+亨丁頓氏舞蹈症 G10
+Hutchinson Gilford progeria
+syndrome
+早老症 E34.8
+Hyper-IgM syndrome 高免疫球蛋白 M 症候群 D80.5
+Hyperlysinemia 高離胺酸血症 E72.3
+Hypermethioninemia 高甲硫胺酸血症 E72.19
+Hyperornithinemia-
+Hyperammonemia-
+Homocitrullinuria syndrome
+高鳥胺酸血症-高氨血症-高瓜胺
+酸血症症候群
+E72.4
+Hyperprolinemia 高脯胺酸血症 E72.59
+Hypophosphatasia 低磷酸酯酶症
+E83.39
+E83.31
+Ichthyosis, lamellar recessive 層狀魚鱗癬(自體隱性遺傳型) Q80.2
+Idiopathic infantile arterial
+calcification
+特發性嬰兒動脈硬化症 Q28.8
+Idiopathic or Heritable
+pulmonary arterial hypertension
+(IPAH or HPAH）
+特發性或遺傳性肺動脈高壓 I27.0
+25
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Inborn errors of bile acid
+synthesis
+先天性膽酸合成障礙 E78.70
+Incontinentia pigmenti 色素失調症 Q82.3
+Infantile form lysosomal acid
+lipase deficiency
+(Wolman disease)
+嬰兒型溶酶體酸性脂肪酶缺乏
+症(又稱伍爾曼氏症)
+E75.5
+Infantile-onset ascending
+hereditary spastic paralysis,
+IAHSP
+嬰兒型上行性遺傳性痙攣性麻
+痺
+G12.20
+G12.24
+G12.29
+Interferon γ receptor 1
+deficiency
+γ 干擾素受體1缺陷 D84.89
+IPEX syndrome IPEX 症候群 E31.0
+Isovaleric acidemia 異戊酸血症 E71.110
+Joubert syndrome
+Joubert 氏症候群(家族性小腦蚓
+部發育不全)
+Q04.3
+Kabuki syndrome Kabuki 症候群 Q89.8
+Kallmann syndrome Kallmann 氏症候群 E23.0
+Kearns-Sayre syndrome Kearns-Sayre 氏症候群
+H49.811
+H49.812
+H49.813
+H49.819
+Kennedy disease
+甘迺迪氏症(脊髓延髓性肌肉萎
+縮症)
+G12.20
+G12.24
+G12.29
+Kenny-Caffey syndrome Kenny-Caffey 氏症候群 Q87.19
+Keppen-Lubinsky syndrome 克片-魯賓斯基症候群 E88.1
+Laron syndrome
+(Laron Dwarfism)
+Laron 氏侏儒症候群 E34.321
+Larsen syndrome
+Larsen 氏症候群
+(顎裂-先天性脫位症候群)
+Q74.8
+Leber congenital amaurosis 萊伯氏先天性黑矇症 H35.50
+Leber hereditary optic
+neuropathy
+雷伯氏遺傳性視神經病變 H47.22
+Leigh disease Leigh 氏童年期腦脊髓病變 G31.82
+Lesch-Nyhan syndrome Lesch-Nyhan 氏症候群 E79.1
+Limb-girdle muscular
+dystrophy
+肢帶型肌失養症
+G71.031
+G71.032
+G71.0342
+G71.0349
+26
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+G71.033
+G71.0340
+G71.0341
+G71.035
+G71.038
+G71.039
+Lowe syndrome Lowe 氏症候群 E72.03
+Maple syrup urine disease 楓糖尿症 E71.0
+McCune Albright syndrome McCune Albright 氏症候群 Q78.1
+Mcleod syndrome Mcleod 症候群
+Q97.8
+Q98.8
+Medium-chain acyl-coenzymeA
+dehydrogenase deficiency
+(MCAD)
+中鏈脂肪酸去氫酵素缺乏症 E71.311
+MELAS MELAS 症候群 E88.41
+Meleda disease Meleda 島病 Q82.8
+Menkes syndrome Menkes 症候群 E83.09
+Metachromatic leukodystrophy
+(MLD)
+MLD 症候群 E75.25
+Methyl CpG binding protein 2
+duplication syndrome
+(MECP2 duplication syndrome)
+MECP2綜合症候群 Q99.8
+Methylmalonic acidemia 甲基丙二酸血症 E71.120
+Miller Dieker syndrome Miller Dieker 症候群 Q93.88
+MIRAGE syndrome MIRAGE 症候群 Q89.8
+Mitochondrial defect 粒線體缺陷 E88.40
+Mitochondrial
+neurogastrointestinal
+encephalopathy syndrome
+MNGIE 症候群粒線體性神經胃
+腸腦病變症候群
+E88.49
+Moebius syndrome Moebius 症候群 Q87.0
+Molybdenum cofactor
+deficiency
+鉬輔酶缺乏症 E61.5
+Mucolipidosis 黏脂質症
+TypeI: E77.1
+TypeⅡ、Ⅲ: E77.0
+Type Ⅳ: E75.11
+Mucopolysaccharidoses 黏多醣症
+Type I Hurler's
+syndrome E76.01
+Type I Hurler-Scheie
+syndrome E76.02
+27
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Type I Scheie
+syndrome E76.03
+Type II Hunter
+syndrome E76.1
+Type III Sanfilippo
+syndrome E76.22
+Type IVA Morquio
+syndrome E76.210
+Type IVB Morquio
+syndrome E76.211
+Type IV
+Other Morquio
+syndrome E76.219
+Other MPS E76.29
+Unspecified MPS
+E76.3
+Multiminicore disease 多微小軸空肌病 G71.29
+Multiple carboxylase
+deficiency
+多發性羧化酶缺乏症 D81.819
+Multiple epiphyseal dysplasia 多發性骨骺發育不全症 Q77.8
+Multiple pterygium syndrome 多發性翼狀膜症候群 Q79.8
+Multiple sclerosis, MS/
+Neuromyelitis optica spectrum
+disorders, NMOSD
+多發性硬化症/泛視神經脊髓炎 G35/G36.0
+Multiple sulfatase deficiency 多發性硫酸脂酶缺乏症 E75.26
+Myhre syndrome Myhre 症候群 Q87.89
+Myotonic dystrophy 肌肉強直症 G71.11
+Myotubular myopathy 肌小管病變 G71.220
+Nager syndrome Nager 症候群 Q75.4
+Nail-Patella syndrome 指（趾）甲髕骨症候群 Q87.2
+Nemaline rod myopathy Nemaline 線狀肌肉病變 G71.21
+Netherton syndrome Netherton 症候群 Q80.8
+Neurofibromatosis type Ⅱ 神經纖維瘤症候群第二型 Q85.02
+Neuronal ceroid lipofuscinosis 神經元蠟樣脂褐質儲積症 E75.4
+28
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Niemann-Pick disease
+Niemann-Pick 氏症，鞘髓磷脂
+儲積症
+E75.240:Type A
+E75.241:Type B
+E75.242:Type C
+E75.243:Type D
+E75.244:Type A/B
+E75.248:other
+E75.249:unspecified
+Nitroacetylglutamate
+synthetase deficiency, NAG
+synthetase deficiency
+乙醯榖胺酸合成酶缺乏症 E72.29
+Nonketotic hyperglycinemia 非酮性高甘胺酸血症 E72.51
+Occult macular dystrophy；
+OMD
+隱匿性黃斑部失養症 H35.50
+Organic acidemias 有機酸血症 E71.118
+Ornithine transcarbamylase
+deficiency
+鳥胺酸氨甲醯基轉移酶缺乏症 E72.4
+Osteogenesis imperfecta 成骨不全症 Q78.0
+Osteopetrosis 骨質石化症 Q78.2
+Oto-Palato-Digital syndrome 耳-齶-指（趾）症候群 Q87.0
+PAH type PKU combine with
+sucrase-isomaltase deficiency
+典型苯酮尿症合併蔗糖酶同麥
+芽糖酶缺乏症
+E74.31+E70.0
+Pantothenate kinase associated
+neurodegeneration (PKAN)
+泛酸鹽激酶關聯之神經退化性
+疾病
+G23.0
+Paroxysmal nocturnal
+hemoglobinuria
+陣發性夜間血紅素尿症 D59.5
+Pelizaeus-Merzbacher disease
+Pelizaeus-Merzbacher 氏症(慢性
+兒童型腦硬化症)
+E75.29
+Permanent neonatal diabetes
+mellitus
+永久性新生兒糖尿病 P70.2
+Persistent hyperinsulinemic
+hypoglycemia of infancy
+(PHHI)
+持續性幼兒型胰島素過度分泌
+低血糖症
+E16.1
+Peters-Plus syndrome Peters-Plus 症候群 Q13.4
+Pfeiffer syndrome Pfeiffer 氏症候群 Q87.0
+Phenylketonuria 苯酮尿症 E70.0
+Phospholipase A2-associated
+neurodegeneration (PLAN)
+磷脂質脂解酶 A2關聯之神經退
+化性疾病
+G23.0
+29
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Pitt-Hopkins syndrome 皮特-霍普金斯症候群 Q87.0
+Porphyria 紫質症
+E80.20
+E80.21
+E80.29
+Prader-Willi syndrome Prader-Willi 氏症候群 Q87.11
+Primary hyperoxaluria 原發性高草酸鹽尿症 E72.53
+Primary Paget disease 原發性變形性骨炎
+M88.0
+M88.1
+M88.811
+M88.812
+M88.819
+M88.821
+M88.822
+M88.829
+M88.831
+M88.832
+M88.839
+M88.841
+M88.842
+M88.849
+M88.851
+M88.852
+M88.859
+M88.861
+M88.862
+M88.869
+M88.871
+M88.872
+M88.879
+M88.88
+M88.89
+M88.9
+Progressive familial
+intrahepatic cholestasis, PFIC
+進行性家族性肝內膽汁滯留症 K83.1
+Propionic acidemia 丙酸血症 E71.121
+Proteus syndrome 普洛提斯症候群 Q87.3
+Pseudoachondroplastic
+dysplasia
+假性軟骨發育不全 Q77.8
+Pseudohypoparathyroidism 假性副甲狀腺低能症 E20.1
+Pyruvate dehydrogenase
+deficiency
+丙酮酸鹽脫氫酶缺乏症 E74.4
+Rett syndrome 雷特氏症 F84.2
+Rhizomelic chondrodysplasia
+punctata
+肢近端型點狀軟骨發育不良 E71.540
+Robinow syndrome Robinow 氏症候群 Q87.19
+Rubinstein-Taybi syndrome Rubinstein-Taybi 氏症候群 Q87.2
+Schaaf-Yang syndrome Schaaf-Yang 症候群 Q87.19
+Schwartz Jampel syndrome Schwartz Jampel 氏症候群 G71.13
+30
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Sensenbrenner syndrome 森森布倫納症候群 Q87.5
+Severe combined
+immunodeficiency
+嚴重複合型免疫缺乏症
+D81.0
+D81.1
+D81.2
+D81.31
+D81.9
+Short-chain acyl-CoA
+dehydrogenase deficiency
+短鏈脂肪酸去氫酶缺乏症 E71.312
+Sialidosis 涎酸酵素缺乏症 E77.1
+Sitosterolemia 豆固醇血症(植物性)
+E78.00
+E78.01
+Smith-Lemli-Opitz syndrome Smith-Lemli-Opitz 氏症候群 E78.72
+Spinal muscular atrophy 脊髓性肌肉萎縮症
+G12.0
+G12.1
+Spinocerebellar ataxia 脊髓小腦退化性動作協調障礙
+G11.10
+G11.11
+G11.19
+G11.2
+G11.8
+G11.9
+Split-hand/ Split-foot
+malformation (SHFM)
+裂手裂足症
+Q71.60
+Q71.61
+Q71.62
+Q71.63
+Q72.70
+Q72.71
+Q72.72
+Q72.73
+Stargardt’s disease Stargardt’s 氏症 H35.50
+Stiffperson syndrome 僵體症候群 G25.82
+Stormorken syndrome 史托摩根症候群 D69.8
+Sulfite oxidase deficiency 亞硫酸鹽氧化酶缺乏 E72.19
+Tetrahydrobiopterin deficiency 四氫基喋呤缺乏症 E70.1
+Thalassemia major 重型海洋性貧血
+D56.0
+D56.1
+Thiamine metabolism
+dysfunction syndromes
+硫胺素(維生素 B1)代謝功能障
+礙症候群
+E51.8
+Thrombasthenia 血小板無力症 D69.1
+Transaldolase deficiency 轉醛醇酶缺乏症 E74.89
+Treacher Collins syndrome Treacher Collins 氏症候群 Q75.4
+31
+英文病名(縮寫) 中文病名（僅供參考） ICD-10-CM 編碼
+Tricho-hepato-enteric
+syndrome
+髮-肝-腸症候群
+Q89.7
+K52.89
+Trimethylaminuria 三甲基胺尿症 E72.52
+Tuberous sclerosis 結節性硬化症 Q85.1
+Tyrosine hydroxylase
+deficiency
+酪胺酸羥化酶缺乏症 E70.20
+Vanishing white matter disease 腦白質消失症 G11.8
+Von Hippel-Lindau disease Von Hippel-Lindau 症候群 Q85.83
+Waardenburg syndrome 瓦登伯格氏症候群 Q87.89
+WAGR syndrome (Wilms’
+tumor-aniridia-genitourinary
+anomalies-mental retardation)
+威爾姆氏腫瘤、無虹膜、性器
+異常、智能障礙症候群(WAGR
+症候群)
+Q87.89
+Werner syndrome Werner 症候群 E34.8
+White-Sutton syndrome 懷特-薩頓症候群 Q87.0
+Williams syndrome 威廉斯氏症候群 Q93.82
+Wilson’s disease 威爾森氏症 E83.01
+Wiskott-Aldrich syndrome Wiskott-Aldrich 氏症候群 D82.0
+Wolfram syndrome,
+DIDMOAD
+Wolfram 氏症候群 E34.8
+Zellweger syndrome Zellweger 氏症候群 E71.510
+備註：
+1. 中華民國93年1月7日署授國字第092401548號公告「胰島母細胞瘤（Nesidioblastosis）
+」因屬舊的
+病名用法，自即日起併入罕見疾病序號 L07號 Persistent hyperinsulinemic hypoglycemia of infancy
+（PHHI）名單。
+2. 中華民國95年9月12日署授國字第09504009072號公告「Tyrosinemial Ⅰ、Ⅱ、Ⅲ（酪胺基酸症第一
+型、第二型、第三型）
+」
+，自即日起併入罕見疾病序號 A207號 Hereditary tyrosinemia（遺傳性高酪
+胺酸血症）名單。
+3. 中華民國96年8月22日署授國字第09604006002號修正已公告 Urea cycle disorders 為 Congenital Urea
+cycle disorders。
+4. 中華民國98年7月3日署授國字第0980400742號公告罕見疾病序號 B107號 Spinocerebellar ataxia，
+原中文病名：脊髓小腦性共濟失調，修正為：脊髓小腦退化性動作協調障礙。
+5. 中華民國99年3月19日署授國字第0990400103號公告罕見疾病序號 K102號 Congenital Hyper IgE
+syndrome（先天性高免疫球蛋白 E 症候群）
+，原 ICD-9-CM 編碼：
+「279.9」
+，修正為：
+「288.1」
+。
+6. 中華民國106年10月25日衛授國字第1060402678號公告新增罕見疾病序號 G13號 Emery-Dreifuss 肌
+失養症(Emery-Dreifuss Muscular Dystrophy)：ICD-10-CM 編碼「G71.0」
+、K10號遺傳性血管性水
+腫(Hereditary Angioedema) ：ICD-10-CM 編碼「D84.1」
+。
+32
+7. 中華民國107年5月30日衛授國字第1070401231號公告新增罕見疾病序號 B1-25號 Dravet 症候群
+(Dravet Syndrome, DS)：ICD-10-CM 編碼「G40.311」
+、腦白質消失症(Vanishing White Matter
+Disease)：ICD-10-CM 編碼「G37.8」
+；修正罕見疾病序號 A11-05號臭魚症(Trimethylaminuria)修正
+為 三 甲 基 胺 尿 症 (Trimethylaminuria) 、 序 號 L1-12 號 1α- 羥 化 酶 缺 乏 症 候 群 (1α-hydroxylase
+deficiency)：ICD-10-CM 編碼「E25.0」修正為第一型遺傳性維生素 D 依賴型佝僂症 (25-
+Hydroxyvitamin D 1-Alpha-Hydroxylase Deficiency)：ICD-10-CM 編碼「E83.32」
+、序號 G13號肌失
+養症(Emery–Dreifuss Muscular Dystrophy,EDMD)分類序號修正為 G1-13、序號 K10號遺傳性血管
+性水腫(Hereditary Angioedema,HAE)分類序號修正為 K1-10。
+8. 中華民國108年1月15日衛授國字第1070403736號公告新增罕見疾病序號 G1-14號 GNE 遠端肌病變
+(GNE myopathy)：ICD-10-CM 編碼「G71.8」
+、G1-15號史托摩根症候群(Stormorken syndrome)：
+ICD-10-CM 編碼「D69.8」及 M1-25號克斯提洛氏彈性蛋白缺陷症(Costello syndrome)：ICD-10-
+CM 編碼「Q87.89」
+。
+9. 中華民國109年7月31日衛授國字第1090402037號公告新增罕見疾病序號 M1-26號 Ayme-Gripp 症
+候群(Ayme-Gripp syndrome)：ICD-10-CM 編碼「Q87.89」及 M1-27號 Coffin-Lowry 症候群(Coffin-
+Lowry Syndrome)：ICD-10-CM 編碼「Q89.8」
+，及修正罕見疾病名稱序號 C1-03號原發性肺動脈高
+壓(Primary Pulmonary Hypertension ,PPH)修正為特發性或遺傳性肺動脈高壓(Idiopathic or Heritable
+pulmonary arterial hypertension (IPAH or HPAH）及序號 B1-05號瑞特氏症候群(Rett syndrome)修正
+為雷特氏症(Rett syndrome)。
+10. 中華民國109年10月13日衛授國字第1090402740號公告新增罕見疾病序號 B1-28號磷脂質脂解酶
+A2關聯之神經退化性疾病(Phospholipase A2-associated neurodegeneration,PLAN)：ICD-10-CM 編碼
+「G23.0」
+，及罕見疾病序號 M1-18號泛酸鹽激酶關聯之神經退化性疾病(Pantothenate Kinase
+Associated Neurodegeneration,PKAN）分類序號修正為 B1-27號。
+11. 中華民國110年8月3日衛授國字第1100460016號公告新增罕見疾病序號 A6-08號雷伯氏遺傳性視神
+經病變(Leber hereditary optic neuropathy)：ICD-10-CM 編碼「H47.22」及 B1-29號皮特-霍普金斯
+症候群(Pitt-Hopkins Syndrome)：ICD-10-CM編碼「Q87.0」
+，及修正罕見疾病序號 B1-16號 Charcot
+Maire Tooth 氏症(進行性神經性腓骨萎縮症)( X-linked hypophosphatemic rickets)修正為夏柯-馬利-
+杜斯氏症(Charcot-Marie-Tooth Disease)、序號 L1-03號性連遺傳型低磷酸鹽佝僂症(X-linked
+hypophosphatemic rickets)修正為性聯遺傳型低磷酸鹽佝僂症(X-linked hypophosphatemic rickets)。
+12. 中華民國110年11月23日衛授國字第1100461161號公告新增罕見疾病序號 M1-28號 Myhre 症候群
+(Myhre syndrome)：ICD-10-CM 編碼「Q87.89」
+、Z1-06號萊伯氏先天性黑矇症(Leber Congenital
+Amaurosis)：ICD-10-CM 編碼「H35.50」
+、L1-16號 MIRAGE 症候群(MIRAGE syndrome)：ICD-10-
+CM 編碼「Q89.8」及 E1-04號亞伯氏症候群(Alport Syndrome)：ICD-10-CM 編碼「Q87.81」
+。
+13. 中華民國110年11月24日衛授國字第1100461168號公告修正罕見疾病序號 B1-01號多發性硬化症
+(Multiple sclerosis)：ICD-10-CM 編碼「G35」修正為多發性硬化症泛視神經脊髓炎(Multiple
+Sclerosis ,MS/ Neuromyelitis Optica Spectrum Disorders, NMOSD)：ICD-10-CM 編碼「G35、G36.0」
+。
+14. 中華民國111年1月12日衛授國字第1100461686號公告新增罕見疾病序號 M1-29號森森布倫納症候
+群(Sensenbrenner Syndrome)：ICD-10-CM 編碼「Q87.5」
+、A4-04號轉醛醇酶缺乏症(Transaldolase
+deficiency)： ICD-10-CM 編 碼「 E74.8 」 及 M1-30 號 克片 魯賓 斯 基症 候 群 (Keppen Lubinsky
+Syndrome)：ICD-10-CM 編碼「E88.1」
+，及修正罕見疾病序號 F1-01號遺傳性表皮分解性水皰症
+(Hereditary epidermolysis bullosa)原 ICD-10-CM 編碼：
+「Q81.9」
+，修正為：
+「Q81.0、Q81.1、Q81.2、
+Q81.8、Q81.9」
+。
+15. 中華民國111年4月13日衛授國字第1110460962號公告新增罕見疾病序號 B1-30號 Beta 螺旋狀蛋白
+關聯之神經退化疾病(Beta-Propeller Protein-Associated Neurodegeneration ,BPAN)：ICD-10-CM 編
+碼「G23.0」
+，及修正罕見疾病序號 A2-143號3-羥基-3-甲基戊二酸血症(3-Hydroxy-3-methyl-
+glutaric academia)修正為3-羥基-3-甲基戊二酸血症(3-Hydroxy-3-methylglutaric academia)、序號 A2-
+16號高離氨基酸血症(Hyperlysinemia)修正為高離胺基酸血症(Hyperlysinemia)、罕見疾病序號 D1-
+01號進行性家族性肝內膽汁滯留症(Progressive intrahepatic cholestasis,PFIC)修正為進行性家族性肝
+內膽汁滯留症(Progressive familial intrahepatic cholestasis,PFIC)。
+16. 中華民國111年7月13日衛授國字第1110461992號公告新增罕見疾病序號 H1-10號顱骨幹骺端發育
+33
+不良(CraniometaphysealDysplasia)：ICD-10-CM 編碼「Q78.8」
+、序號 B1-31號嬰兒型上行性遺傳性
+痙 攣 性 麻 痺 (Infantile-Onset AscendingHereditary Spastic Paralysis,IAHSP) ： ICD-10-CM 編 碼
+「G12.2」
+、序號 A11-11號大腦肌酸缺乏症(Cerebral Creatine Deficiency) ICD-10-CM 編碼「E72.8」
+及序號 A11-12號硫胺素(維生素 B1)代謝功能障礙症候群(Thiamine Metabolism Dysfunction
+Syndromes) )：ICD-10-CM 編碼「E51.8」
+，及修正罕見疾病序號 M1-12號歌舞伎症候群(Kabuki
+syndrome)中文名稱為 Kabuki 症候群(Kabuki syndrome)、序號 N1-02號 DiGeorge’s 症候群
+(DiGeorge’s syndrome)名稱為 DiGeorge 症候群(DiGeorge syndrome)。
+17. 中華民國112年1月17日衛授國字第1120460003號公告新增罕見疾病序號 A2-24號原發性高草酸鹽
+尿症(Primary Hyperoxaluria)：ICD-10-CM 編碼「E72.53」
+，及修正罕見疾病序號 B1-06號脊髓性肌
+肉萎縮症(Spinal muscular atrophy) 原 ICD-10-CM 編碼：
+「G12.9」
+，修正為：
+「G12.0、G12.1」
+、序
+號 B1-25號 Dravet 症候群(Dravet syndrome) 原 ICD-10-CM 編碼：
+「G40.311」
+，修正為：
+「G40.803、
+G40.804」
+。
+18. 中華民國112年4月19日衛授國字第1120460969號公告新增罕見疾病序號 A2-25號黑尿症
+(Alkaptonuria)：ICD-10-CM 編碼「E70.29」
+。
+19. 中華民國112年10月25日衛授國字第1120463037號公告新增罕見疾病序號 J1-05號先天性血栓性血
+小板低下紫斑症(Congenital thrombotic thrombocytopenic purpura)：ICD-10-CM 編碼「M31.1」
+，並
+修正罕見疾病分類及序號26類、罕見疾病所屬分類32項及中英文病名84項(含修正英文字大小寫)。
+20. 中華民國113年1月30日衛授國字第1130460217號公告新增罕見疾病序號 M1-39號 Schaaf-Yang 症
+候群(Schaaf-Yang syndrome )：ICD-10-CM 編碼「Q87.1」
+。
+21. 中華民國113年7月15日衛授國字第1130462168號公告新增罕見疾病序號 B1-32號 Basilicate-Akhtar
+症候群(Basilicate-Akhtar syndrome)：ICD-10-CM 編碼為「F78」
+，並修正序號 A3-03之 Fabry 氏症
+(Fabry disease)修正為 Fabry 氏症(法布瑞氏症) (Fabry disease)。
+22. 中華民國113年10月11日衛授國字第1130463224號公告新增罕見疾病序號 B1-33號 舞蹈症-棘紅細
+胞增多症(Chorea-acanthocytosis)：ICD-10-CM 編碼為「G25.5」
+。
+23. 中華民國114年1月23日衛授國字第1130464505號公告修正序號 A11-04之碳水化合缺乏醣蛋白症候
+群 (Carbohydrate-deficiency glycoprotein syndrome) 為 先 天性 醣 基化 障礙 (Congenital disorder of
+glycosylation, CDG)；修正序號 M1-37之 Cockayne 氏症候群(Cockayne syndrome)為 Cockayne 氏症
+候群(柯凱因氏症候群) (Cockayne syndrome)；修正罕見疾病 ICD-10-CM 編碼共37項，並酌修表格
+文字。
+24. 中華民國114年4月11日衛授國字第1140461041號公告新增罕見疾病序號 M1-40號 Galloway-Mowat
+症候群(Galloway-Mowat syndrome)：ICD-10-CM 編碼為「Q04.3」
+。
+25. 中華民國114年10月20日衛授國字第1140463341號公告修正序號 L1-03之性聯遺傳低磷酸鹽佝僂症
+(X-linked Hypophosphatemic rickets)為遺傳性低磷酸鹽佝僂症(Hereditary hypophosphatemic rickets)。
+26. 中華民國115年3月13日衛授國字第1150460479號公告新增罕見疾病序號 A11-10號嘌呤合成代謝異
+常(Disorders of purine biosynthesis metabolism)：ICD-10-CM 編碼為「E79.8、E79.9」
+；修正罕見疾
+病 ICD-10-CM 編碼共26項。
+27. 中華民國115年7月23日衛授國字第1150461436號公告新增罕見疾病序號 L1-17號 Werner 症候群
+(Werner syndrome)：ICD-10-CM 編碼為「E34.8」
+。
+

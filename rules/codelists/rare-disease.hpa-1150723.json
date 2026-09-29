@@ -1,1369 +1,652 @@
 {
  "id": "HPA_RARE_DISEASE_ICD_1150723",
- "title": "公告罕見疾病名單暨ICD-10-CM編碼一覽表(依疾病分類排序)",
+ "title": "公告罕見疾病名單暨ICD-10-CM編碼一覽表(依疾病分類排序為主表,依英文字母排序交叉核對)",
  "issuer": "衛生福利部(國民健康署)",
  "icdVersion": "ICD-10-CM 2023年版",
  "announced": "2026-07-23",
  "announcementNo": "衛授國字第1150461436號(115-07-23,含 106-10-25 起歷次公告)",
  "sourceSha256": "3406bda4aec53f768a1ffa19007a8cb17b7edbf87cb5973ac8588769f755d9ae",
  "fetchedAt": "2026-09-27",
- "receivedFrom": "YC 上傳 PDF(33 頁,文字層)",
- "note": "依「依疾病分類排序」表逐列轉錄(24 類 249 項,序號連續);與同檔「依英文字母排序」表比對,後者漏列 E74.04、M61.122、M61.129,以分類表為準。罕見疾病以健保卡註記或證明為準,本表診斷碼僅作病歷證據推估(醫師可取消)。excluded 所列通用碼不作證據,理由見各項。",
+ "archivedAt": "2026-09-29",
+ "receivedFrom": "YC 提供 PDF(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知);歸檔於 sources/hpa/",
+ "note": "罕見疾病以健保卡註記或證明為準,本表診斷碼僅作病歷證據推估(醫師可取消)。本檔由 scripts/build-rare-disease.mjs 自 PDF 產生(pdftotext -raw),請勿手改;要改請改腳本或來源。主表 249 項(24 類,序號連續),以字母表交叉核對,兩表不一致取聯集(cleaning.tableMismatches)。碼的比對形式與其他清單相同(完整碼,病歷碼被截短時前綴相符)。共用碼(同一碼對到多種疾病)標 shared,證據列顯示「第一個病名 等 N 種(公告碼)」,N = diseases 數;otherCount = N−1。broadCodes 為寬泛碼(YC 核可清單:初版 27 碼 + v0.4.8 曾排除的 7 個通用碼):命中只顯示、不參與人工條件預勾,證據列標「寬泛碼,需核對」。excluded 所列碼不納入,理由見各項。",
  "diseaseCount": 249,
+ "generatedBy": "scripts/build-rare-disease.mjs",
+ "broadCodes": ["F84.8","K52.89","G71.8","G71.9","E72.9","E70.9","E72.89","D81.9","E79.8","E79.9","G11.8","G11.9","E34.8","H35.50","Q87.0","Q87.19","Q87.2","Q87.89","Q89.8","Q82.8","Q79.8","Q74.8","Q28.8","Q43.8","Q80.8","E77.8","G31.89","E78.00","E78.01","E16.1","E23.0","E27.49","K83.1","D69.8"],
+ "excluded": [
+  {"code":"E74.31","reason":"僅以組合碼 E74.31+E70.0 出現(A2-15 典型苯酮尿症合併蔗糖酶同麥芽糖酶缺乏症);E70.0 已單列於 A2-05,E74.31 單獨不代表罕病,不納入。","diseases":["A2-15"]}
+ ],
+ "cleaning": {
+  "pageNumberGlue": [
+   {"page":1,"code":"E71.2","gluedAs":"E71.22"},
+   {"page":2,"code":"E72.11","gluedAs":"E72.113"},
+   {"page":3,"code":"E76.219","gluedAs":"E76.2194"},
+   {"page":4,"code":"H49.819","gluedAs":"H49.8195"},
+   {"page":5,"code":"E71.540","gluedAs":"E71.5406"},
+   {"page":6,"code":"L74.4","gluedAs":"L74.47"},
+   {"page":7,"code":"Q85.83","gluedAs":"Q85.838"},
+   {"page":9,"code":"G71.038","gluedAs":"G71.03810"},
+   {"page":10,"code":"M61.175","gluedAs":"M61.17511"},
+   {"page":11,"code":"D82.4","gluedAs":"D82.412"},
+   {"page":12,"code":"E27.49","gluedAs":"E27.4913"},
+   {"page":13,"code":"Q87.2","gluedAs":"Q87.214"},
+   {"page":14,"code":"Q87.19","gluedAs":"Q87.1915"},
+   {"page":18,"code":"E71.528","gluedAs":"E71.52819"},
+   {"page":19,"code":"E78.71","gluedAs":"E78.7120"},
+   {"page":20,"code":"E72.23","gluedAs":"E72.2321"},
+   {"page":21,"code":"E84.9","gluedAs":"E84.922"},
+   {"page":22,"code":"M61.175","gluedAs":"M61.17523"},
+   {"page":23,"code":"D84.1","gluedAs":"D84.124"},
+   {"page":24,"code":"I27.0","gluedAs":"I27.025"},
+   {"page":25,"code":"G71.0349","gluedAs":"G71.034926"},
+   {"page":26,"code":"E76.02","gluedAs":"E76.0227"},
+   {"page":27,"code":"E75.4","gluedAs":"E75.428"},
+   {"page":28,"code":"G23.0","gluedAs":"G23.029"},
+   {"page":29,"code":"G71.13","gluedAs":"G71.1330"},
+   {"page":30,"code":"Q75.4","gluedAs":"Q75.431"}
+  ],
+  "tableMismatches": [
+   {"serial":"A4-02","zh":"肝醣儲積症","classifiedOnly":["E74.04"],"alphabeticalOnly":["E74.4"],"resolution":"覆寫:丟棄 E74.4","reason":"肝醣儲積症第五型:分類表為 E74.04,字母表為 E74.4;YC 判定字母表 E74.4 為筆誤,採 E74.04。E74.4 仍因 A6-06 丙酮酸鹽脫氫酶缺乏症而在名單內。"},
+   {"serial":"H1-05","zh":"進行性骨化性肌炎","classifiedOnly":["M61.122","M61.129"],"alphabeticalOnly":[],"resolution":"取聯集"}
+  ],
+  "combos": [
+   {"serial":"A2-15","parts":["E74.31","E70.0"]},
+   {"serial":"A2-23","parts":["E71.120","E72.11"]}
+  ],
+  "slash": [
+   {"serial":"B1-01","parts":["G35","G36.0"]}
+  ]
+ },
+ "diseases": [
+  {"serial":"A1-01","zh":"先天性尿素循環代謝障礙","en":"Congenital urea cycle disorders","category":"rare","codes":["E72.20"]},
+  {"serial":"A1-02","zh":"瓜胺酸血症","en":"Citrullinemia","category":"rare","codes":["E72.23"]},
+  {"serial":"A1-03","zh":"乙醯榖胺酸合成酶缺乏症","en":"Nitroacetylglutamate synthetase deficiency, NAG synthetase deficiency","category":"rare","codes":["E72.29"]},
+  {"serial":"A1-04","zh":"鳥胺酸氨甲醯基轉移酶缺乏症","en":"Ornithine transcarbamylase deficiency","category":"rare","codes":["E72.4"]},
+  {"serial":"A1-05","zh":"高鳥胺酸血症-高氨血症-高瓜胺酸血症症候群","en":"Hyperornithinemia-Hyperammonemia-Homocitrullinuria syndrome","category":"rare","codes":["E72.4"]},
+  {"serial":"A2-01","zh":"胺基酸代謝疾病","en":"Amino acid metabolic disorders (Aminoacidopathies)","category":"rare","codes":["E72.9","E70.9","E72.10","E72.89","E71.2","E70.89"]},
+  {"serial":"A2-02","zh":"高胱胺酸尿症","en":"Homocystinuria","category":"rare","codes":["E72.11"]},
+  {"serial":"A2-03","zh":"高甲硫胺酸血症","en":"Hypermethioninemia","category":"rare","codes":["E72.19"]},
+  {"serial":"A2-04","zh":"非酮性高甘胺酸血症","en":"Nonketotic hyperglycinemia","category":"rare","codes":["E72.51"]},
+  {"serial":"A2-05","zh":"苯酮尿症","en":"Phenylketonuria","category":"rare","codes":["E70.0"]},
+  {"serial":"A2-06","zh":"四氫基喋呤缺乏症","en":"Tetrahydrobiopterin deficiency","category":"rare","codes":["E70.1"]},
+  {"serial":"A2-07","zh":"遺傳性高酪胺酸血症","en":"Hereditary tyrosinemia","category":"rare","codes":["E70.21"]},
+  {"serial":"A2-08","zh":"楓糖尿症","en":"Maple syrup urine disease","category":"rare","codes":["E71.0"]},
+  {"serial":"A2-09","zh":"有機酸血症","en":"Organic acidemias","category":"rare","codes":["E71.118"]},
+  {"serial":"A2-10","zh":"異戊酸血症","en":"Isovaleric acidemia","category":"rare","codes":["E71.110"]},
+  {"serial":"A2-11","zh":"戊二酸尿症，第一型、第二型","en":"Glutaric aciduria type I、II","category":"rare","codes":["E72.3","E71.313"]},
+  {"serial":"A2-12","zh":"丙酸血症","en":"Propionic acidemia","category":"rare","codes":["E71.121"]},
+  {"serial":"A2-13","zh":"甲基丙二酸血症","en":"Methylmalonic acidemia","category":"rare","codes":["E71.120"]},
+  {"serial":"A2-14","zh":"3-羥基-3-甲基戊二酸血症","en":"3-Hydroxy-3-methylglutaric acidemia","category":"rare","codes":["E71.118"]},
+  {"serial":"A2-15","zh":"典型苯酮尿症合併蔗糖酶同麥芽糖酶缺乏症","en":"PAH type PKU combine with sucrase-isomaltase deficiency","category":"rare","codes":["E70.0"]},
+  {"serial":"A2-16","zh":"高離胺酸血症","en":"Hyperlysinemia","category":"rare","codes":["E72.3"]},
+  {"serial":"A2-17","zh":"組胺酸血症","en":"Histidinemia","category":"rare","codes":["E70.41"]},
+  {"serial":"A2-18","zh":"三甲基巴豆醯輔酶 A羧化酵素缺乏症","en":"3-Methylcrotonyl-CoA carboxylase deficiency","category":"rare","codes":["E71.19"]},
+  {"serial":"A2-19","zh":"多發性羧化酶缺乏症","en":"Multiple carboxylase deficiency","category":"rare","codes":["D81.819"]},
+  {"serial":"A2-20","zh":"高脯胺酸血症","en":"Hyperprolinemia","category":"rare","codes":["E72.59"]},
+  {"serial":"A2-21","zh":"芳香族 L-胺基酸類脫羧基酶缺乏症","en":"Aromatic L-amino acid decarboxylase deficiency","category":"rare","codes":["E70.81"]},
+  {"serial":"A2-22","zh":"酪胺酸羥化酶缺乏症","en":"Tyrosine hydroxylase deficiency","category":"rare","codes":["E70.20"]},
+  {"serial":"A2-23","zh":"甲基丙二酸血症併高胱胺酸尿症,cb1C 型","en":"Cobalamin C defect (Methylmalonic acidemia and Homocystinuria, cb1C type)","category":"rare","codes":["E71.120","E72.11"]},
+  {"serial":"A2-24","zh":"原發性高草酸鹽尿症","en":"Primary hyperoxaluria","category":"rare","codes":["E72.53"]},
+  {"serial":"A2-25","zh":"黑尿症","en":"Alkaptonuria","category":"rare","codes":["E70.29"]},
+  {"serial":"A3-01","zh":"高雪氏症","en":"Gaucher disease","category":"rare","codes":["E75.22"]},
+  {"serial":"A3-02","zh":"GM1/GM2神經節苷脂儲積症","en":"GM1/GM2 gangliosidosis","category":"rare","codes":["E75.19","E75.00","E75.09","E75.01","E75.02"]},
+  {"serial":"A3-03","zh":"Fabry 氏症(法布瑞氏症)","en":"Fabry disease","category":"rare","codes":["E75.21"]},
+  {"serial":"A3-04","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","en":"Niemann-Pick disease","category":"rare","codes":["E75.240","E75.241","E75.242","E75.243","E75.244","E75.248","E75.249"]},
+  {"serial":"A3-05","zh":"MLD 症候群","en":"Metachromatic leukodystrophy (MLD)","category":"rare","codes":["E75.25"]},
+  {"serial":"A3-06","zh":"球細胞腦白質失養症","en":"Globoid cell leukodystrophy (Krabbe’s disease)","category":"rare","codes":["E75.23"]},
+  {"serial":"A3-07","zh":"嬰兒型溶酶體酸性脂肪酶缺乏症(又稱伍爾曼氏症)","en":"Infantile form lysosomal acid lipase deficiency (Wolman disease)","category":"rare","codes":["E75.5"]},
+  {"serial":"A3-08","zh":"胱胺酸血症","en":"Cystinosis","category":"rare","codes":["E72.04"]},
+  {"serial":"A3-09","zh":"黏多醣症","en":"Mucopolysaccharidoses","category":"rare","codes":["E76.01","E76.02","E76.03","E76.1","E76.22","E76.210","E76.211","E76.219","E76.29","E76.3"]},
+  {"serial":"A3-10","zh":"岩藻糖代謝異常(儲積症)","en":"Fucosidosis","category":"rare","codes":["E77.1"]},
+  {"serial":"A3-11","zh":"涎酸酵素缺乏症","en":"Sialidosis","category":"rare","codes":["E77.1"]},
+  {"serial":"A3-12","zh":"黏脂質症","en":"Mucolipidosis","category":"rare","codes":["E77.1","E77.0","E75.11"]},
+  {"serial":"A3-13","zh":"神經元蠟樣脂褐質儲積症","en":"Neuronal ceroid lipofuscinosis","category":"rare","codes":["E75.4"]},
+  {"serial":"A3-14","zh":"多發性硫酸脂酶缺乏症","en":"Multiple sulfatase deficiency","category":"rare","codes":["E75.26"]},
+  {"serial":"A4-01","zh":"半乳糖血症","en":"Galactosemia","category":"rare","codes":["E74.21"]},
+  {"serial":"A4-02","zh":"肝醣儲積症","en":"Glycogen storage disease","category":"rare","codes":["E74.09","E74.01","E74.02","E74.03","E74.04"]},
+  {"serial":"A4-03","zh":"腦血管屏障葡萄糖輸送缺陷","en":"Glut (Glucose transport)1 deficiency syndrome","category":"rare","codes":["E74.810"]},
+  {"serial":"A4-04","zh":"轉醛醇酶缺乏症","en":"Transaldolase deficiency","category":"rare","codes":["E74.89"]},
+  {"serial":"A5-01","zh":"脂肪酸氧化作用缺陷","en":"Fatty acid oxidation defect","category":"rare","codes":["E71.30","E71.310","E71.311","E71.312","E71.313","E71.314","E71.318","E71.32","E71.39"]},
+  {"serial":"A5-02","zh":"原發性肉鹼缺乏症","en":"Carnitine deficiency syndrome, primary","category":"rare","codes":["E71.41"]},
+  {"serial":"A5-03","zh":"中鏈脂肪酸去氫酵素缺乏症","en":"Medium-chain acyl-coenzyme A dehydrogenase deficiency (MCAD)","category":"rare","codes":["E71.311"]},
+  {"serial":"A5-04","zh":"短鏈脂肪酸去氫酶缺乏症","en":"Short-chain acyl-CoA dehydrogenase deficiency","category":"rare","codes":["E71.312"]},
+  {"serial":"A6-01","zh":"粒線體缺陷","en":"Mitochondrial defect","category":"rare","codes":["E88.40"]},
+  {"serial":"A6-02","zh":"Kearns-Sayre 氏症候群","en":"Kearns-Sayre syndrome","category":"rare","codes":["H49.811","H49.812","H49.813","H49.819"]},
+  {"serial":"A6-03","zh":"Leigh 氏童年期腦脊髓病變","en":"Leigh disease","category":"rare","codes":["G31.82"]},
+  {"serial":"A6-04","zh":"MELAS 症候群","en":"MELAS","category":"rare","codes":["E88.41"]},
+  {"serial":"A6-05","zh":"MNGIE 症候群粒線體性神經胃腸腦病變症候群","en":"Mitochondrial neurogastrointestinal encephalopathy syndrome","category":"rare","codes":["E88.49"]},
+  {"serial":"A6-06","zh":"丙酮酸鹽脫氫酶缺乏症","en":"Pyruvate dehydrogenase deficiency","category":"rare","codes":["E74.4"]},
+  {"serial":"A6-07","zh":"巴氏症候群","en":"Barth syndrome","category":"rare","codes":["E78.71"]},
+  {"serial":"A6-08","zh":"雷伯氏遺傳性視神經病變","en":"Leber hereditary optic neuropathy","category":"rare","codes":["H47.22"]},
+  {"serial":"A7-01","zh":"生物素酶缺乏症","en":"Biotinidase deficiency","category":"rare","codes":["D81.810"]},
+  {"serial":"A8-01","zh":"同合子家族性高膽固醇血症","en":"Homozygous familial hypercholesterolemia","category":"rare","codes":["E78.01"]},
+  {"serial":"A8-02","zh":"家族性高乳糜微粒血症","en":"Familial hyperchylomicronemia","category":"rare","codes":["E78.3"]},
+  {"serial":"A8-03","zh":"豆固醇血症(植物性)","en":"Sitosterolemia","category":"rare","codes":["E78.00","E78.01"]},
+  {"serial":"A8-04","zh":"先天性全身脂質營養不良症","en":"Congenital generalized lipodystrophy","category":"rare","codes":["E88.1"]},
+  {"serial":"A8-05","zh":"腦腱性黃瘤症","en":"Cerebrotendinous xanthomatosis","category":"rare","codes":["E75.5"]},
+  {"serial":"A9-01","zh":"威爾森氏症","en":"Wilson’s disease","category":"rare","codes":["E83.01"]},
+  {"serial":"A9-02","zh":"Menkes 症候群","en":"Menkes syndrome","category":"rare","codes":["E83.09"]},
+  {"serial":"A9-03","zh":"鉬輔酶缺乏症","en":"Molybdenum cofactor deficiency","category":"rare","codes":["E61.5"]},
+  {"serial":"A10-01","zh":"Zellweger 氏症候群","en":"Zellweger syndrome","category":"rare","codes":["E71.510"]},
+  {"serial":"A10-02","zh":"腎上腺腦白質失養症","en":"Adrenoleukodystrophy","category":"rare","codes":["E71.511","E71.520","E71.521","E71.528","E71.529"]},
+  {"serial":"A10-03","zh":"肢近端型點狀軟骨發育不良","en":"Rhizomelic chondrodysplasia punctata","category":"rare","codes":["E71.540"]},
+  {"serial":"A11-01","zh":"紫質症","en":"Porphyria","category":"rare","codes":["E80.20","E80.21","E80.29"]},
+  {"serial":"A11-02","zh":"Lesch-Nyhan 氏症候群","en":"Lesch-Nyhan syndrome","category":"rare","codes":["E79.1"]},
+  {"serial":"A11-03","zh":"亞硫酸鹽氧化酶缺乏","en":"Sulfite oxidase deficiency","category":"rare","codes":["E72.19"]},
+  {"serial":"A11-04","zh":"先天性醣基化障礙","en":"Congenital disorder of glycosylation, CDG","category":"rare","codes":["E77.8"]},
+  {"serial":"A11-05","zh":"三甲基胺尿症","en":"Trimethylaminuria","category":"rare","codes":["E72.52"]},
+  {"serial":"A11-06","zh":"低磷酸酯酶症","en":"Hypophosphatasia","category":"rare","codes":["E83.39","E83.31"]},
+  {"serial":"A11-07","zh":"Beta 硫解酶缺乏症","en":"Beta-Ketothiolase deficiency","category":"rare","codes":["E71.19"]},
+  {"serial":"A11-08","zh":"大腦肌酸缺乏症","en":"Cerebral creatine deficiency","category":"rare","codes":["E72.89"]},
+  {"serial":"A11-09","zh":"硫胺素(維生素 B1)代謝功能障礙症候群","en":"Thiamine metabolism dysfunction syndromes","category":"rare","codes":["E51.8"]},
+  {"serial":"A11-10","zh":"嘌呤合成代謝異常","en":"Disorders of purine biosynthesis metabolism","category":"rare","codes":["E79.8","E79.9"]},
+  {"serial":"B1-01","zh":"多發性硬化症/泛視神經脊髓炎","en":"Multiple sclerosis, MS/ Neuromyelitis optica spectrum disorders, NMOSD","category":"rare","codes":["G35","G36.0"]},
+  {"serial":"B1-02","zh":"肌萎縮性側索硬化症","en":"Amyotrophic lateral sclerosis (ALS)","category":"rare","codes":["G12.21"]},
+  {"serial":"B1-03","zh":"共濟失調微血管擴張症候群","en":"Ataxia telangiectasia","category":"rare","codes":["G11.3"]},
+  {"serial":"B1-04","zh":"亨丁頓氏舞蹈症","en":"Huntington disease (又稱 Huntington's chorea)","category":"rare","codes":["G10"]},
+  {"serial":"B1-05","zh":"雷特氏症","en":"Rett syndrome","category":"rare","codes":["F84.2"]},
+  {"serial":"B1-06","zh":"脊髓性肌肉萎縮症","en":"Spinal muscular atrophy","category":"rare","codes":["G12.0","G12.1"]},
+  {"serial":"B1-07","zh":"脊髓小腦退化性動作協調障礙","en":"Spinocerebellar ataxia","category":"rare","codes":["G11.9","G11.10","G11.11","G11.19","G11.2","G11.8"]},
+  {"serial":"B1-08","zh":"結節性硬化症","en":"Tuberous sclerosis","category":"rare","codes":["Q85.1"]},
+  {"serial":"B1-09","zh":"先天性痛不敏感症合併無汗症","en":"Congenital insensitivity to pain with anhidrosis (CIPA)","category":"rare","codes":["L74.4"]},
+  {"serial":"B1-10","zh":"神經纖維瘤症候群第二型","en":"Neurofibromatosis type Ⅱ","category":"rare","codes":["Q85.02"]},
+  {"serial":"B1-11","zh":"Alexander 氏病","en":"Alexander disease","category":"rare","codes":["G31.89"]},
+  {"serial":"B1-12","zh":"僵體症候群","en":"Stiffperson syndrome","category":"rare","codes":["G25.82"]},
+  {"serial":"B1-13","zh":"遺傳性痙攣性下身麻痺","en":"Hereditary spastic paraplegia","category":"rare","codes":["G11.4"]},
+  {"serial":"B1-14","zh":"Joubert 氏症候群(家族性小腦蚓部發育不全)","en":"Joubert syndrome","category":"rare","codes":["Q04.3"]},
+  {"serial":"B1-15","zh":"Pelizaeus-Merzbacher 氏症(慢性兒童型腦硬化症)","en":"Pelizaeus-Merzbacher disease","category":"rare","codes":["E75.29"]},
+  {"serial":"B1-16","zh":"夏柯-馬利-杜斯氏症","en":"Charcot-Marie-Tooth disease","category":"rare","codes":["G60.0"]},
+  {"serial":"B1-17","zh":"甘迺迪氏症(脊髓延髓性肌肉萎縮症)","en":"Kennedy disease","category":"rare","codes":["G12.20","G12.24","G12.29"]},
+  {"serial":"B1-18","zh":"家族性澱粉樣多發性神經病變","en":"Familial amyloidotic polyneuropathy","category":"rare","codes":["E85.1"]},
+  {"serial":"B1-19","zh":"Moebius 症候群","en":"Moebius syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"B1-20","zh":"Mcleod 症候群","en":"Mcleod syndrome","category":"rare","codes":["Q97.8","Q98.8"]},
+  {"serial":"B1-21","zh":"Aicardi-Goutieres 症候群","en":"Aicardi-Goutieres syndrome","category":"rare","codes":["E79.8"]},
+  {"serial":"B1-22","zh":"MECP2綜合症候群","en":"Methyl CpG binding protein 2 duplication syndrome (MECP2 duplication syndrome)","category":"rare","codes":["Q99.8"]},
+  {"serial":"B1-23","zh":"Dravet 症候群","en":"Dravet syndrome, DS","category":"rare","codes":["G40.833","G40.834"]},
+  {"serial":"B1-24","zh":"腦白質消失症","en":"Vanishing white matter disease","category":"rare","codes":["G11.8"]},
+  {"serial":"B1-25","zh":"泛酸鹽激酶關聯之神經退化性疾病","en":"Pantothenate kinase associated neurodegeneration (PKAN)","category":"rare","codes":["G23.0"]},
+  {"serial":"B1-26","zh":"磷脂質脂解酶 A2關聯之神經退化性疾病","en":"Phospholipase A2-associated neurodegeneration (PLAN)","category":"rare","codes":["G23.0"]},
+  {"serial":"B1-27","zh":"皮特-霍普金斯症候群","en":"Pitt-Hopkins syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"B1-28","zh":"Beta 螺旋狀蛋白關聯之神經退化疾病","en":"Beta-Propeller protein-associated neurodegeneration (BPAN)","category":"rare","codes":["G23.0"]},
+  {"serial":"B1-29","zh":"嬰兒型上行性遺傳性痙攣性麻痺","en":"Infantile-onset ascending hereditary spastic paralysis, IAHSP","category":"rare","codes":["G12.20","G12.24","G12.29"]},
+  {"serial":"B1-30","zh":"先天性中樞性換氣不足症候群","en":"Congenital central hypoventilation syndrome","category":"rare","codes":["G47.35"]},
+  {"serial":"B1-31","zh":"Von Hippel-Lindau症候群","en":"Von Hippel-Lindau disease","category":"rare","codes":["Q85.83"]},
+  {"serial":"B1-32","zh":"Basilicata-Akhtar症候群","en":"Basilicata-Akhtar syndrome","category":"rare","codes":["F78.A9","F84.8"]},
+  {"serial":"B1-33","zh":"舞蹈症-棘紅細胞增多症","en":"Chorea-acanthocytosis","category":"rare","codes":["G25.5"]},
+  {"serial":"C1-01","zh":"特發性嬰兒動脈硬化症","en":"Idiopathic infantile arterial calcification","category":"rare","codes":["Q28.8"]},
+  {"serial":"C1-02","zh":"囊狀纖維化症","en":"Cystic fibrosis","category":"rare","codes":["E84.9"]},
+  {"serial":"C1-03","zh":"特發性或遺傳性肺動脈高壓","en":"Idiopathic or Heritable pulmonary arterial hypertension (IPAH or HPAH)","category":"rare","codes":["I27.0"]},
+  {"serial":"C1-04","zh":"Holt-Oram 氏症候群","en":"Holt-Oram syndrome","category":"rare","codes":["Q87.2"]},
+  {"serial":"C1-05","zh":"Andersen 氏症候群(心節律障礙暨週期性麻痺症候群；鉀離子通道病變)","en":"Andersen syndrome","category":"rare","codes":["G72.3"]},
+  {"serial":"C1-06","zh":"遺傳性出血性血管擴張症","en":"Hereditary hemorrhagic telangiectasia","category":"rare","codes":["I78.0"]},
+  {"serial":"C1-07","zh":"窒息性胸腔失養症","en":"Asphyxiating thoracic dystrophy","category":"rare","codes":["Q77.2"]},
+  {"serial":"D1-01","zh":"進行性家族性肝內膽汁滯留症","en":"Progressive familial intrahepatic cholestasis, PFIC","category":"rare","codes":["K83.1"]},
+  {"serial":"D1-02","zh":"先天性膽酸合成障礙","en":"Inborn errors of bile acid synthesis","category":"rare","codes":["E78.70"]},
+  {"serial":"D1-03","zh":"α1-抗胰蛋白酶缺乏症","en":"α1- Antitrypsin deficiency","category":"rare","codes":["E88.01"]},
+  {"serial":"D1-04","zh":"先天性 Cajal 氏間質細胞增生合併腸道神經元發育異常","en":"Congenital interstitial cell of Cajal hyperplasia with neuronal intestinal dysplasia","category":"rare","codes":["Q43.8"]},
+  {"serial":"D1-05","zh":"阿拉吉歐症候群","en":"Alagille syndrome","category":"rare","codes":["Q44.7"]},
+  {"serial":"D1-06","zh":"髮-肝-腸症候群","en":"Tricho-hepato-enteric syndrome","category":"rare","codes":["Q89.7","K52.89"]},
+  {"serial":"E1-01","zh":"Lowe 氏症候群","en":"Lowe syndrome","category":"rare","codes":["E72.03"]},
+  {"serial":"E1-02","zh":"Bartter 氏症候群","en":"Bartter’s syndrome","category":"rare","codes":["E26.81"]},
+  {"serial":"E1-03","zh":"體染色體隱性多囊性腎臟疾病","en":"Autosomal recessive polycystic kidney disease","category":"rare","codes":["Q61.19"]},
+  {"serial":"E1-04","zh":"亞伯氏症候群","en":"Alport syndrome","category":"rare","codes":["Q87.81"]},
+  {"serial":"F1-01","zh":"遺傳性表皮分解性水皰症","en":"Hereditary epidermolysis bullosa","category":"rare","codes":["Q81.0","Q81.1","Q81.2","Q81.8","Q81.9"]},
+  {"serial":"F1-02","zh":"層狀魚鱗癬(自體隱性遺傳型)","en":"Ichthyosis, lamellar recessive","category":"rare","codes":["Q80.2"]},
+  {"serial":"F1-03","zh":"膠膜兒","en":"Collodion baby","category":"rare","codes":["Q80.2"]},
+  {"serial":"F1-04","zh":"斑色魚鱗癬","en":"Harlequin ichthyosis","category":"rare","codes":["Q80.4"]},
+  {"serial":"F1-05","zh":"水泡型先天性魚鱗癬樣紅皮症(表皮鬆解性角化過度症)","en":"Bullous congenital ichthyosiform erythoderma (epidermolytic hyperkeratosis)","category":"rare","codes":["Q80.3"]},
+  {"serial":"F1-06","zh":"外胚層增生不良症","en":"Ectodermal dysplasias","category":"rare","codes":["Q82.4"]},
+  {"serial":"F1-07","zh":"Meleda 島病","en":"Meleda disease","category":"rare","codes":["Q82.8"]},
+  {"serial":"F1-08","zh":"Darier 氏症(毛囊角化病)","en":"Darier’s disease","category":"rare","codes":["Q82.8"]},
+  {"serial":"F1-09","zh":"先天性角化不全症","en":"Dyskeratosis congenita","category":"rare","codes":["Q82.8"]},
+  {"serial":"F1-10","zh":"皮膚過度角化症雅司病","en":"Diffuse non-epidermolytic palmoplantar keratoderma type Unna-Thost","category":"rare","codes":["Q82.8"]},
+  {"serial":"F1-11","zh":"色素失調症","en":"Incontinentia pigmenti","category":"rare","codes":["Q82.3"]},
+  {"serial":"G1-01","zh":"裘馨氏肌肉失養症","en":"Duchenne muscular dystrophy","category":"rare","codes":["G71.01"]},
+  {"serial":"G1-02","zh":"Nemaline 線狀肌肉病變","en":"Nemaline rod myopathy","category":"rare","codes":["G71.21"]},
+  {"serial":"G1-03","zh":"Schwartz Jampel 氏症候群","en":"Schwartz Jampel syndrome","category":"rare","codes":["G71.13"]},
+  {"serial":"G1-04","zh":"肌肉強直症","en":"Myotonic dystrophy","category":"rare","codes":["G71.11"]},
+  {"serial":"G1-05","zh":"面肩胛肱肌失養症","en":"Facioscapulohumeral muscular dystrophy","category":"rare","codes":["G71.02"]},
+  {"serial":"G1-06","zh":"肌小管病變","en":"Myotubular myopathy","category":"rare","codes":["G71.220"]},
+  {"serial":"G1-07","zh":"貝克型肌肉失養症","en":"Becker muscular dystrophy","category":"rare","codes":["G71.01"]},
+  {"serial":"G1-08","zh":"Freeman-Sheldon 氏症候群","en":"Freeman-Sheldon syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"G1-09","zh":"肢帶型肌失養症","en":"Limb-girdle muscular dystrophy","category":"rare","codes":["G71.031","G71.032","G71.033","G71.0340","G71.0342","G71.0349","G71.035","G71.038","G71.0341","G71.039"]},
+  {"serial":"G1-10","zh":"先天性肌失養症","en":"Congenital muscular dystrophy","category":"rare","codes":["G71.20"]},
+  {"serial":"G1-11","zh":"中心軸空肌病","en":"Central core disease","category":"rare","codes":["G71.29"]},
+  {"serial":"G1-12","zh":"多微小軸空肌病","en":"Multiminicore disease","category":"rare","codes":["G71.29"]},
+  {"serial":"G1-13","zh":"Emery-Dreifuss 肌失養症","en":"Emery-Dreifuss muscular dystrophy (EDMD)","category":"rare","codes":["G71.00","G71.038","G71.09"]},
+  {"serial":"G1-14","zh":"GNE 遠端肌病變","en":"GNE myopathy","category":"rare","codes":["G71.8","G71.9"]},
+  {"serial":"G1-15","zh":"史托摩根症候群","en":"Stormorken syndrome","category":"rare","codes":["D69.8"]},
+  {"serial":"H1-01","zh":"軟骨發育不全症","en":"Achondroplasia","category":"rare","codes":["Q77.4"]},
+  {"serial":"H1-02","zh":"成骨不全症","en":"Osteogenesis imperfecta","category":"rare","codes":["Q78.0"]},
+  {"serial":"H1-03","zh":"原發性變形性骨炎","en":"Primary Paget disease","category":"rare","codes":["M88.0","M88.1","M88.811","M88.812","M88.819","M88.821","M88.822","M88.829","M88.831","M88.832","M88.839","M88.841","M88.842","M88.849","M88.851","M88.852","M88.859","M88.861","M88.862","M88.869","M88.871","M88.872","M88.879","M88.88","M88.89","M88.9"]},
+  {"serial":"H1-04","zh":"鎖骨顱骨發育異常","en":"Cleidocraninal dysplasia","category":"rare","codes":["Q74.0"]},
+  {"serial":"H1-05","zh":"進行性骨化性肌炎","en":"Fibrodysplasia ossificans progressiva","category":"rare","codes":["M61.10","M61.111","M61.112","M61.119","M61.121","M61.122","M61.129","M61.131","M61.132","M61.139","M61.152","M61.159","M61.161","M61.162","M61.169","M61.171","M61.172","M61.173","M61.174","M61.175","M61.141","M61.142","M61.143","M61.144","M61.145","M61.146","M61.151","M61.176","M61.177","M61.178","M61.179","M61.18","M61.19"]},
+  {"serial":"H1-06","zh":"裂手裂足症","en":"Split-hand/ Split-foot malformation (SHFM)","category":"rare","codes":["Q71.60","Q71.61","Q71.62","Q71.63","Q72.70","Q72.71","Q72.72","Q72.73"]},
+  {"serial":"H1-07","zh":"骨質石化症","en":"Osteopetrosis","category":"rare","codes":["Q78.2"]},
+  {"serial":"H1-08","zh":"假性軟骨發育不全","en":"Pseudoachondroplastic dysplasia","category":"rare","codes":["Q77.8"]},
+  {"serial":"H1-09","zh":"多發性骨骺發育不全症","en":"Multiple epiphyseal dysplasia","category":"rare","codes":["Q77.8"]},
+  {"serial":"H1-10","zh":"顱骨幹骺端發育不良","en":"Craniometaphyseal dysplasia","category":"rare","codes":["Q78.8"]},
+  {"serial":"H1-11","zh":"腦肋小頜症候群","en":"Cerebro-Costo-Mandibular syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"H1-12","zh":"Crouzon 氏症候群","en":"Crouzon syndrome","category":"rare","codes":["Q75.1"]},
+  {"serial":"H1-13","zh":"Pfeiffer 氏症候群","en":"Pfeiffer syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"I1-01","zh":"先天結締組織異常第四型","en":"Ehlers Danlos syndrome Ⅳ","category":"rare","codes":["Q79.63"]},
+  {"serial":"J1-01","zh":"重型海洋性貧血","en":"Thalassemia major","category":"rare","codes":["D56.0","D56.1"]},
+  {"serial":"J1-02","zh":"血小板無力症","en":"Thrombasthenia","category":"rare","codes":["D69.1"]},
+  {"serial":"J1-03","zh":"同基因合子蛋白質 C 缺乏症","en":"Homozygous protein C deficiency","category":"rare","codes":["D68.59"]},
+  {"serial":"J1-04","zh":"陣發性夜間血紅素尿症","en":"Paroxysmal nocturnal hemoglobinuria","category":"rare","codes":["D59.5"]},
+  {"serial":"J1-05","zh":"先天性血栓性血小板低下紫斑症","en":"Congenital thrombotic thrombocytopenic purpura","category":"rare","codes":["D69.42"]},
+  {"serial":"K1-01","zh":"原發性慢性肉芽腫病","en":"Chronic primary granulomatous disease","category":"rare","codes":["D71"]},
+  {"serial":"K1-02","zh":"先天性高免疫球蛋白 E 症候群","en":"Congenital hyper IgE syndrome","category":"rare","codes":["D82.4"]},
+  {"serial":"K1-03","zh":"布魯頓氏低免疫球蛋白血症","en":"Bruton’s agammaglobulinemia","category":"rare","codes":["D80.0"]},
+  {"serial":"K1-04","zh":"Wiskott-Aldrich 氏症候群","en":"Wiskott-Aldrich syndrome","category":"rare","codes":["D82.0"]},
+  {"serial":"K1-05","zh":"嚴重複合型免疫缺乏症","en":"Severe combined immunodeficiency","category":"rare","codes":["D81.0","D81.1","D81.2","D81.31","D81.9"]},
+  {"serial":"K1-06","zh":"補體成份8缺乏症","en":"Complement component 8 deficiency","category":"rare","codes":["D84.1"]},
+  {"serial":"K1-07","zh":"IPEX 症候群","en":"IPEX syndrome","category":"rare","codes":["E31.0"]},
+  {"serial":"K1-08","zh":"高免疫球蛋白 M 症候群","en":"Hyper-IgM syndrome","category":"rare","codes":["D80.5"]},
+  {"serial":"K1-09","zh":"γ 干擾素受體1缺陷","en":"Interferon γ receptor 1 deficiency","category":"rare","codes":["D84.89"]},
+  {"serial":"K1-10","zh":"遺傳性血管性水腫","en":"Hereditary angioedema (HAE)","category":"rare","codes":["D84.1"]},
+  {"serial":"K1-11","zh":"Netherton 症候群","en":"Netherton syndrome","category":"rare","codes":["Q80.8"]},
+  {"serial":"K1-12","zh":"非典型性尿毒溶血症候群","en":"Atypical hemolytic uremic syndrome","category":"rare","codes":["D59.32","D59.39"]},
+  {"serial":"L1-01","zh":"Kenny-Caffey 氏症候群","en":"Kenny-Caffey syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"L1-02","zh":"假性副甲狀腺低能症","en":"Pseudohypoparathyroidism","category":"rare","codes":["E20.1"]},
+  {"serial":"L1-03","zh":"遺傳性低磷酸鹽佝僂症","en":"Hereditary hypophosphatemic rickets","category":"rare","codes":["E83.31"]},
+  {"serial":"L1-04","zh":"Laron 氏侏儒症候群","en":"Laron syndrome (Laron Dwarfism)","category":"rare","codes":["E34.321"]},
+  {"serial":"L1-05","zh":"Bardet-Biedl 氏症候群","en":"Bardet-Biedl syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"L1-06","zh":"Alstrom 氏症候群","en":"Alstrom syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"L1-07","zh":"持續性幼兒型胰島素過度分泌低血糖症","en":"Persistent hyperinsulinemic hypoglycemia of infancy (PHHI)","category":"rare","codes":["E16.1"]},
+  {"serial":"L1-08","zh":"Wolfram 氏症候群","en":"Wolfram syndrome, DIDMOAD","category":"rare","codes":["E34.8"]},
+  {"serial":"L1-09","zh":"McCune Albright 氏症候群","en":"McCune Albright syndrome","category":"rare","codes":["Q78.1"]},
+  {"serial":"L1-10","zh":"短指發育不良及性別顛倒","en":"Campomelic dysplasia with autosomal sex reversal","category":"rare","codes":["Q87.19"]},
+  {"serial":"L1-11","zh":"腎上腺皮促素抗性","en":"ACTH resistance","category":"rare","codes":["E27.49"]},
+  {"serial":"L1-12","zh":"第一型遺傳性維生素 D 依賴型佝僂症","en":"25-Hydroxyvitamin D 1-alpha-hydroxylase deficiency","category":"rare","codes":["E83.32"]},
+  {"serial":"L1-13","zh":"先天性腎上腺發育不全","en":"Congenital adrenal hypoplasia","category":"rare","codes":["Q89.1"]},
+  {"serial":"L1-14","zh":"Kallmann 氏症候群","en":"Kallmann syndrome","category":"rare","codes":["E23.0"]},
+  {"serial":"L1-15","zh":"永久性新生兒糖尿病","en":"Permanent neonatal diabetes mellitus","category":"rare","codes":["P70.2"]},
+  {"serial":"L1-16","zh":"MIRAGE 症候群","en":"MIRAGE syndrome","category":"rare","codes":["Q89.8"]},
+  {"serial":"L1-17","zh":"Werner 症候群","en":"Werner syndrome","category":"rare","codes":["E34.8"]},
+  {"serial":"M1-01","zh":"Aarskog-Scott 氏症候群","en":"Aarskog-Scott syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"M1-02","zh":"瓦登伯格氏症候群","en":"Waardenburg syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-03","zh":"愛伯特氏症","en":"Apert syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"M1-04","zh":"Smith-Lemli-Opitz 氏症候群","en":"Smith-Lemli-Opitz syndrome","category":"rare","codes":["E78.72"]},
+  {"serial":"M1-05","zh":"Larsen 氏症候群(顎裂-先天性脫位症候群)","en":"Larsen syndrome","category":"rare","codes":["Q74.8"]},
+  {"serial":"M1-06","zh":"Beckwith Wiedemann 氏症候群","en":"Beckwith Wiedemann syndrome","category":"rare","codes":["Q87.3"]},
+  {"serial":"M1-07","zh":"Fraser 氏症候群","en":"Fraser syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"M1-08","zh":"多發性翼狀膜症候群","en":"Multiple pterygium syndrome","category":"rare","codes":["Q79.8"]},
+  {"serial":"M1-09","zh":"Cornelia de Lange 氏症候群","en":"Cornelia de Lange syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"M1-10","zh":"海勒曼-史德萊夫氏症候群","en":"Hallerman-Streiff syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"M1-11","zh":"Kabuki 症候群","en":"Kabuki syndrome","category":"rare","codes":["Q89.8"]},
+  {"serial":"M1-12","zh":"耳-齶-指（趾）症候群","en":"Oto-Palato-Digital syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"M1-13","zh":"Conradi-Hunermann 氏症候群","en":"Conradi-Hunermann syndrome","category":"rare","codes":["Q77.3"]},
+  {"serial":"M1-14","zh":"Treacher Collins 氏症候群","en":"Treacher Collins syndrome","category":"rare","codes":["Q75.4"]},
+  {"serial":"M1-15","zh":"Robinow 氏症候群","en":"Robinow syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"M1-16","zh":"指（趾）甲髕骨症候群","en":"Nail-Patella syndrome","category":"rare","codes":["Q87.2"]},
+  {"serial":"M1-17","zh":"CFC 症候群","en":"Cardiofaciocutaneous syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-18","zh":"Peters-Plus 症候群","en":"Peters-Plus syndrome","category":"rare","codes":["Q13.4"]},
+  {"serial":"M1-19","zh":"Nager 症候群","en":"Nager syndrome","category":"rare","codes":["Q75.4"]},
+  {"serial":"M1-20","zh":"CHARGE 症候群","en":"CHARGE syndrome","category":"rare","codes":["Q89.8"]},
+  {"serial":"M1-21","zh":"懷特-薩頓症候群","en":"White-Sutton syndrome","category":"rare","codes":["Q87.0"]},
+  {"serial":"M1-22","zh":"克斯提洛氏彈性蛋白缺陷症","en":"Costello syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-23","zh":"Ayme-Gripp 症候群","en":"Ayme-Gripp syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-24","zh":"Coffin-Lowry 症候群","en":"Coffin-Lowry syndrome","category":"rare","codes":["Q89.8"]},
+  {"serial":"M1-25","zh":"Myhre 症候群","en":"Myhre syndrome","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-26","zh":"森森布倫納症候群","en":"Sensenbrenner syndrome","category":"rare","codes":["Q87.5"]},
+  {"serial":"M1-27","zh":"克片-魯賓斯基症候群","en":"Keppen-Lubinsky syndrome","category":"rare","codes":["E88.1"]},
+  {"serial":"M1-28","zh":"Angelman 氏症候群","en":"Angelman syndrome","category":"rare","codes":["Q93.51"]},
+  {"serial":"M1-29","zh":"DiGeorge 症候群","en":"DiGeorge syndrome","category":"rare","codes":["D82.1"]},
+  {"serial":"M1-30","zh":"Prader-Willi 氏症候群","en":"Prader-Willi syndrome","category":"rare","codes":["Q87.11"]},
+  {"serial":"M1-31","zh":"威爾姆氏腫瘤、無虹膜、性器異常、智能障礙症候群(WAGR 症候群)","en":"WAGR syndrome (Wilms’ tumor-aniridia-genitourinary anomalies-mental retardation)","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-32","zh":"Miller Dieker 症候群","en":"Miller Dieker syndrome","category":"rare","codes":["Q93.88"]},
+  {"serial":"M1-33","zh":"Rubinstein-Taybi 氏症候群","en":"Rubinstein-Taybi syndrome","category":"rare","codes":["Q87.2"]},
+  {"serial":"M1-34","zh":"威廉斯氏症候群","en":"Williams syndrome","category":"rare","codes":["Q93.82"]},
+  {"serial":"M1-35","zh":"Branchio-Oto-Renal 症候群(BOR 症候群)","en":"Branchio-Oto-Renal syndrome (BOR syndrome)","category":"rare","codes":["Q87.89"]},
+  {"serial":"M1-36","zh":"普洛提斯症候群","en":"Proteus syndrome","category":"rare","codes":["Q87.3"]},
+  {"serial":"M1-37","zh":"Cockayne 氏症候群(柯凱因氏症候群)","en":"Cockayne syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"M1-38","zh":"早老症","en":"Hutchinson Gilford progeria syndrome","category":"rare","codes":["E34.8"]},
+  {"serial":"M1-39","zh":"Schaaf-Yang 症候群","en":"Schaaf-Yang syndrome","category":"rare","codes":["Q87.19"]},
+  {"serial":"M1-40","zh":"Galloway-Mowat 症候群","en":"Galloway-Mowat syndrome","category":"rare","codes":["Q04.3"]},
+  {"serial":"N1-01","zh":"Stargardt's 氏症","en":"Stargardt's disease","category":"rare","codes":["H35.50"]},
+  {"serial":"N1-02","zh":"隱匿性黃斑部失養症","en":"Occult macular dystrophy；OMD","category":"rare","codes":["H35.50"]},
+  {"serial":"N1-03","zh":"萊伯氏先天性黑矇症","en":"Leber congenital amaurosis","category":"rare","codes":["H35.50"]}
+ ],
  "sections": {
   "rare": {
    "label": "罕見疾病(國健署公告名單)",
-   "count": 324,
+   "count": 333,
    "codes": [
-    {
-     "code": "E72.20",
-     "zh": "A1-01 先天性尿素循環代謝障礙"
-    },
-    {
-     "code": "E72.23",
-     "zh": "A1-02 瓜胺酸血症"
-    },
-    {
-     "code": "E72.29",
-     "zh": "A1-03 乙醯榖胺酸合成酶缺乏症"
-    },
-    {
-     "code": "E72.4",
-     "zh": "A1-04 鳥胺酸氨甲醯基轉移酶缺乏症、A1-05 高鳥胺酸血症-高氨血症-高瓜胺酸血症症候群"
-    },
-    {
-     "code": "E72.9",
-     "zh": "A2-01 胺基酸代謝疾病"
-    },
-    {
-     "code": "E70.9",
-     "zh": "A2-01 胺基酸代謝疾病"
-    },
-    {
-     "code": "E72.10",
-     "zh": "A2-01 胺基酸代謝疾病"
-    },
-    {
-     "code": "E72.89",
-     "zh": "A2-01 胺基酸代謝疾病、A11-08 大腦肌酸缺乏症"
-    },
-    {
-     "code": "E71.2",
-     "zh": "A2-01 胺基酸代謝疾病"
-    },
-    {
-     "code": "E70.89",
-     "zh": "A2-01 胺基酸代謝疾病"
-    },
-    {
-     "code": "E72.11",
-     "zh": "A2-02 高胱胺酸尿症、A2-23 甲基丙二酸血症併高胱胺酸尿症,cb1C型"
-    },
-    {
-     "code": "E72.19",
-     "zh": "A2-03 高甲硫胺酸血症、A11-03 亞硫酸鹽氧化酶缺乏"
-    },
-    {
-     "code": "E72.51",
-     "zh": "A2-04 非酮性高甘胺酸血症"
-    },
-    {
-     "code": "E70.0",
-     "zh": "A2-05 苯酮尿症、A2-15 典型苯酮尿症合併蔗糖酶同麥芽糖酶缺乏症"
-    },
-    {
-     "code": "E70.1",
-     "zh": "A2-06 四氫基喋呤缺乏症"
-    },
-    {
-     "code": "E70.21",
-     "zh": "A2-07 遺傳性高酪胺酸血症"
-    },
-    {
-     "code": "E71.0",
-     "zh": "A2-08 楓糖尿症"
-    },
-    {
-     "code": "E71.118",
-     "zh": "A2-09 有機酸血症、A2-14 3-羥基-3-甲基戊二酸血症"
-    },
-    {
-     "code": "E71.110",
-     "zh": "A2-10 異戊酸血症"
-    },
-    {
-     "code": "E72.3",
-     "zh": "A2-11 戊二酸尿症，第一型、第二型、A2-16 高離胺酸血症"
-    },
-    {
-     "code": "E71.313",
-     "zh": "A2-11 戊二酸尿症，第一型、第二型、A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.121",
-     "zh": "A2-12 丙酸血症"
-    },
-    {
-     "code": "E71.120",
-     "zh": "A2-13 甲基丙二酸血症、A2-23 甲基丙二酸血症併高胱胺酸尿症,cb1C型"
-    },
-    {
-     "code": "E70.41",
-     "zh": "A2-17 組胺酸血症"
-    },
-    {
-     "code": "E71.19",
-     "zh": "A2-18 三甲基巴豆醯輔酶A羧化酵素缺乏症、A11-07 Beta硫解酶缺乏症"
-    },
-    {
-     "code": "D81.819",
-     "zh": "A2-19 多發性羧化酶缺乏症"
-    },
-    {
-     "code": "E72.59",
-     "zh": "A2-20 高脯胺酸血症"
-    },
-    {
-     "code": "E70.81",
-     "zh": "A2-21 芳香族L-胺基酸類脫羧基酶缺乏症"
-    },
-    {
-     "code": "E70.20",
-     "zh": "A2-22 酪胺酸羥化酶缺乏症"
-    },
-    {
-     "code": "E72.53",
-     "zh": "A2-24 原發性高草酸鹽尿症"
-    },
-    {
-     "code": "E70.29",
-     "zh": "A2-25 黑尿症"
-    },
-    {
-     "code": "E75.22",
-     "zh": "A3-01 高雪氏症"
-    },
-    {
-     "code": "E75.19",
-     "zh": "A3-02 GM1/GM2神經節苷脂儲積症"
-    },
-    {
-     "code": "E75.00",
-     "zh": "A3-02 GM1/GM2神經節苷脂儲積症"
-    },
-    {
-     "code": "E75.09",
-     "zh": "A3-02 GM1/GM2神經節苷脂儲積症"
-    },
-    {
-     "code": "E75.01",
-     "zh": "A3-02 GM1/GM2神經節苷脂儲積症"
-    },
-    {
-     "code": "E75.02",
-     "zh": "A3-02 GM1/GM2神經節苷脂儲積症"
-    },
-    {
-     "code": "E75.21",
-     "zh": "A3-03 Fabry氏症(法布瑞氏症)"
-    },
-    {
-     "code": "E75.240",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.241",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.242",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.243",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.244",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.248",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.249",
-     "zh": "A3-04 Niemann-Pick氏症，鞘髓磷脂儲積症"
-    },
-    {
-     "code": "E75.25",
-     "zh": "A3-05 MLD症候群"
-    },
-    {
-     "code": "E75.23",
-     "zh": "A3-06 球細胞腦白質失養症"
-    },
-    {
-     "code": "E75.5",
-     "zh": "A3-07 嬰兒型溶酶體酸性脂肪酶缺乏症(又稱伍爾曼氏症)、A8-05 腦腱性黃瘤症"
-    },
-    {
-     "code": "E72.04",
-     "zh": "A3-08 胱胺酸血症"
-    },
-    {
-     "code": "E76.01",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.02",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.03",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.1",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.22",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.210",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.211",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.219",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.29",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E76.3",
-     "zh": "A3-09 黏多醣症"
-    },
-    {
-     "code": "E77.1",
-     "zh": "A3-10 岩藻糖代謝異常(儲積症)、A3-11 涎酸酵素缺乏症、A3-12 黏脂質症"
-    },
-    {
-     "code": "E77.0",
-     "zh": "A3-12 黏脂質症"
-    },
-    {
-     "code": "E75.11",
-     "zh": "A3-12 黏脂質症"
-    },
-    {
-     "code": "E75.4",
-     "zh": "A3-13 神經元蠟樣脂褐質儲積症"
-    },
-    {
-     "code": "E75.26",
-     "zh": "A3-14 多發性硫酸脂酶缺乏症"
-    },
-    {
-     "code": "E74.21",
-     "zh": "A4-01 半乳糖血症"
-    },
-    {
-     "code": "E74.09",
-     "zh": "A4-02 肝醣儲積症"
-    },
-    {
-     "code": "E74.01",
-     "zh": "A4-02 肝醣儲積症"
-    },
-    {
-     "code": "E74.02",
-     "zh": "A4-02 肝醣儲積症"
-    },
-    {
-     "code": "E74.03",
-     "zh": "A4-02 肝醣儲積症"
-    },
-    {
-     "code": "E74.04",
-     "zh": "A4-02 肝醣儲積症"
-    },
-    {
-     "code": "E74.810",
-     "zh": "A4-03 腦血管屏障葡萄糖輸送缺陷"
-    },
-    {
-     "code": "E74.89",
-     "zh": "A4-04 轉醛醇酶缺乏症"
-    },
-    {
-     "code": "E71.30",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.314",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.310",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.318",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.311",
-     "zh": "A5-01 脂肪酸氧化作用缺陷、A5-03 中鏈脂肪酸去氫酵素缺乏症"
-    },
-    {
-     "code": "E71.32",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.312",
-     "zh": "A5-01 脂肪酸氧化作用缺陷、A5-04 短鏈脂肪酸去氫酶缺乏症"
-    },
-    {
-     "code": "E71.39",
-     "zh": "A5-01 脂肪酸氧化作用缺陷"
-    },
-    {
-     "code": "E71.41",
-     "zh": "A5-02 原發性肉鹼缺乏症"
-    },
-    {
-     "code": "E88.40",
-     "zh": "A6-01 粒線體缺陷"
-    },
-    {
-     "code": "H49.811",
-     "zh": "A6-02 Kearns-Sayre氏症候群"
-    },
-    {
-     "code": "H49.812",
-     "zh": "A6-02 Kearns-Sayre氏症候群"
-    },
-    {
-     "code": "H49.813",
-     "zh": "A6-02 Kearns-Sayre氏症候群"
-    },
-    {
-     "code": "H49.819",
-     "zh": "A6-02 Kearns-Sayre氏症候群"
-    },
-    {
-     "code": "G31.82",
-     "zh": "A6-03 Leigh氏童年期腦脊髓病變"
-    },
-    {
-     "code": "E88.41",
-     "zh": "A6-04 MELAS症候群"
-    },
-    {
-     "code": "E88.49",
-     "zh": "A6-05 MNGIE症候群粒線體性神經胃腸腦病變症候群"
-    },
-    {
-     "code": "E74.4",
-     "zh": "A6-06 丙酮酸鹽脫氫酶缺乏症"
-    },
-    {
-     "code": "E78.71",
-     "zh": "A6-07 巴氏症候群"
-    },
-    {
-     "code": "H47.22",
-     "zh": "A6-08 雷伯氏遺傳性視神經病變"
-    },
-    {
-     "code": "D81.810",
-     "zh": "A7-01 生物素酶缺乏症"
-    },
-    {
-     "code": "E78.3",
-     "zh": "A8-02 家族性高乳糜微粒血症"
-    },
-    {
-     "code": "E88.1",
-     "zh": "A8-04 先天性全身脂質營養不良症、M1-27 克片-魯賓斯基症候群"
-    },
-    {
-     "code": "E83.01",
-     "zh": "A9-01 威爾森氏症"
-    },
-    {
-     "code": "E83.09",
-     "zh": "A9-02 Menkes症候群"
-    },
-    {
-     "code": "E61.5",
-     "zh": "A9-03 鉬輔酶缺乏症"
-    },
-    {
-     "code": "E71.510",
-     "zh": "A10-01 Zellweger氏症候群"
-    },
-    {
-     "code": "E71.511",
-     "zh": "A10-02 腎上腺腦白質失養症"
-    },
-    {
-     "code": "E71.520",
-     "zh": "A10-02 腎上腺腦白質失養症"
-    },
-    {
-     "code": "E71.521",
-     "zh": "A10-02 腎上腺腦白質失養症"
-    },
-    {
-     "code": "E71.528",
-     "zh": "A10-02 腎上腺腦白質失養症"
-    },
-    {
-     "code": "E71.529",
-     "zh": "A10-02 腎上腺腦白質失養症"
-    },
-    {
-     "code": "E71.540",
-     "zh": "A10-03 肢近端型點狀軟骨發育不良"
-    },
-    {
-     "code": "E80.20",
-     "zh": "A11-01 紫質症"
-    },
-    {
-     "code": "E80.21",
-     "zh": "A11-01 紫質症"
-    },
-    {
-     "code": "E80.29",
-     "zh": "A11-01 紫質症"
-    },
-    {
-     "code": "E79.1",
-     "zh": "A11-02 Lesch-Nyhan氏症候群"
-    },
-    {
-     "code": "E77.8",
-     "zh": "A11-04 先天性醣基化障礙"
-    },
-    {
-     "code": "E72.52",
-     "zh": "A11-05 三甲基胺尿症"
-    },
-    {
-     "code": "E83.39",
-     "zh": "A11-06 低磷酸酯酶症"
-    },
-    {
-     "code": "E83.31",
-     "zh": "A11-06 低磷酸酯酶症、L1-03 遺傳性低磷酸鹽佝僂症"
-    },
-    {
-     "code": "E51.8",
-     "zh": "A11-09 硫胺素(維生素B1)代謝功能障礙症候群"
-    },
-    {
-     "code": "E79.8",
-     "zh": "A11-10 嘌呤合成代謝異常、B1-21 Aicardi-Goutieres症候群"
-    },
-    {
-     "code": "E79.9",
-     "zh": "A11-10 嘌呤合成代謝異常"
-    },
-    {
-     "code": "G35",
-     "zh": "B1-01 多發性硬化症/泛視神經脊髓炎"
-    },
-    {
-     "code": "G36.0",
-     "zh": "B1-01 多發性硬化症/泛視神經脊髓炎"
-    },
-    {
-     "code": "G12.21",
-     "zh": "B1-02 肌萎縮性側索硬化症"
-    },
-    {
-     "code": "G11.3",
-     "zh": "B1-03 共濟失調微血管擴張症候群"
-    },
-    {
-     "code": "G10",
-     "zh": "B1-04 亨丁頓氏舞蹈症"
-    },
-    {
-     "code": "F84.2",
-     "zh": "B1-05 雷特氏症"
-    },
-    {
-     "code": "G12.0",
-     "zh": "B1-06 脊髓性肌肉萎縮症"
-    },
-    {
-     "code": "G12.1",
-     "zh": "B1-06 脊髓性肌肉萎縮症"
-    },
-    {
-     "code": "G11.9",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙"
-    },
-    {
-     "code": "G11.10",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙"
-    },
-    {
-     "code": "G11.11",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙"
-    },
-    {
-     "code": "G11.19",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙"
-    },
-    {
-     "code": "G11.2",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙"
-    },
-    {
-     "code": "G11.8",
-     "zh": "B1-07 脊髓小腦退化性動作協調障礙、B1-24 腦白質消失症"
-    },
-    {
-     "code": "Q85.1",
-     "zh": "B1-08 結節性硬化症"
-    },
-    {
-     "code": "L74.4",
-     "zh": "B1-09 先天性痛不敏感症合併無汗症"
-    },
-    {
-     "code": "Q85.02",
-     "zh": "B1-10 神經纖維瘤症候群第二型"
-    },
-    {
-     "code": "G31.89",
-     "zh": "B1-11 Alexander氏病"
-    },
-    {
-     "code": "G25.82",
-     "zh": "B1-12 僵體症候群"
-    },
-    {
-     "code": "G11.4",
-     "zh": "B1-13 遺傳性痙攣性下身麻痺"
-    },
-    {
-     "code": "Q04.3",
-     "zh": "B1-14 Joubert氏症候群(家族性小腦蚓部發育不全)、M1-40 Galloway-Mowat症候群"
-    },
-    {
-     "code": "E75.29",
-     "zh": "B1-15 Pelizaeus-Merzbacher氏症(慢性兒童型腦硬化症)"
-    },
-    {
-     "code": "G60.0",
-     "zh": "B1-16 夏柯-馬利-杜斯氏症"
-    },
-    {
-     "code": "G12.20",
-     "zh": "B1-17 甘迺迪氏症(脊髓延髓性肌肉萎縮症)、B1-29 嬰兒型上行性遺傳性痙攣性麻痺"
-    },
-    {
-     "code": "G12.24",
-     "zh": "B1-17 甘迺迪氏症(脊髓延髓性肌肉萎縮症)、B1-29 嬰兒型上行性遺傳性痙攣性麻痺"
-    },
-    {
-     "code": "G12.29",
-     "zh": "B1-17 甘迺迪氏症(脊髓延髓性肌肉萎縮症)、B1-29 嬰兒型上行性遺傳性痙攣性麻痺"
-    },
-    {
-     "code": "E85.1",
-     "zh": "B1-18 家族性澱粉樣多發性神經病變"
-    },
-    {
-     "code": "Q87.0",
-     "zh": "B1-19 Moebius症候群、B1-27 皮特-霍普金斯症候群、G1-08 Freeman-Sheldon氏症候群、H1-13 Pfeiffer氏症候群、M1-03 愛伯特氏症、M1-07 Fraser氏症候群、M1-10 海勒曼-史德萊夫氏症候群、M1-12 耳-齶-指（趾）症候群、M1-21 懷特-薩頓症候群"
-    },
-    {
-     "code": "Q97.8",
-     "zh": "B1-20 Mcleod症候群"
-    },
-    {
-     "code": "Q98.8",
-     "zh": "B1-20 Mcleod症候群"
-    },
-    {
-     "code": "Q99.8",
-     "zh": "B1-22 MECP2綜合症候群"
-    },
-    {
-     "code": "G40.833",
-     "zh": "B1-23 Dravet症候群"
-    },
-    {
-     "code": "G40.834",
-     "zh": "B1-23 Dravet症候群"
-    },
-    {
-     "code": "G23.0",
-     "zh": "B1-25 泛酸鹽激酶關聯之神經退化性疾病、B1-26 磷脂質脂解酶A2關聯之神經退化性疾病、B1-28 Beta螺旋狀蛋白關聯之神經退化疾病"
-    },
-    {
-     "code": "G47.35",
-     "zh": "B1-30 先天性中樞性換氣不足症候群"
-    },
-    {
-     "code": "Q85.83",
-     "zh": "B1-31 VonHippel-Lindau症候群"
-    },
-    {
-     "code": "F78.A9",
-     "zh": "B1-32 Basilicata-Akhtar症候群"
-    },
-    {
-     "code": "F84.8",
-     "zh": "B1-32 Basilicata-Akhtar症候群"
-    },
-    {
-     "code": "G25.5",
-     "zh": "B1-33 舞蹈症-棘紅細胞增多症"
-    },
-    {
-     "code": "Q28.8",
-     "zh": "C1-01 特發性嬰兒動脈硬化症"
-    },
-    {
-     "code": "E84.9",
-     "zh": "C1-02 囊狀纖維化症"
-    },
-    {
-     "code": "I27.0",
-     "zh": "C1-03 特發性或遺傳性肺動脈高壓"
-    },
-    {
-     "code": "Q87.2",
-     "zh": "C1-04 Holt-Oram氏症候群、M1-16 指（趾）甲髕骨症候群、M1-33 Rubinstein-Taybi氏症候群"
-    },
-    {
-     "code": "G72.3",
-     "zh": "C1-05 Andersen氏症候群(心節律障礙暨週期性麻痺症候群；鉀離子通道病變)"
-    },
-    {
-     "code": "I78.0",
-     "zh": "C1-06 遺傳性出血性血管擴張症"
-    },
-    {
-     "code": "Q77.2",
-     "zh": "C1-07 窒息性胸腔失養症"
-    },
-    {
-     "code": "E78.70",
-     "zh": "D1-02 先天性膽酸合成障礙"
-    },
-    {
-     "code": "E88.01",
-     "zh": "D1-03 α1-抗胰蛋白酶缺乏症"
-    },
-    {
-     "code": "Q43.8",
-     "zh": "D1-04 先天性Cajal氏間質細胞增生合併腸道神經元發育異常"
-    },
-    {
-     "code": "Q44.7",
-     "zh": "D1-05 阿拉吉歐症候群"
-    },
-    {
-     "code": "Q89.7",
-     "zh": "D1-06 髮-肝-腸症候群"
-    },
-    {
-     "code": "E72.03",
-     "zh": "E1-01 Lowe氏症候群"
-    },
-    {
-     "code": "E26.81",
-     "zh": "E1-02 Bartter氏症候群"
-    },
-    {
-     "code": "Q61.19",
-     "zh": "E1-03 體染色體隱性多囊性腎臟疾病"
-    },
-    {
-     "code": "Q87.81",
-     "zh": "E1-04 亞伯氏症候群"
-    },
-    {
-     "code": "Q81.0",
-     "zh": "F1-01 遺傳性表皮分解性水皰症"
-    },
-    {
-     "code": "Q81.1",
-     "zh": "F1-01 遺傳性表皮分解性水皰症"
-    },
-    {
-     "code": "Q81.2",
-     "zh": "F1-01 遺傳性表皮分解性水皰症"
-    },
-    {
-     "code": "Q81.8",
-     "zh": "F1-01 遺傳性表皮分解性水皰症"
-    },
-    {
-     "code": "Q81.9",
-     "zh": "F1-01 遺傳性表皮分解性水皰症"
-    },
-    {
-     "code": "Q80.2",
-     "zh": "F1-02 層狀魚鱗癬(自體隱性遺傳型)、F1-03 膠膜兒"
-    },
-    {
-     "code": "Q80.4",
-     "zh": "F1-04 斑色魚鱗癬"
-    },
-    {
-     "code": "Q80.3",
-     "zh": "F1-05 水泡型先天性魚鱗癬樣紅皮症(表皮鬆解性角化過度症)"
-    },
-    {
-     "code": "Q82.4",
-     "zh": "F1-06 外胚層增生不良症"
-    },
-    {
-     "code": "Q82.3",
-     "zh": "F1-11 色素失調症"
-    },
-    {
-     "code": "G71.01",
-     "zh": "G1-01 裘馨氏肌肉失養症、G1-07 貝克型肌肉失養症"
-    },
-    {
-     "code": "G71.21",
-     "zh": "G1-02 Nemaline線狀肌肉病變"
-    },
-    {
-     "code": "G71.13",
-     "zh": "G1-03 SchwartzJampel氏症候群"
-    },
-    {
-     "code": "G71.11",
-     "zh": "G1-04 肌肉強直症"
-    },
-    {
-     "code": "G71.02",
-     "zh": "G1-05 面肩胛肱肌失養症"
-    },
-    {
-     "code": "G71.220",
-     "zh": "G1-06 肌小管病變"
-    },
-    {
-     "code": "G71.031",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.0342",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.032",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.0349",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.033",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.035",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.0340",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.038",
-     "zh": "G1-09 肢帶型肌失養症、G1-13 Emery-Dreifuss肌失養症"
-    },
-    {
-     "code": "G71.0341",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.039",
-     "zh": "G1-09 肢帶型肌失養症"
-    },
-    {
-     "code": "G71.20",
-     "zh": "G1-10 先天性肌失養症"
-    },
-    {
-     "code": "G71.29",
-     "zh": "G1-11 中心軸空肌病、G1-12 多微小軸空肌病"
-    },
-    {
-     "code": "G71.00",
-     "zh": "G1-13 Emery-Dreifuss肌失養症"
-    },
-    {
-     "code": "G71.09",
-     "zh": "G1-13 Emery-Dreifuss肌失養症"
-    },
-    {
-     "code": "G71.8",
-     "zh": "G1-14 GNE遠端肌病變"
-    },
-    {
-     "code": "G71.9",
-     "zh": "G1-14 GNE遠端肌病變"
-    },
-    {
-     "code": "Q77.4",
-     "zh": "H1-01 軟骨發育不全症"
-    },
-    {
-     "code": "Q78.0",
-     "zh": "H1-02 成骨不全症"
-    },
-    {
-     "code": "M88.0",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.1",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.851",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.811",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.852",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.812",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.859",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.819",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.861",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.821",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.862",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.822",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.869",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.829",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.871",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.831",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.872",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.832",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.879",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.839",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.88",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.841",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.89",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.842",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.9",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "M88.849",
-     "zh": "H1-03 原發性變形性骨炎"
-    },
-    {
-     "code": "Q74.0",
-     "zh": "H1-04 鎖骨顱骨發育異常"
-    },
-    {
-     "code": "M61.10",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.152",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.111",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.159",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.112",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.161",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.119",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.162",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.121",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.169",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.122",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.171",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.129",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.172",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.131",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.173",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.132",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.174",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.139",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.175",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.141",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.176",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.142",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.177",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.143",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.178",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.144",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.179",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.145",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.18",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.146",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.19",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "M61.151",
-     "zh": "H1-05 進行性骨化性肌炎"
-    },
-    {
-     "code": "Q71.60",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q72.70",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q71.61",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q72.71",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q71.62",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q72.72",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q71.63",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q72.73",
-     "zh": "H1-06 裂手裂足症"
-    },
-    {
-     "code": "Q78.2",
-     "zh": "H1-07 骨質石化症"
-    },
-    {
-     "code": "Q77.8",
-     "zh": "H1-08 假性軟骨發育不全、H1-09 多發性骨骺發育不全症"
-    },
-    {
-     "code": "Q78.8",
-     "zh": "H1-10 顱骨幹骺端發育不良"
-    },
-    {
-     "code": "Q87.89",
-     "zh": "H1-11 腦肋小頜症候群、L1-05 Bardet-Biedl氏症候群、L1-06 Alstrom氏症候群、M1-02 瓦登伯格氏症候群、M1-17 CFC症候群、M1-22 克斯提洛氏彈性蛋白缺陷症、M1-23 Ayme-Gripp症候群、M1-25 Myhre症候群、M1-31 威爾姆氏腫瘤、無虹膜、性器異常、智能障礙症候群(WAGR症候群)、M1-35 Branchio-Oto-Renal症候群(BOR症候群)"
-    },
-    {
-     "code": "Q75.1",
-     "zh": "H1-12 Crouzon氏症候群"
-    },
-    {
-     "code": "Q79.63",
-     "zh": "I1-01 先天結締組織異常第四型"
-    },
-    {
-     "code": "D56.0",
-     "zh": "J1-01 重型海洋性貧血"
-    },
-    {
-     "code": "D56.1",
-     "zh": "J1-01 重型海洋性貧血"
-    },
-    {
-     "code": "D69.1",
-     "zh": "J1-02 血小板無力症"
-    },
-    {
-     "code": "D68.59",
-     "zh": "J1-03 同基因合子蛋白質C缺乏症"
-    },
-    {
-     "code": "D59.5",
-     "zh": "J1-04 陣發性夜間血紅素尿症"
-    },
-    {
-     "code": "D69.42",
-     "zh": "J1-05 先天性血栓性血小板低下紫斑症"
-    },
-    {
-     "code": "D71",
-     "zh": "K1-01 原發性慢性肉芽腫病"
-    },
-    {
-     "code": "D82.4",
-     "zh": "K1-02 先天性高免疫球蛋白E症候群"
-    },
-    {
-     "code": "D80.0",
-     "zh": "K1-03 布魯頓氏低免疫球蛋白血症"
-    },
-    {
-     "code": "D82.0",
-     "zh": "K1-04 Wiskott-Aldrich氏症候群"
-    },
-    {
-     "code": "D81.0",
-     "zh": "K1-05 嚴重複合型免疫缺乏症"
-    },
-    {
-     "code": "D81.1",
-     "zh": "K1-05 嚴重複合型免疫缺乏症"
-    },
-    {
-     "code": "D81.2",
-     "zh": "K1-05 嚴重複合型免疫缺乏症"
-    },
-    {
-     "code": "D81.31",
-     "zh": "K1-05 嚴重複合型免疫缺乏症"
-    },
-    {
-     "code": "D81.9",
-     "zh": "K1-05 嚴重複合型免疫缺乏症"
-    },
-    {
-     "code": "D84.1",
-     "zh": "K1-06 補體成份8缺乏症、K1-10 遺傳性血管性水腫"
-    },
-    {
-     "code": "E31.0",
-     "zh": "K1-07 IPEX症候群"
-    },
-    {
-     "code": "D80.5",
-     "zh": "K1-08 高免疫球蛋白M症候群"
-    },
-    {
-     "code": "D84.89",
-     "zh": "K1-09 γ干擾素受體1缺陷"
-    },
-    {
-     "code": "Q80.8",
-     "zh": "K1-11 Netherton症候群"
-    },
-    {
-     "code": "D59.32",
-     "zh": "K1-12 非典型性尿毒溶血症候群"
-    },
-    {
-     "code": "D59.39",
-     "zh": "K1-12 非典型性尿毒溶血症候群"
-    },
-    {
-     "code": "Q87.19",
-     "zh": "L1-01 Kenny-Caffey氏症候群、L1-10 短指發育不良及性別顛倒、M1-01 Aarskog-Scott氏症候群、M1-09 CorneliadeLange氏症候群、M1-15 Robinow氏症候群、M1-37 Cockayne氏症候群(柯凱因氏症候群)、M1-39 Schaaf-Yang症候群"
-    },
-    {
-     "code": "E20.1",
-     "zh": "L1-02 假性副甲狀腺低能症"
-    },
-    {
-     "code": "E34.321",
-     "zh": "L1-04 Laron氏侏儒症候群"
-    },
-    {
-     "code": "E34.8",
-     "zh": "L1-08 Wolfram氏症候群、L1-17 Werner症候群、M1-38 早老症"
-    },
-    {
-     "code": "Q78.1",
-     "zh": "L1-09 McCuneAlbright氏症候群"
-    },
-    {
-     "code": "E83.32",
-     "zh": "L1-12 第一型遺傳性維生素D依賴型佝僂症"
-    },
-    {
-     "code": "Q89.1",
-     "zh": "L1-13 先天性腎上腺發育不全"
-    },
-    {
-     "code": "P70.2",
-     "zh": "L1-15 永久性新生兒糖尿病"
-    },
-    {
-     "code": "Q89.8",
-     "zh": "L1-16 MIRAGE症候群、M1-11 Kabuki症候群、M1-20 CHARGE症候群、M1-24 Coffin-Lowry症候群"
-    },
-    {
-     "code": "E78.72",
-     "zh": "M1-04 Smith-Lemli-Opitz氏症候群"
-    },
-    {
-     "code": "Q74.8",
-     "zh": "M1-05 Larsen氏症候群(顎裂-先天性脫位症候群)"
-    },
-    {
-     "code": "Q87.3",
-     "zh": "M1-06 BeckwithWiedemann氏症候群、M1-36 普洛提斯症候群"
-    },
-    {
-     "code": "Q79.8",
-     "zh": "M1-08 多發性翼狀膜症候群"
-    },
-    {
-     "code": "Q77.3",
-     "zh": "M1-13 Conradi-Hunermann氏症候群"
-    },
-    {
-     "code": "Q75.4",
-     "zh": "M1-14 TreacherCollins氏症候群、M1-19 Nager症候群"
-    },
-    {
-     "code": "Q13.4",
-     "zh": "M1-18 Peters-Plus症候群"
-    },
-    {
-     "code": "Q87.5",
-     "zh": "M1-26 森森布倫納症候群"
-    },
-    {
-     "code": "Q93.51",
-     "zh": "M1-28 Angelman氏症候群"
-    },
-    {
-     "code": "D82.1",
-     "zh": "M1-29 DiGeorge症候群"
-    },
-    {
-     "code": "Q87.11",
-     "zh": "M1-30 Prader-Willi氏症候群"
-    },
-    {
-     "code": "Q93.88",
-     "zh": "M1-32 MillerDieker症候群"
-    },
-    {
-     "code": "Q93.82",
-     "zh": "M1-34 威廉斯氏症候群"
-    },
-    {
-     "code": "H35.50",
-     "zh": "N1-01 Stargardt's氏症、N1-02 隱匿性黃斑部失養症、N1-03 萊伯氏先天性黑矇症"
-    }
+    {"code":"E72.20","zh":"先天性尿素循環代謝障礙","diseases":["A1-01"]},
+    {"code":"E72.23","zh":"瓜胺酸血症","diseases":["A1-02"]},
+    {"code":"E72.29","zh":"乙醯榖胺酸合成酶缺乏症","diseases":["A1-03"]},
+    {"code":"E72.4","zh":"鳥胺酸氨甲醯基轉移酶缺乏症","shared":true,"otherCount":1,"diseases":["A1-04","A1-05"]},
+    {"code":"E72.9","zh":"胺基酸代謝疾病","broad":true,"diseases":["A2-01"]},
+    {"code":"E70.9","zh":"胺基酸代謝疾病","broad":true,"diseases":["A2-01"]},
+    {"code":"E72.10","zh":"胺基酸代謝疾病","diseases":["A2-01"]},
+    {"code":"E72.89","zh":"胺基酸代謝疾病","shared":true,"otherCount":1,"broad":true,"diseases":["A2-01","A11-08"]},
+    {"code":"E71.2","zh":"胺基酸代謝疾病","diseases":["A2-01"]},
+    {"code":"E70.89","zh":"胺基酸代謝疾病","diseases":["A2-01"]},
+    {"code":"E72.11","zh":"高胱胺酸尿症","shared":true,"otherCount":1,"diseases":["A2-02","A2-23"]},
+    {"code":"E72.19","zh":"高甲硫胺酸血症","shared":true,"otherCount":1,"diseases":["A2-03","A11-03"]},
+    {"code":"E72.51","zh":"非酮性高甘胺酸血症","diseases":["A2-04"]},
+    {"code":"E70.0","zh":"苯酮尿症","shared":true,"otherCount":1,"diseases":["A2-05","A2-15"]},
+    {"code":"E70.1","zh":"四氫基喋呤缺乏症","diseases":["A2-06"]},
+    {"code":"E70.21","zh":"遺傳性高酪胺酸血症","diseases":["A2-07"]},
+    {"code":"E71.0","zh":"楓糖尿症","diseases":["A2-08"]},
+    {"code":"E71.118","zh":"有機酸血症","shared":true,"otherCount":1,"diseases":["A2-09","A2-14"]},
+    {"code":"E71.110","zh":"異戊酸血症","diseases":["A2-10"]},
+    {"code":"E72.3","zh":"戊二酸尿症，第一型、第二型","shared":true,"otherCount":1,"diseases":["A2-11","A2-16"]},
+    {"code":"E71.313","zh":"戊二酸尿症，第一型、第二型","shared":true,"otherCount":1,"diseases":["A2-11","A5-01"]},
+    {"code":"E71.121","zh":"丙酸血症","diseases":["A2-12"]},
+    {"code":"E71.120","zh":"甲基丙二酸血症","shared":true,"otherCount":1,"diseases":["A2-13","A2-23"]},
+    {"code":"E70.41","zh":"組胺酸血症","diseases":["A2-17"]},
+    {"code":"E71.19","zh":"三甲基巴豆醯輔酶 A羧化酵素缺乏症","shared":true,"otherCount":1,"diseases":["A2-18","A11-07"]},
+    {"code":"D81.819","zh":"多發性羧化酶缺乏症","diseases":["A2-19"]},
+    {"code":"E72.59","zh":"高脯胺酸血症","diseases":["A2-20"]},
+    {"code":"E70.81","zh":"芳香族 L-胺基酸類脫羧基酶缺乏症","diseases":["A2-21"]},
+    {"code":"E70.20","zh":"酪胺酸羥化酶缺乏症","diseases":["A2-22"]},
+    {"code":"E72.53","zh":"原發性高草酸鹽尿症","diseases":["A2-24"]},
+    {"code":"E70.29","zh":"黑尿症","diseases":["A2-25"]},
+    {"code":"E75.22","zh":"高雪氏症","diseases":["A3-01"]},
+    {"code":"E75.19","zh":"GM1/GM2神經節苷脂儲積症","diseases":["A3-02"]},
+    {"code":"E75.00","zh":"GM1/GM2神經節苷脂儲積症","diseases":["A3-02"]},
+    {"code":"E75.09","zh":"GM1/GM2神經節苷脂儲積症","diseases":["A3-02"]},
+    {"code":"E75.01","zh":"GM1/GM2神經節苷脂儲積症","diseases":["A3-02"]},
+    {"code":"E75.02","zh":"GM1/GM2神經節苷脂儲積症","diseases":["A3-02"]},
+    {"code":"E75.21","zh":"Fabry 氏症(法布瑞氏症)","diseases":["A3-03"]},
+    {"code":"E75.240","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.241","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.242","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.243","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.244","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.248","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.249","zh":"Niemann-Pick 氏症，鞘髓磷脂儲積症","diseases":["A3-04"]},
+    {"code":"E75.25","zh":"MLD 症候群","diseases":["A3-05"]},
+    {"code":"E75.23","zh":"球細胞腦白質失養症","diseases":["A3-06"]},
+    {"code":"E75.5","zh":"嬰兒型溶酶體酸性脂肪酶缺乏症(又稱伍爾曼氏症)","shared":true,"otherCount":1,"diseases":["A3-07","A8-05"]},
+    {"code":"E72.04","zh":"胱胺酸血症","diseases":["A3-08"]},
+    {"code":"E76.01","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.02","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.03","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.1","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.22","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.210","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.211","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.219","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.29","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E76.3","zh":"黏多醣症","diseases":["A3-09"]},
+    {"code":"E77.1","zh":"岩藻糖代謝異常(儲積症)","shared":true,"otherCount":2,"diseases":["A3-10","A3-11","A3-12"]},
+    {"code":"E77.0","zh":"黏脂質症","diseases":["A3-12"]},
+    {"code":"E75.11","zh":"黏脂質症","diseases":["A3-12"]},
+    {"code":"E75.4","zh":"神經元蠟樣脂褐質儲積症","diseases":["A3-13"]},
+    {"code":"E75.26","zh":"多發性硫酸脂酶缺乏症","diseases":["A3-14"]},
+    {"code":"E74.21","zh":"半乳糖血症","diseases":["A4-01"]},
+    {"code":"E74.09","zh":"肝醣儲積症","diseases":["A4-02"]},
+    {"code":"E74.01","zh":"肝醣儲積症","diseases":["A4-02"]},
+    {"code":"E74.02","zh":"肝醣儲積症","diseases":["A4-02"]},
+    {"code":"E74.03","zh":"肝醣儲積症","diseases":["A4-02"]},
+    {"code":"E74.04","zh":"肝醣儲積症","diseases":["A4-02"]},
+    {"code":"E74.810","zh":"腦血管屏障葡萄糖輸送缺陷","diseases":["A4-03"]},
+    {"code":"E74.89","zh":"轉醛醇酶缺乏症","diseases":["A4-04"]},
+    {"code":"E71.30","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.310","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.311","zh":"脂肪酸氧化作用缺陷","shared":true,"otherCount":1,"diseases":["A5-01","A5-03"]},
+    {"code":"E71.312","zh":"脂肪酸氧化作用缺陷","shared":true,"otherCount":1,"diseases":["A5-01","A5-04"]},
+    {"code":"E71.314","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.318","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.32","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.39","zh":"脂肪酸氧化作用缺陷","diseases":["A5-01"]},
+    {"code":"E71.41","zh":"原發性肉鹼缺乏症","diseases":["A5-02"]},
+    {"code":"E88.40","zh":"粒線體缺陷","diseases":["A6-01"]},
+    {"code":"H49.811","zh":"Kearns-Sayre 氏症候群","diseases":["A6-02"]},
+    {"code":"H49.812","zh":"Kearns-Sayre 氏症候群","diseases":["A6-02"]},
+    {"code":"H49.813","zh":"Kearns-Sayre 氏症候群","diseases":["A6-02"]},
+    {"code":"H49.819","zh":"Kearns-Sayre 氏症候群","diseases":["A6-02"]},
+    {"code":"G31.82","zh":"Leigh 氏童年期腦脊髓病變","diseases":["A6-03"]},
+    {"code":"E88.41","zh":"MELAS 症候群","diseases":["A6-04"]},
+    {"code":"E88.49","zh":"MNGIE 症候群粒線體性神經胃腸腦病變症候群","diseases":["A6-05"]},
+    {"code":"E74.4","zh":"丙酮酸鹽脫氫酶缺乏症","diseases":["A6-06"]},
+    {"code":"E78.71","zh":"巴氏症候群","diseases":["A6-07"]},
+    {"code":"H47.22","zh":"雷伯氏遺傳性視神經病變","diseases":["A6-08"]},
+    {"code":"D81.810","zh":"生物素酶缺乏症","diseases":["A7-01"]},
+    {"code":"E78.01","zh":"同合子家族性高膽固醇血症","shared":true,"otherCount":1,"broad":true,"diseases":["A8-01","A8-03"]},
+    {"code":"E78.3","zh":"家族性高乳糜微粒血症","diseases":["A8-02"]},
+    {"code":"E78.00","zh":"豆固醇血症(植物性)","broad":true,"diseases":["A8-03"]},
+    {"code":"E88.1","zh":"先天性全身脂質營養不良症","shared":true,"otherCount":1,"diseases":["A8-04","M1-27"]},
+    {"code":"E83.01","zh":"威爾森氏症","diseases":["A9-01"]},
+    {"code":"E83.09","zh":"Menkes 症候群","diseases":["A9-02"]},
+    {"code":"E61.5","zh":"鉬輔酶缺乏症","diseases":["A9-03"]},
+    {"code":"E71.510","zh":"Zellweger 氏症候群","diseases":["A10-01"]},
+    {"code":"E71.511","zh":"腎上腺腦白質失養症","diseases":["A10-02"]},
+    {"code":"E71.520","zh":"腎上腺腦白質失養症","diseases":["A10-02"]},
+    {"code":"E71.521","zh":"腎上腺腦白質失養症","diseases":["A10-02"]},
+    {"code":"E71.528","zh":"腎上腺腦白質失養症","diseases":["A10-02"]},
+    {"code":"E71.529","zh":"腎上腺腦白質失養症","diseases":["A10-02"]},
+    {"code":"E71.540","zh":"肢近端型點狀軟骨發育不良","diseases":["A10-03"]},
+    {"code":"E80.20","zh":"紫質症","diseases":["A11-01"]},
+    {"code":"E80.21","zh":"紫質症","diseases":["A11-01"]},
+    {"code":"E80.29","zh":"紫質症","diseases":["A11-01"]},
+    {"code":"E79.1","zh":"Lesch-Nyhan 氏症候群","diseases":["A11-02"]},
+    {"code":"E77.8","zh":"先天性醣基化障礙","broad":true,"diseases":["A11-04"]},
+    {"code":"E72.52","zh":"三甲基胺尿症","diseases":["A11-05"]},
+    {"code":"E83.39","zh":"低磷酸酯酶症","diseases":["A11-06"]},
+    {"code":"E83.31","zh":"低磷酸酯酶症","shared":true,"otherCount":1,"diseases":["A11-06","L1-03"]},
+    {"code":"E51.8","zh":"硫胺素(維生素 B1)代謝功能障礙症候群","diseases":["A11-09"]},
+    {"code":"E79.8","zh":"嘌呤合成代謝異常","shared":true,"otherCount":1,"broad":true,"diseases":["A11-10","B1-21"]},
+    {"code":"E79.9","zh":"嘌呤合成代謝異常","broad":true,"diseases":["A11-10"]},
+    {"code":"G35","zh":"多發性硬化症/泛視神經脊髓炎","diseases":["B1-01"]},
+    {"code":"G36.0","zh":"多發性硬化症/泛視神經脊髓炎","diseases":["B1-01"]},
+    {"code":"G12.21","zh":"肌萎縮性側索硬化症","diseases":["B1-02"]},
+    {"code":"G11.3","zh":"共濟失調微血管擴張症候群","diseases":["B1-03"]},
+    {"code":"G10","zh":"亨丁頓氏舞蹈症","diseases":["B1-04"]},
+    {"code":"F84.2","zh":"雷特氏症","diseases":["B1-05"]},
+    {"code":"G12.0","zh":"脊髓性肌肉萎縮症","diseases":["B1-06"]},
+    {"code":"G12.1","zh":"脊髓性肌肉萎縮症","diseases":["B1-06"]},
+    {"code":"G11.9","zh":"脊髓小腦退化性動作協調障礙","broad":true,"diseases":["B1-07"]},
+    {"code":"G11.10","zh":"脊髓小腦退化性動作協調障礙","diseases":["B1-07"]},
+    {"code":"G11.11","zh":"脊髓小腦退化性動作協調障礙","diseases":["B1-07"]},
+    {"code":"G11.19","zh":"脊髓小腦退化性動作協調障礙","diseases":["B1-07"]},
+    {"code":"G11.2","zh":"脊髓小腦退化性動作協調障礙","diseases":["B1-07"]},
+    {"code":"G11.8","zh":"脊髓小腦退化性動作協調障礙","shared":true,"otherCount":1,"broad":true,"diseases":["B1-07","B1-24"]},
+    {"code":"Q85.1","zh":"結節性硬化症","diseases":["B1-08"]},
+    {"code":"L74.4","zh":"先天性痛不敏感症合併無汗症","diseases":["B1-09"]},
+    {"code":"Q85.02","zh":"神經纖維瘤症候群第二型","diseases":["B1-10"]},
+    {"code":"G31.89","zh":"Alexander 氏病","broad":true,"diseases":["B1-11"]},
+    {"code":"G25.82","zh":"僵體症候群","diseases":["B1-12"]},
+    {"code":"G11.4","zh":"遺傳性痙攣性下身麻痺","diseases":["B1-13"]},
+    {"code":"Q04.3","zh":"Joubert 氏症候群(家族性小腦蚓部發育不全)","shared":true,"otherCount":1,"diseases":["B1-14","M1-40"]},
+    {"code":"E75.29","zh":"Pelizaeus-Merzbacher 氏症(慢性兒童型腦硬化症)","diseases":["B1-15"]},
+    {"code":"G60.0","zh":"夏柯-馬利-杜斯氏症","diseases":["B1-16"]},
+    {"code":"G12.20","zh":"甘迺迪氏症(脊髓延髓性肌肉萎縮症)","shared":true,"otherCount":1,"diseases":["B1-17","B1-29"]},
+    {"code":"G12.24","zh":"甘迺迪氏症(脊髓延髓性肌肉萎縮症)","shared":true,"otherCount":1,"diseases":["B1-17","B1-29"]},
+    {"code":"G12.29","zh":"甘迺迪氏症(脊髓延髓性肌肉萎縮症)","shared":true,"otherCount":1,"diseases":["B1-17","B1-29"]},
+    {"code":"E85.1","zh":"家族性澱粉樣多發性神經病變","diseases":["B1-18"]},
+    {"code":"Q87.0","zh":"Moebius 症候群","shared":true,"otherCount":8,"broad":true,"diseases":["B1-19","B1-27","G1-08","H1-13","M1-03","M1-07","M1-10","M1-12","M1-21"]},
+    {"code":"Q97.8","zh":"Mcleod 症候群","diseases":["B1-20"]},
+    {"code":"Q98.8","zh":"Mcleod 症候群","diseases":["B1-20"]},
+    {"code":"Q99.8","zh":"MECP2綜合症候群","diseases":["B1-22"]},
+    {"code":"G40.833","zh":"Dravet 症候群","diseases":["B1-23"]},
+    {"code":"G40.834","zh":"Dravet 症候群","diseases":["B1-23"]},
+    {"code":"G23.0","zh":"泛酸鹽激酶關聯之神經退化性疾病","shared":true,"otherCount":2,"diseases":["B1-25","B1-26","B1-28"]},
+    {"code":"G47.35","zh":"先天性中樞性換氣不足症候群","diseases":["B1-30"]},
+    {"code":"Q85.83","zh":"Von Hippel-Lindau症候群","diseases":["B1-31"]},
+    {"code":"F78.A9","zh":"Basilicata-Akhtar症候群","diseases":["B1-32"]},
+    {"code":"F84.8","zh":"Basilicata-Akhtar症候群","broad":true,"diseases":["B1-32"]},
+    {"code":"G25.5","zh":"舞蹈症-棘紅細胞增多症","diseases":["B1-33"]},
+    {"code":"Q28.8","zh":"特發性嬰兒動脈硬化症","broad":true,"diseases":["C1-01"]},
+    {"code":"E84.9","zh":"囊狀纖維化症","diseases":["C1-02"]},
+    {"code":"I27.0","zh":"特發性或遺傳性肺動脈高壓","diseases":["C1-03"]},
+    {"code":"Q87.2","zh":"Holt-Oram 氏症候群","shared":true,"otherCount":2,"broad":true,"diseases":["C1-04","M1-16","M1-33"]},
+    {"code":"G72.3","zh":"Andersen 氏症候群(心節律障礙暨週期性麻痺症候群；鉀離子通道病變)","diseases":["C1-05"]},
+    {"code":"I78.0","zh":"遺傳性出血性血管擴張症","diseases":["C1-06"]},
+    {"code":"Q77.2","zh":"窒息性胸腔失養症","diseases":["C1-07"]},
+    {"code":"K83.1","zh":"進行性家族性肝內膽汁滯留症","broad":true,"diseases":["D1-01"]},
+    {"code":"E78.70","zh":"先天性膽酸合成障礙","diseases":["D1-02"]},
+    {"code":"E88.01","zh":"α1-抗胰蛋白酶缺乏症","diseases":["D1-03"]},
+    {"code":"Q43.8","zh":"先天性 Cajal 氏間質細胞增生合併腸道神經元發育異常","broad":true,"diseases":["D1-04"]},
+    {"code":"Q44.7","zh":"阿拉吉歐症候群","diseases":["D1-05"]},
+    {"code":"Q89.7","zh":"髮-肝-腸症候群","diseases":["D1-06"]},
+    {"code":"K52.89","zh":"髮-肝-腸症候群","broad":true,"diseases":["D1-06"]},
+    {"code":"E72.03","zh":"Lowe 氏症候群","diseases":["E1-01"]},
+    {"code":"E26.81","zh":"Bartter 氏症候群","diseases":["E1-02"]},
+    {"code":"Q61.19","zh":"體染色體隱性多囊性腎臟疾病","diseases":["E1-03"]},
+    {"code":"Q87.81","zh":"亞伯氏症候群","diseases":["E1-04"]},
+    {"code":"Q81.0","zh":"遺傳性表皮分解性水皰症","diseases":["F1-01"]},
+    {"code":"Q81.1","zh":"遺傳性表皮分解性水皰症","diseases":["F1-01"]},
+    {"code":"Q81.2","zh":"遺傳性表皮分解性水皰症","diseases":["F1-01"]},
+    {"code":"Q81.8","zh":"遺傳性表皮分解性水皰症","diseases":["F1-01"]},
+    {"code":"Q81.9","zh":"遺傳性表皮分解性水皰症","diseases":["F1-01"]},
+    {"code":"Q80.2","zh":"層狀魚鱗癬(自體隱性遺傳型)","shared":true,"otherCount":1,"diseases":["F1-02","F1-03"]},
+    {"code":"Q80.4","zh":"斑色魚鱗癬","diseases":["F1-04"]},
+    {"code":"Q80.3","zh":"水泡型先天性魚鱗癬樣紅皮症(表皮鬆解性角化過度症)","diseases":["F1-05"]},
+    {"code":"Q82.4","zh":"外胚層增生不良症","diseases":["F1-06"]},
+    {"code":"Q82.8","zh":"Meleda 島病","shared":true,"otherCount":3,"broad":true,"diseases":["F1-07","F1-08","F1-09","F1-10"]},
+    {"code":"Q82.3","zh":"色素失調症","diseases":["F1-11"]},
+    {"code":"G71.01","zh":"裘馨氏肌肉失養症","shared":true,"otherCount":1,"diseases":["G1-01","G1-07"]},
+    {"code":"G71.21","zh":"Nemaline 線狀肌肉病變","diseases":["G1-02"]},
+    {"code":"G71.13","zh":"Schwartz Jampel 氏症候群","diseases":["G1-03"]},
+    {"code":"G71.11","zh":"肌肉強直症","diseases":["G1-04"]},
+    {"code":"G71.02","zh":"面肩胛肱肌失養症","diseases":["G1-05"]},
+    {"code":"G71.220","zh":"肌小管病變","diseases":["G1-06"]},
+    {"code":"G71.031","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.032","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.033","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.0340","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.0342","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.0349","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.035","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.038","zh":"肢帶型肌失養症","shared":true,"otherCount":1,"diseases":["G1-09","G1-13"]},
+    {"code":"G71.0341","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.039","zh":"肢帶型肌失養症","diseases":["G1-09"]},
+    {"code":"G71.20","zh":"先天性肌失養症","diseases":["G1-10"]},
+    {"code":"G71.29","zh":"中心軸空肌病","shared":true,"otherCount":1,"diseases":["G1-11","G1-12"]},
+    {"code":"G71.00","zh":"Emery-Dreifuss 肌失養症","diseases":["G1-13"]},
+    {"code":"G71.09","zh":"Emery-Dreifuss 肌失養症","diseases":["G1-13"]},
+    {"code":"G71.8","zh":"GNE 遠端肌病變","broad":true,"diseases":["G1-14"]},
+    {"code":"G71.9","zh":"GNE 遠端肌病變","broad":true,"diseases":["G1-14"]},
+    {"code":"D69.8","zh":"史托摩根症候群","broad":true,"diseases":["G1-15"]},
+    {"code":"Q77.4","zh":"軟骨發育不全症","diseases":["H1-01"]},
+    {"code":"Q78.0","zh":"成骨不全症","diseases":["H1-02"]},
+    {"code":"M88.0","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.1","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.811","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.812","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.819","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.821","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.822","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.829","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.831","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.832","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.839","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.841","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.842","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.849","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.851","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.852","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.859","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.861","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.862","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.869","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.871","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.872","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.879","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.88","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.89","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"M88.9","zh":"原發性變形性骨炎","diseases":["H1-03"]},
+    {"code":"Q74.0","zh":"鎖骨顱骨發育異常","diseases":["H1-04"]},
+    {"code":"M61.10","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.111","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.112","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.119","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.121","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.122","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.129","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.131","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.132","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.139","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.152","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.159","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.161","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.162","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.169","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.171","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.172","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.173","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.174","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.175","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.141","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.142","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.143","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.144","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.145","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.146","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.151","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.176","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.177","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.178","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.179","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.18","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"M61.19","zh":"進行性骨化性肌炎","diseases":["H1-05"]},
+    {"code":"Q71.60","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q71.61","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q71.62","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q71.63","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q72.70","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q72.71","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q72.72","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q72.73","zh":"裂手裂足症","diseases":["H1-06"]},
+    {"code":"Q78.2","zh":"骨質石化症","diseases":["H1-07"]},
+    {"code":"Q77.8","zh":"假性軟骨發育不全","shared":true,"otherCount":1,"diseases":["H1-08","H1-09"]},
+    {"code":"Q78.8","zh":"顱骨幹骺端發育不良","diseases":["H1-10"]},
+    {"code":"Q87.89","zh":"腦肋小頜症候群","shared":true,"otherCount":9,"broad":true,"diseases":["H1-11","L1-05","L1-06","M1-02","M1-17","M1-22","M1-23","M1-25","M1-31","M1-35"]},
+    {"code":"Q75.1","zh":"Crouzon 氏症候群","diseases":["H1-12"]},
+    {"code":"Q79.63","zh":"先天結締組織異常第四型","diseases":["I1-01"]},
+    {"code":"D56.0","zh":"重型海洋性貧血","diseases":["J1-01"]},
+    {"code":"D56.1","zh":"重型海洋性貧血","diseases":["J1-01"]},
+    {"code":"D69.1","zh":"血小板無力症","diseases":["J1-02"]},
+    {"code":"D68.59","zh":"同基因合子蛋白質 C 缺乏症","diseases":["J1-03"]},
+    {"code":"D59.5","zh":"陣發性夜間血紅素尿症","diseases":["J1-04"]},
+    {"code":"D69.42","zh":"先天性血栓性血小板低下紫斑症","diseases":["J1-05"]},
+    {"code":"D71","zh":"原發性慢性肉芽腫病","diseases":["K1-01"]},
+    {"code":"D82.4","zh":"先天性高免疫球蛋白 E 症候群","diseases":["K1-02"]},
+    {"code":"D80.0","zh":"布魯頓氏低免疫球蛋白血症","diseases":["K1-03"]},
+    {"code":"D82.0","zh":"Wiskott-Aldrich 氏症候群","diseases":["K1-04"]},
+    {"code":"D81.0","zh":"嚴重複合型免疫缺乏症","diseases":["K1-05"]},
+    {"code":"D81.1","zh":"嚴重複合型免疫缺乏症","diseases":["K1-05"]},
+    {"code":"D81.2","zh":"嚴重複合型免疫缺乏症","diseases":["K1-05"]},
+    {"code":"D81.31","zh":"嚴重複合型免疫缺乏症","diseases":["K1-05"]},
+    {"code":"D81.9","zh":"嚴重複合型免疫缺乏症","broad":true,"diseases":["K1-05"]},
+    {"code":"D84.1","zh":"補體成份8缺乏症","shared":true,"otherCount":1,"diseases":["K1-06","K1-10"]},
+    {"code":"E31.0","zh":"IPEX 症候群","diseases":["K1-07"]},
+    {"code":"D80.5","zh":"高免疫球蛋白 M 症候群","diseases":["K1-08"]},
+    {"code":"D84.89","zh":"γ 干擾素受體1缺陷","diseases":["K1-09"]},
+    {"code":"Q80.8","zh":"Netherton 症候群","broad":true,"diseases":["K1-11"]},
+    {"code":"D59.32","zh":"非典型性尿毒溶血症候群","diseases":["K1-12"]},
+    {"code":"D59.39","zh":"非典型性尿毒溶血症候群","diseases":["K1-12"]},
+    {"code":"Q87.19","zh":"Kenny-Caffey 氏症候群","shared":true,"otherCount":6,"broad":true,"diseases":["L1-01","L1-10","M1-01","M1-09","M1-15","M1-37","M1-39"]},
+    {"code":"E20.1","zh":"假性副甲狀腺低能症","diseases":["L1-02"]},
+    {"code":"E34.321","zh":"Laron 氏侏儒症候群","diseases":["L1-04"]},
+    {"code":"E16.1","zh":"持續性幼兒型胰島素過度分泌低血糖症","broad":true,"diseases":["L1-07"]},
+    {"code":"E34.8","zh":"Wolfram 氏症候群","shared":true,"otherCount":2,"broad":true,"diseases":["L1-08","L1-17","M1-38"]},
+    {"code":"Q78.1","zh":"McCune Albright 氏症候群","diseases":["L1-09"]},
+    {"code":"E27.49","zh":"腎上腺皮促素抗性","broad":true,"diseases":["L1-11"]},
+    {"code":"E83.32","zh":"第一型遺傳性維生素 D 依賴型佝僂症","diseases":["L1-12"]},
+    {"code":"Q89.1","zh":"先天性腎上腺發育不全","diseases":["L1-13"]},
+    {"code":"E23.0","zh":"Kallmann 氏症候群","broad":true,"diseases":["L1-14"]},
+    {"code":"P70.2","zh":"永久性新生兒糖尿病","diseases":["L1-15"]},
+    {"code":"Q89.8","zh":"MIRAGE 症候群","shared":true,"otherCount":3,"broad":true,"diseases":["L1-16","M1-11","M1-20","M1-24"]},
+    {"code":"E78.72","zh":"Smith-Lemli-Opitz 氏症候群","diseases":["M1-04"]},
+    {"code":"Q74.8","zh":"Larsen 氏症候群(顎裂-先天性脫位症候群)","broad":true,"diseases":["M1-05"]},
+    {"code":"Q87.3","zh":"Beckwith Wiedemann 氏症候群","shared":true,"otherCount":1,"diseases":["M1-06","M1-36"]},
+    {"code":"Q79.8","zh":"多發性翼狀膜症候群","broad":true,"diseases":["M1-08"]},
+    {"code":"Q77.3","zh":"Conradi-Hunermann 氏症候群","diseases":["M1-13"]},
+    {"code":"Q75.4","zh":"Treacher Collins 氏症候群","shared":true,"otherCount":1,"diseases":["M1-14","M1-19"]},
+    {"code":"Q13.4","zh":"Peters-Plus 症候群","diseases":["M1-18"]},
+    {"code":"Q87.5","zh":"森森布倫納症候群","diseases":["M1-26"]},
+    {"code":"Q93.51","zh":"Angelman 氏症候群","diseases":["M1-28"]},
+    {"code":"D82.1","zh":"DiGeorge 症候群","diseases":["M1-29"]},
+    {"code":"Q87.11","zh":"Prader-Willi 氏症候群","diseases":["M1-30"]},
+    {"code":"Q93.88","zh":"Miller Dieker 症候群","diseases":["M1-32"]},
+    {"code":"Q93.82","zh":"威廉斯氏症候群","diseases":["M1-34"]},
+    {"code":"H35.50","zh":"Stargardt's 氏症","shared":true,"otherCount":2,"broad":true,"diseases":["N1-01","N1-02","N1-03"]}
    ]
   }
- },
- "excluded": [
-  {
-   "code": "E78.00",
-   "reason": "純高膽固醇血症未明示(門診常見);名單用於 A8-03 豆固醇血症",
-   "diseases": "A8-03 豆固醇血症(植物性)"
-  },
-  {
-   "code": "E78.01",
-   "reason": "家族性高膽固醇血症(異合子型約 1/250,不罕見);名單用於 A8-01 同合子型、A8-03",
-   "diseases": "A8-01 同合子家族性高膽固醇血症、A8-03 豆固醇血症(植物性)"
-  },
-  {
-   "code": "E16.1",
-   "reason": "其他低血糖(常見);名單用於 L1-07 PHHI",
-   "diseases": "L1-07 持續性幼兒型胰島素過度分泌低血糖症"
-  },
-  {
-   "code": "E23.0",
-   "reason": "腦下垂體功能低下(術後等常見);名單用於 L1-14 Kallmann 氏症候群",
-   "diseases": "L1-14 Kallmann氏症候群"
-  },
-  {
-   "code": "E27.49",
-   "reason": "其他腎上腺皮質功能不足(含類固醇引起者);名單用於 L1-11 腎上腺皮促素抗性",
-   "diseases": "L1-11 腎上腺皮促素抗性"
-  },
-  {
-   "code": "K83.1",
-   "reason": "膽管阻塞(結石、腫瘤常見);名單用於 D1-01 PFIC",
-   "diseases": "D1-01 進行性家族性肝內膽汁滯留症"
-  },
-  {
-   "code": "K52.89",
-   "reason": "其他非感染性胃腸炎(常見);名單用於 D1-06 髮-肝-腸症候群(另有 Q89.7)",
-   "diseases": "D1-06 髮-肝-腸症候群"
-  },
-  {
-   "code": "D69.8",
-   "reason": "其他出血性病症(非特異);名單用於 G1-15 史托摩根症候群",
-   "diseases": "G1-15 史托摩根症候群"
-  },
-  {
-   "code": "Q82.8",
-   "reason": "其他先天性皮膚畸形(含皮膚贅肉等常見輕微異常);名單用於 F1-07~F1-10",
-   "diseases": "F1-07 Meleda島病、F1-08 Darier氏症(毛囊角化病)、F1-09 先天性角化不全症、F1-10 皮膚過度角化症雅司病"
-  },
-  {
-   "code": "E74.31",
-   "reason": "僅以組合碼 E74.31+E70.0 出現(A2-15);E70.0 已單列,E74.31 單獨不代表罕病",
-   "diseases": "A2-15 典型苯酮尿症合併蔗糖酶同麥芽糖酶缺乏症"
-  }
- ]
+ }
 }

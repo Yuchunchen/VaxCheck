@@ -11,6 +11,8 @@ export const SAMPLES = [
   { id: 'I', title: '52 歲男,乳癌化療中', birth: '1974-08-08', sex: 'M', dx: [['C509', '2025-11-01', '乳房惡性腫瘤']], meds: [['L01CD01', '2026-08-20', 'Paclitaxel']], vacc: [] },
   { id: 'J', title: '55 歲男,潛在疾病未確認(流感第二階段)', birth: '1971-05-05', sex: 'M', vacc: [] },
   { id: 'K', title: '70 歲男,8/6 打過 PCV13(8 週 vs 1 年)', birth: '1956-03-02', sex: 'M', vacc: [['PCV13', '2026-08-06']] },
+  { id: 'L', title: '30 歲男,只有寬泛碼 Q87.89(罕見疾病名單,只顯示不預勾)', birth: '1996-01-01', sex: 'M', dx: [['Q8789', '2026-04-01', '其他特定先天畸形症候群']], vacc: [] },
+  { id: 'M', title: '30 歲男,Prader-Willi(Q87.11,罕見疾病預勾)', birth: '1996-01-01', sex: 'M', dx: [['Q8711', '2026-04-01', 'Prader-Willi 症候群']], vacc: [] },
 ];
 
 export function toFacts(s, { niisQueried = true } = {}) {

@@ -1,11 +1,12 @@
 # sources/ — 官方來源原檔封存
 
-規則(`rules/vaccines.yaml`)與病歷證據清單(`rules/codelists/`)所依據的官方公開文件原檔,加上 `pdftotext -layout` 抽出的文字檔。用途:稽核「當時依據什麼」、規則更新時比對新舊版差異。**不進建置、不進外掛**(`scripts/build.mjs` 只打包 `src/`、`rules/`)。
+規則(`rules/vaccines.yaml`)與病歷證據清單(`rules/codelists/`)所依據的官方公開文件原檔,加上 `pdftotext -layout` 抽出的文字檔(供人讀)。需要由腳本解析者另存 `pdftotext -raw`(`rawTextFile`)。用途:稽核「當時依據什麼」、規則更新時比對新舊版差異。**不進建置、不進外掛**(`scripts/build.mjs` 只打包 `src/`、`rules/`)。
 
 ## 結構
 - `manifest.yaml`:每份檔案的 id、疫苗、標題、發布/生效日、sha256、頁數、原始檔名、官方網頁、對應的規則來源 id(`ruleSourceIds`)與 codelist。`tests/sources.test.mjs` 每次 `npm test` 驗證雜湊、文字檔存在、規則來源 id 有效。
 - `flu/`、`covid19/`、`pneumo/`:各疫苗的計畫、工作手冊、附件。
 - `common/`:跨疫苗共用(例如健保重大傷病 ICD)。
+- `hpa/`:國民健康署公告(罕見疾病名單);`rules/codelists/rare-disease.hpa-1150723.json` 由 `node scripts/build-rare-disease.mjs` 自此處產生。
 - 檔名 `YYYY-MM_<slug>.pdf`(年月 = 發布月),slug 用英文避免跨平台檔名問題;中文原始檔名記在 manifest 的 `originalName`。
 
 ## 規則

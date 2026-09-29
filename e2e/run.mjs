@@ -340,6 +340,26 @@ const dxG = await dxOf('流感');
 check('D1 流感潛在疾病命中:判定依據出現證據列(代碼、中文名、類別、最近日期、筆數)', dxG.rows.length === 1 && /E119/.test(dxG.rows[0]) && /高風險慢性病/.test(dxG.rows[0]) && /115\/04\/10/.test(dxG.rows[0]) && /2 筆/.test(dxG.rows[0]), dxG.rows.join('|'));
 await pick('F');
 check('D2 無相關診斷:不出現證據區', !(await dxOf('流感')).block);
+
+// E. 罕見疾病寬泛碼(v0.4.24):只有寬泛碼 → 問題卡旁列出證據、標「寬泛碼,需核對」、不預勾;非寬泛碼 → 預勾,證據不標寬泛碼
+const askDx = (name) => demo.evaluate((n) => {
+  const li = [...document.querySelector('#panel-host').shadowRoot.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n));
+  const grp = li.closest('ol')?.getAttribute('aria-label') || '';
+  return { grp, rows: [...li.querySelectorAll('.vx-ask .vx-dx-i, .vx-up .vx-dx-i')].map((x) => x.textContent),
+    pressed: [...li.querySelectorAll('.vx-ask .vx-yes[aria-pressed="true"], .vx-up .vx-yes[aria-pressed="true"]')].length,
+    whyRows: [...li.querySelectorAll('.vx-why .vx-dx-i')].map((x) => x.textContent) };
+}, name);
+await pick('L');
+const dxL = await askDx('流感');
+check('E1 只有寬泛碼 Q87.89:流感在「待確認」,問題卡旁列出證據並標「寬泛碼,需核對」,未預勾',
+  dxL.grp === '待確認' && dxL.rows.length === 1 && /Q8789/.test(dxL.rows[0]) && /等 10 種\(公告碼\)/.test(dxL.rows[0]) && /罕見疾病/.test(dxL.rows[0]) && /寬泛碼,需核對/.test(dxL.rows[0]) && dxL.pressed === 0 && dxL.whyRows.length === 0,
+  `${dxL.grp}|${dxL.rows.join('|')}|按下 ${dxL.pressed}`);
+await demo.screenshot({ path: path.join(SHOTS, '16-demo-rare-broad-only.png'), fullPage: true });
+await pick('M');
+const dxM = await askDx('流感');
+check('E2 非寬泛碼 Q87.11:流感「可接種」,判定依據列罕見疾病證據,不標寬泛碼',
+  dxM.grp === '可接種' && dxM.whyRows.length === 1 && /Q8711/.test(dxM.whyRows[0]) && /罕見疾病/.test(dxM.whyRows[0]) && !/寬泛碼/.test(dxM.whyRows[0]) && /以證明為準/.test(dxM.whyRows[0]),
+  `${dxM.grp}|${dxM.whyRows.join('|')}`);
 await demo.close();
 
 await ctx.close();
