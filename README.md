@@ -18,7 +18,57 @@
 - 隱私:病患資料只在瀏覽器記憶體與 `chrome.storage.session`;身分證只做 SHA-256 比對、不保存、不寫進 Console。唯一的外部連線是下載線上規則(不帶任何病患資料)。
 - 線上規則:預設從本 repo 的 `rules` 分支下載(每天自動檢查一次;設定頁可「立即更新規則」),發行時才更新。讀不到、雜湊不符、比內建舊、或需要較新版外掛時,自動改用外掛內建規則;面板頁尾「來源」顯示線上/快取/內建。設定頁勾「只用內建規則」可停用。
 
+## 執行畫面
+
+插入健保卡後,按瀏覽器標題列的 VaxCheck 圖示,同時檢核三種公費疫苗(肺炎鏈球菌、流感、COVID-19)。下圖為合成病患「測試甲」(68 歲男,非真實資料;截圖為 v0.4.20,實際版面以最新版為準):
+
+<img src="docs/img/run-panels-overview.jpg" width="900" alt="VaxCheck 面板三個畫面:左「可接種」(展開判定依據)、中「待確認」(確認後今天可打,有是/否鈕)、右「尚未開打」(尚未查 NIIS 接種史)">
+
+- **左:可接種**。顯示今日可打的劑次,展開「判定依據」可看每個對象群符合或不符的原因。
+- **中:待確認**。「確認後今天可打」的條件有「是/否」鈕,勾了就重新判定;不確定可按「以上皆否」。
+- **右:尚未查 NIIS 接種史**。肺鏈顯示「待接種史」、流感顯示「尚未開打」與 NIIS 接種對象別代碼;按「查接種史(NIIS 需過卡)」補查,「匯出診斷檔」供回報問題。
+
+安裝後,瀏覽器工具列會有 VaxCheck 圖示(第一次要從拼圖圖示釘選),擴充功能頁 `chrome://extensions` 的 VaxCheck 卡片可「重新載入」或關閉(截圖版號為 v0.4.19,以實際安裝的版本為準):
+
+<img src="docs/img/run-toolbar.png" width="309" alt="Chrome 工具列上已釘選的 VaxCheck 圖示">
+
+<img src="docs/img/run-extension-card.png" width="426" alt="chrome://extensions 的 VaxCheck 疫苗檢核卡片:版號、重新載入與開關">
+
+## 環境設定說明
+
+使用 VaxCheck 前,門診電腦需先安裝並執行下列**兩個讀卡程式**(健保署系統與 NIIS 讀取健保卡、醫事人員卡用)。兩個都裝好後,再照下一節安裝外掛。
+
+### 1. CDC 讀卡程式(CDCServiSign)
+用於疾管署「全國性預防接種資訊管理系統」的**醫療院所預防接種資料查詢系統**(NIIS)。
+
+- 網址:<https://10.241.219.42/>(疾病管制署 VPN 內部公開的位址,需連上該 VPN 才能開啟;NIIS 查詢頁 `10.241.219.35` 同屬此類)
+- 安裝檔:`CDCPKI_Setup.exe`。首次使用時,網站會顯示「系統所需安裝檔(非IE)」頁,依頁面連結下載。
+
+安裝步驟:
+1. **安裝前關閉所有應用程式**,包含所有 IE、Chrome、其他瀏覽器(頁面紅字提醒)。
+2. 執行 `CDCPKI_Setup.exe`。安裝視窗標題為 CDCServiSignAdapterSetup,輸出資料夾為 `C:\Program Files (x86)\CDC\CDCServiSign`,跑完進度條即完成。
+3. 回到上述頁面,點「系統元件檢查」確認安裝成功。
+4. 到工作列右下角「顯示隱藏的圖示」(`^`),出現 **CDCServiSign** 圖示,表示程式已在執行。
+
+<img src="docs/img/env-niis-cdc-install.png" width="600" alt="NIIS「系統所需安裝檔(非IE)」頁,與 CDCServiSignAdapterSetup 安裝中的畫面">
+
+<img src="docs/img/env-cdc-servisign-tray.png" width="263" alt="工作列隱藏圖示區出現 CDCServiSign 圖示">
+
+### 2. 健保署讀卡機控制軟體(Windows 版)
+- 版本:**5.1.5.7 版、5.1.5.8 版**(111.9.26 更新)
+- 下載:<https://www.nhi.gov.tw/ch/cp-5143-3d82a-2693-1.html>
+- 安裝後,工作列隱藏圖示區出現綠色圓形 **H** 圖示(滑鼠移上去,提示文字結尾為「控制軟體主控台-NHI」),表示程式已在執行。
+
+<img src="docs/img/env-nhi-reader-tray.png" width="294" alt="工作列隱藏圖示區的健保署讀卡機控制軟體圖示(綠色 H)">
+
+### 確認清單
+- [ ] 工作列隱藏圖示區同時看得到 **CDCServiSign** 與**綠色 H(健保署讀卡機控制軟體)**兩個圖示。
+- [ ] 讀卡機已接上,醫事人員卡與健保卡可插入。
+- [ ] Chrome ≥ 116。
+
 ## 院內安裝(未封裝)
+
+前置條件:已依上一節裝好兩個讀卡程式。
 
 ### 一鍵下載(PowerShell)
 Windows「開始」→ 輸入 `powershell` → 開「Windows PowerShell」→ 把下面整段貼上(Ctrl+V 或按右鍵)→ 按 Enter。不需要系統管理員權限;Windows PowerShell 5.1(Windows 10/11 內建)即可。
