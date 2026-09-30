@@ -1,11 +1,11 @@
 {
- "publishedAt": "2026-09-29T23:23:35.895Z",
- "minEngine": "0.4.24",
+ "publishedAt": "2026-09-30T10:12:44.198Z",
+ "minEngine": "0.4.26",
  "latest": {
   "TW": {
-   "version": "2026.09.29-v0424",
+   "version": "2026.09.30-v0426",
    "file": "vaccines.TW.json",
-   "sha256": "8f3eed68341ef70c73989f0d22a990fcf1ea4cb689bfd269abc46421ebd36327",
+   "sha256": "1beeaa64e28a19f650880ff90221d1eb2052d5aa94c4f78c05787f9215de2dfb",
    "name": "中央(疾管署)"
   }
  }
