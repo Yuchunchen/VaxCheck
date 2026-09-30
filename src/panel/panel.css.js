@@ -16,7 +16,7 @@ export const CSS = `
 .vx-sources .s-error::before, .vx-sources .s-unknown_shape::before { background: var(--stop); }
 .vx-list { list-style:none; margin:0; padding:0; }
 .vx-grp { margin:14px 16px 2px; font-size:13px; font-weight:700; color:var(--muted); letter-spacing:.02em; border-bottom:1px solid var(--rule); padding-bottom:4px; }
-.vx-grp-eligible { color:var(--go); } .vx-grp-confirm { color:var(--wait); } .vx-grp-not_open { color:var(--soon); }
+.vx-grp-eligible { color:var(--go); } .vx-grp-confirm { color:var(--wait); } .vx-grp-not_open { color:var(--soon); } .vx-grp-done { color:var(--ink); }
 .vx-grp-n { display:inline-block; min-width:1.6em; margin-left:4px; padding:0 6px; border-radius:9px; background:var(--wash); color:var(--ink); font-weight:600; text-align:center; }
 .vx-v { display:grid; grid-template-columns: 88px 1fr; border-bottom: 1px solid var(--rule); }
 .vx-verdict { padding: 14px 6px 14px 12px; font-weight: 700; font-size: 16px; line-height: 1.25; border-left: 6px solid var(--no); color: var(--no); }

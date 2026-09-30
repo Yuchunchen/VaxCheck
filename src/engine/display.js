@@ -7,7 +7,7 @@ import { maxDate } from './dates.js';
 const uniq = (a) => [...new Set(a)];
 const TERMINAL = new Set(['completed', 'not_funded']);
 const GIVE = new Set(['due', 'wait']);
-export const BUCKETS = ['eligible', 'confirm', 'not_open', 'ineligible'];
+export const BUCKETS = ['eligible', 'confirm', 'not_open', 'done', 'ineligible'];
 
 const phaseOf = (g, vaccine) => vaccine.season?.phases?.find((p) => p.phase === g.priorityPhase) || null;
 
@@ -103,10 +103,11 @@ export function computeDisplay(vaccine, vctx, groups, out) {
   const dueToday = out.verdict === 'eligible' && out.dosing?.status === 'due';        // 可接種只來自既有 eligible + 今日可打
   if (fb && fb.kind === 'dose' && fb.date <= asOf && dueToday) return res('eligible', 2, null);   // 保底今日可打:不列升級、不問
   if (fb && (TERMINAL.has(fb.kind) || (fb.kind && fb.date > asOf))) {              // 未開打、間隔未滿、已完成、不再公費
-    const end = TERMINAL.has(fb.kind) ? 'ineligible' : 'not_open';
+    const end = fb.kind === 'completed' ? 'done' : fb.kind === 'not_funded' ? 'ineligible' : 'not_open';   // 已完成 → 已接種;不再公費仍是不符合
     if (upgrade?.decisive) return res('confirm', '3a');
     return res(end, upgrade ? '3b' : '3c');
   }
+  if (out.verdict === 'completed' && !fb) return res('done', '3d', null);            // 公費期間已過,仍在接種史的季內(season.historyEnd):本季已接種
   if (!fb && upgrade) return res(upgrade.decisive ? 'confirm' : 'ineligible', 4);   // 無保底:確認後今日可打 → 待確認;否則不符合 + 選填提示
   if (['pending_history', 'needs_review', 'unknown_source', 'needs_input'].includes(out.verdict)) return res('confirm', 5, null);
   if (['out_of_season', 'ineligible', 'not_open'].includes(out.verdict)) return res('ineligible', 6, null);

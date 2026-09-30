@@ -5,7 +5,7 @@ import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 import { computeDisplay, decisiveKeys } from './display.js';
 
-export const ENGINE_VERSION = '0.4.24';   // 0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
+export const ENGINE_VERSION = '0.4.26';   // 0.4.26:season.historyEnd(接種史的季)+ 分組新增「已接種」(display.bucket = done);舊引擎讀到新規則會在 7/1 後把已接種者顯示成非公費期間,故 minEngine 隨之升高。0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -91,7 +91,16 @@ function legacyVerdict(vaccine, vctx, groups) {
   out.upcoming = upcoming.map(({ g, t, state, win }) => groupOut(g, t, state, win));
   const sched = upcoming.filter((x) => x.t.v === true).sort((a, b) => a.win.from.localeCompare(b.win.from));
   if (sched.length) { out.report = reportOf(vaccine, sched.filter((x) => x.win.from === sched[0].win.from)); out.verdict = 'scheduled'; out.opensOn = sched[0].win.from; out.matchedGroups = [groupOut(sched[0].g, sched[0].t, 'scheduled', sched[0].win)]; return out; }
-  if (groups.length && groups.every((x) => x.state === 'expired')) { out.verdict = 'out_of_season'; return out; }
+  if (groups.length && groups.every((x) => x.state === 'expired')) {
+    // 公費期間已過,但仍在接種史的季內(season.historyEnd):本季已接種者顯示已接種;沒紀錄(含 NIIS 已查無紀錄)維持非公費期間
+    const he = vaccine.season?.historyEnd;
+    if (he && ctx.asOf <= he) {
+      const d = computeDosing(vaccine.dosing, vaccine, vctx);
+      if (d.status === 'completed') { out.dosing = d; out.verdict = 'completed'; return out; }
+    }
+    out.verdict = 'out_of_season';
+    return out;
+  }
 
   // 尚未開打(所有群組都還沒到期間):仍算出「若符合哪些條件」供事先確認
   const notOpen = !active.length && upcoming.length > 0;
