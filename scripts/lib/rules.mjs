@@ -122,6 +122,7 @@ export function semanticCheck(rs, niisCodes, errors) {
     const unk = new Set(v.dosing?.unknownTypeCodes || []);
     const okCode = (c) => canon.has(c) || unk.has(c);
     (v.historyMatch?.vaccineCodes || []).forEach((c) => okCode(c) || errors.push(`${v.vaccineId}:historyMatch 代碼不在對照表 ${c}`));
+    if (v.season?.historyEnd && v.season.historyEnd < v.season.end) errors.push(`${v.vaccineId}:season.historyEnd 不可早於 season.end`);
     for (const g of v.eligibilityGroups) {
       if (gids.has(g.groupId)) errors.push(`groupId 重複 ${g.groupId}`); gids.add(g.groupId);
       (g.sourceIds || []).forEach((s) => sources.has(s) || errors.push(`${g.groupId}:來源不存在 ${s}`));

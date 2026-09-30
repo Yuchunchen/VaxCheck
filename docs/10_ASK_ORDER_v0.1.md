@@ -82,7 +82,7 @@ Result 新增 `vaccines[].decisiveManual: [{ key, label, prefilled: true|false, 
 
 內部 verdict(eligible / ineligible / needs_input / unknown_source / scheduled / …)照舊存在,供稽核與測試;`needs_input` 與 `unknown_source` 在面板上都歸入「不可打」,差別只在下面那一行寫什麼(勾選清單 vs「接種史未查」)。
 
-v0.4.12 起面板分四組:可接種 → 待確認 → 尚未開打 → 不符合,依 `display.bucket`(docs/07 §3.1);卡片保留原狀態標籤,分組與 verdict 不一致時標籤依保底(例:肺鏈 `needs_input` 但保底為已完成 → 「已完成」;開打前無保底的 `not_open` → 「不可打」)。
+v0.4.12 起面板分組(v0.4.26 起五組,新增「已接種」,位於尚未開打與不符合之間):可接種 → 待確認 → 尚未開打 → 已接種 → 不符合,依 `display.bucket`(docs/07 §3.1);卡片保留原狀態標籤,分組與 verdict 不一致時標籤依保底(例:肺鏈 `needs_input` 但保底為已完成 → 「已完成」;開打前無保底的 `not_open` → 「不可打」)。
 
 禁忌症(嚴重過敏、急性發燒)不在資格清單裡:可打時以一行提醒顯示,醫師勾了才把結論改成「不可打:禁忌」。這是我的預設,見 §7。
 

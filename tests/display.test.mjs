@@ -138,12 +138,71 @@ test('肺鏈 PCV13 + PPV23 最後一劑 6 年前 → 待確認:目前視為已�
   assert.deepEqual(keys(v), ['ipdHighRisk']);
 });
 
-test('肺鏈 PCV13 + PPV23 最後一劑 3 年前 → 不符合(已完成),選填提示 +5 年起可追加', () => {
+test('肺鏈 PCV13 + PPV23 最後一劑 3 年前 → 已接種(已完成),選填提示 +5 年起可追加', () => {
   const v = P('pn_pcv_ppv_3y');
-  assert.equal(v.display.bucket, 'ineligible');
+  assert.equal(v.display.bucket, 'done');
   assert.equal(v.display.fallback.kind, 'completed');
   assert.deepEqual([v.display.upgrade.date, v.display.upgrade.decisive], ['2028-10-15', false]);
   assert.deepEqual(keys(v), []);
+});
+
+// ---------------- 已接種(v0.4.26):流感接種史的季 = 10/1 ~ 隔年 9/30 ----------------
+const FLU = (vacc, asOf, birth = '1955-05-05') => V(run(patient({ birth, vacc }), asOf), 'FLU');
+
+test('流感 10/1 前接種(8 月、9/30)算上一季 → 10/1 起仍可接種', () => {
+  for (const d of ['2026-08-20', '2026-09-30']) {
+    const v = FLU([['FLU', d]], '2026-10-05');
+    assert.equal(v.verdict, 'eligible', d);
+    assert.equal(v.display.bucket, 'eligible', d);
+  }
+});
+
+test('流感 10/1 起接種 → 已接種(10/1 當天也算本季)', () => {
+  for (const [d, asOf] of [['2026-10-01', '2026-10-05'], ['2026-11-02', '2027-01-15']]) {
+    const v = FLU([['FLU', d]], asOf);
+    assert.equal(v.verdict, 'completed', d);
+    assert.equal(v.display.bucket, 'done', d);
+  }
+});
+
+test('流感 公費期間(6/30)後到隔年 9/30 → 本季有紀錄者仍是已接種;期間內的 8 月紀錄也算本季', () => {
+  for (const [d, asOf] of [['2026-11-02', '2027-06-30'], ['2026-11-02', '2027-07-01'], ['2026-11-02', '2027-09-30'], ['2027-08-10', '2027-08-15']]) {
+    const v = FLU([['FLU', d]], asOf);
+    assert.equal(v.verdict, 'completed', `${d} @ ${asOf}`);
+    assert.equal(v.display.bucket, 'done', `${d} @ ${asOf}`);
+    assert.equal(v.dosing.lastDate, d);
+  }
+  const late = FLU([['FLU', '2026-11-02']], '2027-07-15');
+  assert.deepEqual([late.display.step, late.display.fallback, late.display.upgrade], ['3d', null, null]);
+  assert.match(late.explanation, /本季已完成/);
+});
+
+test('流感 隔年 10/1 之後、或公費期間後沒紀錄(NIIS 已查)→ 視為沒接種:非公費期間,不符合', () => {
+  for (const [vacc, asOf] of [[[], '2027-07-15'], [[['FLU', '2025-11-02']], '2027-07-15'], [[['FLU', '2026-11-02']], '2027-10-01']]) {
+    const v = FLU(vacc, asOf);
+    assert.equal(v.verdict, 'out_of_season', asOf);
+    assert.equal(v.display.bucket, 'ineligible', asOf);
+  }
+});
+
+test('流感 NIIS 已查、本季無紀錄 → 視為沒接種(可接種);去年的紀錄不算本季', () => {
+  for (const vacc of [[], [['FLU', '2025-10-20']]]) {
+    const v = FLU(vacc, '2026-11-05');
+    assert.equal(v.verdict, 'eligible');
+    assert.equal(v.display.bucket, 'eligible');
+  }
+});
+
+test('不再公費(自費 PPV23 + 公費 PCV13)→ 仍歸不符合,不進已接種', () => {
+  const v = V(run(patient({ birth: '1955-05-05', vacc: [['PPV23', '2020-01-01', '自費'], ['PCV13', '2024-01-01', '公費']] }), AT), 'PNEUMO_PCV20_21');
+  assert.equal(v.verdict, 'not_funded');
+  assert.equal(v.display.bucket, 'ineligible');
+});
+
+test('肺鏈 PCV20 公費已完整接種 → 已接種', () => {
+  const v = V(run(patient({ birth: '1955-05-05', vacc: [['PCV20', '2025-03-01', '公費']] }), AT), 'PNEUMO_PCV20_21');
+  assert.equal(v.verdict, 'completed');
+  assert.equal(v.display.bucket, 'done');
 });
 
 // ---------------- 回歸:既有欄位與 v0.4.10 相同 ----------------

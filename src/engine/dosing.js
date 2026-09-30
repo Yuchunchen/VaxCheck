@@ -35,7 +35,8 @@ export function computeSeries(dosing, vaccine, ctx) {
   const allRecs = recsOf(facts).filter((r) => codes.includes(r.code));
   let recs = allRecs;
   const s = vaccine.season;
-  if (dosing.seasonal && s) recs = recs.filter((r) => r.date && r.date >= s.start && r.date <= s.end);
+  // 接種史的季:start ~ historyEnd(未定義則 end)。10/1 前的紀錄算上一季;10/1 起到隔年 9/30 算本季
+  if (dosing.seasonal && s) recs = recs.filter((r) => r.date && r.date >= s.start && r.date <= (s.historyEnd || s.end));
   const flags = recs.some((r) => !r.date) ? ['NEED_DATE_CONFIRMATION'] : [];
   const pick = pickVariant(dosing, allRecs, recs, dosing.seasonal ? s : null, ctx);
   if (pick?.unknown) return { status: 'needs_review', note: '缺生日,無法判定本季應接種劑數', flags };

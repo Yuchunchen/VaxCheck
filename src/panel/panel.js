@@ -19,7 +19,7 @@ function head(v, fmtDate) {
     case 'needs_input': return ['需確認', 'wait', v.dosing?.alternative ? altText(v.dosing.alternative, fmtDate) : '勾選符合的條件後重新判定'];
     case 'needs_review': return ['需人工判定', 'wait', d.note || d.case?.note || '請醫師依接種史評估'];
     case 'unknown_source': return ['資料不足', 'wait', `缺:${v.missingSources.map((s) => SRC_NAMES[s] || s).join('、')}`];
-    case 'completed': return ['已完成', 'done', d.case?.note || (d.lastDate ? `本季已於 ${fmtDate(d.lastDate)} 接種` : '已完成建議劑次')];
+    case 'completed': return ['已接種', 'done', d.case?.note || (d.lastDate ? `本季已於 ${fmtDate(d.lastDate)} 接種` : '已完成建議劑次')];
     case 'not_funded': return ['不再公費', 'no', d.case?.note || ''];
     case 'out_of_season': return ['非公費期間', 'no', '本季公費施打期間已結束'];
     case 'contraindicated': return ['禁忌', 'stop', v.reasons.join(';')];
@@ -69,7 +69,7 @@ function display(v, fmtDate) {
     const why = fb.kind === 'phase' ? `${fb.phase || '開打日'}:${fb.groupLabel}` : `與前劑間隔${fb.label ? `:${fb.label}` : ''}`;
     return [fb.kind === 'phase' ? '尚未開打' : '尚不可打', 'wait', `${fmtDate(fb.date)} 起可打(${why})`];
   }
-  if (dp.bucket === 'ineligible' && fb?.kind === 'completed' && v.verdict !== 'completed') return ['已完成', 'done', caseNote(v) || fallbackLine(fb, fmtDate, v)];
+  if (dp.bucket === 'done' && fb?.kind === 'completed' && v.verdict !== 'completed') return ['已接種', 'done', caseNote(v) || fallbackLine(fb, fmtDate, v)];
   if (dp.bucket === 'ineligible' && fb?.kind === 'not_funded' && v.verdict !== 'not_funded') return ['不再公費', 'no', caseNote(v)];
   if (dp.bucket === 'ineligible' && v.verdict === 'not_open') return ['不可打', 'no', `目前不符合公費對象;${fmtDate(v.opensOn)} 開打`];
   return null;
@@ -144,7 +144,7 @@ export function renderPanel(wrap, state, on) {
   const res = state.result;
   if (!res) { const f = footer(null); if (f) wrap.append(f); return; }
   const manual = state.manual || {};
-  // 分組顯示:可接種 → 待確認 → 尚未開打 → 不符合(依 display.bucket;組內維持規則順序;Result 本身不改順序)
+  // 分組顯示:可接種 → 待確認 → 尚未開打 → 已接種 → 不符合(依 display.bucket;組內維持規則順序;Result 本身不改順序)
   for (const grp of groupVaccines(res.vaccines)) {
     const list = h('ol', { class: `vx-list vx-list-${grp.key}`, 'aria-label': grp.label });
     wrap.append(h('h3', { class: `vx-grp vx-grp-${grp.key}` }, grp.label, ' ', h('span', { class: 'vx-grp-n' }, String(grp.items.length))));
@@ -163,7 +163,7 @@ export function renderPanel(wrap, state, on) {
 
       // NIIS 接種對象別代碼(填報用;職業別優先)
       const rp = v.report;
-      if (rp && v.display?.bucket !== 'ineligible' && !['completed', 'not_funded', 'contraindicated'].includes(v.verdict)) {   // 只要有已符合的群(今日或開打後)就給填報代碼
+      if (rp && !['ineligible', 'done'].includes(v.display?.bucket) && !['completed', 'not_funded', 'contraindicated'].includes(v.verdict)) {   // 只要有已符合的群(今日或開打後)就給填報代碼
         const opt = (o) => `${o.code} ${o.label}`;
         const notes = [...new Set(rp.primary.map((o) => o.note).filter(Boolean))];
         body.append(h('div', { class: 'vx-code' },

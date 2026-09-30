@@ -49,8 +49,8 @@ const verdictOf = async (page, name) => {
   return shadow(page, (n) => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; const li = [...r.querySelectorAll('.vx-v')].find((x) => x.querySelector('.vx-name').textContent.includes(n)); return li?.querySelector('.vx-verdict').textContent; }, name);
 };
 const panelText = (page, sel) => shadow(page, (s) => document.querySelector('#vaxcheck-panel')?.shadowRoot?.querySelector(s)?.textContent || '', sel);
-// 面板排序:可接種 → 待確認 → 尚未開打 → 不符合,小標題筆數 = 該組卡片數;判定依據 ✓ → 未確認 → ✗
-const ORDER = ['可接種', '待確認', '尚未開打', '不符合'];
+// 面板排序:可接種 → 待確認 → 尚未開打 → 已接種 → 不符合,小標題筆數 = 該組卡片數;判定依據 ✓ → 未確認 → ✗
+const ORDER = ['可接種', '待確認', '尚未開打', '已接種', '不符合'];
 const RANK = { 'g-y': 0, 'g-u': 1, 'g-n': 2 };
 async function checkLayout(pg, need = 2) {
   const layout = await shadow(pg, () => {
@@ -320,7 +320,21 @@ check('C4 肺鏈「以上皆否」→ 尚未開打(1 年路徑)', where(lay, '�
 await pick('H');
 lay = await dLayout();
 check('C5 自費 PPV23 + 公費 PCV13 → 肺鏈在「不符合」(不再公費)', where(lay, '肺炎鏈球菌') === '不符合' && (await dCard('肺炎鏈球菌')).word === '不再公費' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.n])));
-check('C 四組小標題皆出現且順序正確', ORDER.every((t) => seen.has(t)), ORDER.filter((t) => seen.has(t)).join('→'));
+await setAsOf('2026-10-15');
+await pick('N');
+lay = await dLayout();
+flu = await dCard('流感');
+check('C7 10/5 已打流感 → 流感在「已接種」,標籤「已接種」,顯示接種日', where(lay, '流感') === '已接種' && flu.word === '已接種' && /115\/10\/05/.test(flu.line) && orderOk(lay), `${flu.word}|${flu.line}|${JSON.stringify(lay.map((g) => [g.t, g.n]))}`);
+await setAsOf('2027-08-15');
+await sleep(150);
+lay = await dLayout();
+flu = await dCard('流感');
+check('C8 公費期間(6/30)後到 9/30 仍是已接種;未接種者(病患 F)是不符合', where(lay, '流感') === '已接種' && flu.word === '已接種', `${flu.word}|${flu.line}`);
+await pick('F');
+lay = await dLayout();
+check('C8 隔年 8 月沒接種紀錄 → 流感在「不符合」(非公費期間)', where(lay, '流感') === '不符合', JSON.stringify(lay.map((g) => [g.t, g.n])));
+await setAsOf('2026-10-15');
+check('C 五組小標題皆出現且順序正確', ORDER.every((t) => seen.has(t)), ORDER.filter((t) => seen.has(t)).join('→'));
 
 await setAsOf('2026-09-28');
 await pick('J');

@@ -4,21 +4,23 @@ import { groupOf, groupVaccines, sortTrace } from '../src/panel/order.js';
 
 const v = (id, bucket, verdict = 'x') => ({ vaccineId: id, verdict, display: bucket ? { bucket } : undefined });
 
-test('分組:可接種 → 待確認 → 尚未開打 → 不符合,組內維持規則順序,空組不列', () => {
+test('分組:可接種 → 待確認 → 尚未開打 → 已接種 → 不符合,組內維持規則順序,空組不列', () => {
   const vaccines = [
     v('A', 'ineligible'), v('B', 'eligible'), v('C', 'confirm'), v('D', 'not_open'), v('E', 'confirm'), v('F', 'eligible'),
-    v('G', 'ineligible'), v('H', 'not_open'), v('I', 'confirm'),
+    v('G', 'ineligible'), v('H', 'not_open'), v('I', 'confirm'), v('J', 'done'), v('K', 'done'),
   ];
   const g = groupVaccines(vaccines);
   assert.deepEqual(g.map((x) => [x.key, x.label, x.items.map((i) => i.vaccineId).join('')]), [
     ['eligible', '可接種', 'BF'],
     ['confirm', '待確認', 'CEI'],
     ['not_open', '尚未開打', 'DH'],
+    ['done', '已接種', 'JK'],
     ['ineligible', '不符合', 'AG'],
   ]);
-  assert.deepEqual(vaccines.map((x) => x.vaccineId).join(''), 'ABCDEFGHI', 'Result 本身不改順序');
+  assert.deepEqual(vaccines.map((x) => x.vaccineId).join(''), 'ABCDEFGHIJK', 'Result 本身不改順序');
   assert.deepEqual(groupVaccines([v('X', 'ineligible'), v('Y', 'eligible')]).map((x) => x.key), ['eligible', 'ineligible'], '空組不顯示');
   assert.deepEqual(groupVaccines([v('Z', 'not_open')]).map((x) => x.label), ['尚未開打']);
+  assert.deepEqual(groupVaccines([v('W', 'done')]).map((x) => x.label), ['已接種']);
 });
 
 test('分組只看 display.bucket:verdict、pending_case、alternative 不影響', () => {

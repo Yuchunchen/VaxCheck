@@ -801,6 +801,10 @@
         "end": {
           "$ref": "#/definitions/isoDate"
         },
+        "historyEnd": {
+          "$ref": "#/definitions/isoDate",
+          "description": "接種史計算的季末(選填,須 ≥ end)。公費施打期間(end)結束後,到 historyEnd 為止,本季有紀錄者仍顯示「已接種」;本季接種紀錄的日期窗也延伸到此日。流感用:10/1 起算、隔年 9/30 止;需引擎 ≥ 0.4.26"
+        },
         "phases": {
           "type": "array",
           "minItems": 1,

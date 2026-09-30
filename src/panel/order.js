@@ -1,9 +1,11 @@
 // 面板排序(只在渲染層;engine Result 維持規則順序,稽核與匯出不受影響)。純函式,可在 Node 測試。
 // v0.4.12:分組依 engine 算好的 display.bucket(保底/升級,docs/07 §3.1),不再看 pending_case、alternative
+// v0.4.26:新增「已接種」(done):已完成、不需再確認者;「不再公費」仍歸不符合
 export const GROUPS = [
   { key: 'eligible', label: '可接種' },
   { key: 'confirm', label: '待確認' },
   { key: 'not_open', label: '尚未開打' },
+  { key: 'done', label: '已接種' },
   { key: 'ineligible', label: '不符合' },
 ];
 const KEYS = new Set(GROUPS.map((g) => g.key));

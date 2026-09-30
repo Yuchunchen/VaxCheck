@@ -13,6 +13,7 @@ export const SAMPLES = [
   { id: 'K', title: '70 歲男,8/6 打過 PCV13(8 週 vs 1 年)', birth: '1956-03-02', sex: 'M', vacc: [['PCV13', '2026-08-06']] },
   { id: 'L', title: '30 歲男,只有寬泛碼 Q87.89(罕見疾病名單,只顯示不預勾)', birth: '1996-01-01', sex: 'M', dx: [['Q8789', '2026-04-01', '其他特定先天畸形症候群']], vacc: [] },
   { id: 'M', title: '30 歲男,Prader-Willi(Q87.11,罕見疾病預勾)', birth: '1996-01-01', sex: 'M', dx: [['Q8711', '2026-04-01', 'Prader-Willi 症候群']], vacc: [] },
+  { id: 'N', title: '66 歲女,10/5 已打流感(10/1 起算本季)', birth: '1960-02-02', sex: 'F', vacc: [['FLU', '2026-10-05']] },
 ];
 
 export function toFacts(s, { niisQueried = true } = {}) {
