@@ -72,7 +72,26 @@ files:
     archivedAt: "2026-09-29"
     sourcePage: https://www.cdc.gov.tw/Category/Page/pleXgqX_qXM_Q79Yt_QVZQ
     ruleSourceIds: [SRC_CDC_COVID_PLAN_115]
+    supersededBy: CDC_COVID_PLAN_115_116_1151008
     note: "PDF 內文封面「中華民國 115 年 7 月」;檔案建立 2026-07-30。"
+  - id: CDC_COVID_PLAN_115_116_1151008
+    vaccine: COVID
+    kind: plan
+    title: "115-116 年度 COVID-19 疫苗接種計畫(1151008 全文)"
+    issuer: "衛生福利部"
+    published: "2026-10-08"
+    file: covid19/2026-10_covid19-plan-115-116.pdf
+    textFile: covid19/2026-10_covid19-plan-115-116.txt
+    sha256: 2935f7267906bb51e961851af6d4a62a0a35d7407024daf3dd198658e4b39da3
+    bytes: 570177
+    pages: 21
+    originalName: "115-116年度COVID-19疫苗接種計畫-1151008.pdf"
+    receivedFrom: "YC 提供(疾管署網站 robots 限制自動下載,人工下載;2026-10-15 對話上傳)"
+    archivedAt: "2026-10-15"
+    sourcePage: https://www.cdc.gov.tw/Category/Page/pleXgqX_qXM_Q79Yt_QVZQ
+    fileUrl: https://www.cdc.gov.tw/File/Get/SC4-9Qt0uYju9IVTw12dqQ
+    ruleSourceIds: [SRC_CDC_COVID_PLAN_115]
+    note: "PDF 內文封面「中華民國 115 年 10 月」;計畫頁 2026/10/8 更新。與 1150727 版 pdftotext 比對:實施對象、時程、劑次與間隔相同;實質差異僅第五章參:Novavax XFG 由「最快 115 年 11 月起」改為「115 年 10 月 19 日起」,並加「如已接種其中一種廠牌疫苗者,則無須再接種另一種」;附件 1 包裝外觀補圖。其餘為文字編碼修正。"
   - id: CDC_COVID_HIGHRISK_ICD_1140829
     vaccine: COVID
     kind: annex

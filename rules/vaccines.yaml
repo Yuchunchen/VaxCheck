@@ -7,10 +7,10 @@
 #   - 肺炎鏈球菌 PCV20/21:正式(Policy 2026-08-10);IPD 高風險證據改用疾管署官方 ICD 參考表(docs/11)
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
 #     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 國健署罕見疾病 ICD(115-07-23,推估;寬泛碼只顯示不預勾)+ 透析/CKD 旗標
-#   - COVID-19:115–116 年度正式轉譯(衛生福利部 115 年 7 月計畫全文);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
+#   - COVID-19:115–116 年度正式轉譯(衛生福利部計畫全文 1151008 版;對象與劑次與 1150727 版相同);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
 # =====================================================================
 
-ruleSetVersion: 2026.09.30-v0426
+ruleSetVersion: 2026.10.15-v0427
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -105,9 +105,9 @@ sources:
 
   # --- COVID-19 115–116 年度 ---
   - id: SRC_CDC_COVID_PLAN_115
-    title: 115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 7 月版全文 PDF,1150727,YC 提供;第二章實施對象、第三章分階段、第五章劑數與間隔)
+    title: 115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 10 月版全文 PDF,1151008,YC 提供;取代 1150727 版,對象與劑次未變,僅 Novavax 改 10/19 起供應;第二章實施對象、第三章分階段、第五章劑數與間隔、第七章肆上傳欄位)
     issuer: 衛生福利部疾病管制署
-    date: "2026-07-27"
+    date: "2026-10-08"
     watch: true
     kind: plan
 
@@ -580,13 +580,13 @@ vaccines:
 
   # =====================================================================
   # COVID-19 115–116 年度 — 正式轉譯
-  # 依據:115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 7 月,1150727)
+  # 依據:115-116年度COVID-19疫苗接種計畫(衛生福利部 115 年 10 月,1151008;與 1150727 版比對,對象與劑次相同)
   # 第一階段 2026-10-01 起 9 類;第二階段 2026-11-02 起 50–64 歲無高風險成人;至疫苗用罄止
   # 年齡:65 歲、55 歲原住民、50–64 歲依「接種年減出生年」(ageByYear,計畫第二章壹一、二、十原文)
   #       從未接種幼兒以「接種年月日減出生年月日」小於 6 歲(age,計畫第二章壹九)
   # 劑次(第五章):滿 6 個月至 4 歲未曾接種 → 2 劑間隔 28 天;其餘 1 劑;曾接種者與前 1 劑間隔 84 天
   # 再增加 1 劑(第二章貳):65 歲以上、55 歲以上原住民、滿 6 個月以上免疫不全或免疫低下者,間隔 180 天
-  # 廠牌(不影響資格,本規則不判定):莫德納 mRNA-1273 滿 6 個月、mRNA-1283 滿 12 歲(10/1 起);Novavax 滿 12 歲(最快 11 月起)
+  # 廠牌(不影響資格,本規則不判定):莫德納 mRNA-1273 滿 6 個月、mRNA-1283 滿 12 歲(10/1 起);Novavax 滿 12 歲(10/19 起;1151008 版);已接種其中一種廠牌者無須再接種另一種
   # 後續「視接種情形擴大全國滿 6 個月以上尚未接種者」屬未公告事項,待公告再加群組
   # =====================================================================
   - vaccineId: COVID
@@ -599,12 +599,28 @@ vaccines:
         - { phase: 1, start: "2026-10-01", label: 第一階段 }
         - { phase: 2, start: "2026-11-02", label: 第二階段 }
     sourceIds: [SRC_CDC_COVID_PLAN_115]
+    reportCodes:                                 # 計畫第二章壹 實施對象 1–10 類;只供面板顯示身分別,不影響資格
+      label: 計畫對象類別
+      sourceRef: SRC_CDC_COVID_PLAN_115
+      note: COVID-19 上傳 NIIS 不需填對象別(計畫第七章肆:疫苗代碼、劑別、批號、型別)
+      table:
+        - { code: 第1類,  label: 65 歲以上長者 }
+        - { code: 第2類,  label: 55 歲以上原住民 }
+        - { code: 第3類,  label: 安養、長期照顧(服務)等機構之受照顧者及其所屬工作人員 }
+        - { code: 第4類,  label: 孕婦 }
+        - { code: 第5類,  label: 滿 6 個月以上高風險對象 }
+        - { code: 第6類,  label: 醫事及衛生防疫相關人員 }
+        - { code: 第7類,  label: 幼兒園及托育機構工作人員、居家托育人員(保母) }
+        - { code: 第8類,  label: 6 個月內嬰兒之雙親或實際扶養者 }
+        - { code: 第9類,  label: 從未接種 COVID-19 疫苗之滿 6 個月至未滿 6 歲幼兒 }
+        - { code: 第10類, label: 50–64 歲無高風險成人 }
     notes: 第一階段 9 類對象(本規則將免疫低下另立一群以套用再增加 1 劑);第二階段 50–64 歲無高風險成人。高風險對象沿用流感潛在疾病條件,另加結核病、失能、精神疾病、失智症。
 
     eligibilityGroups:
       # ---------- 第一階段(2026-10-01 起)----------
       - groupId: COVID_ELDER_65
         label: 65 歲以上長者
+        reportCodes: [第1類]
         priorityPhase: 1
         criteria: { ageByYear: { min: 65 } }
         dosingOverride: &COVID_PLUS_ONE           # 可再增加 1 劑(計畫第二章貳)
@@ -624,6 +640,7 @@ vaccines:
             - { dose: 2, minIntervalDays: 180, label: "可再增加 1 劑,與前劑間隔 6 個月以上" }
       - groupId: COVID_INDIGENOUS_55
         label: 55 歲以上原住民
+        reportCodes: [第2類]
         priorityPhase: 1
         criteria:
           all:
@@ -632,6 +649,7 @@ vaccines:
         dosingOverride: *COVID_PLUS_ONE
       - groupId: COVID_IMMUNOCOMPROMISED
         label: 滿 6 個月以上免疫不全或免疫低下者
+        reportCodes: [第5類]   # 計畫未將免疫不全列為獨立類別;第二章壹五高風險含免疫低下,貳另許再增加 1 劑
         priorityPhase: 1
         criteria:
           all:
@@ -640,14 +658,17 @@ vaccines:
         dosingOverride: *COVID_PLUS_ONE
       - groupId: COVID_LTC
         label: 安養、長期照顧(服務)等機構之受照顧者及其所屬工作人員
+        reportCodes: [第3類]
         priorityPhase: 1
         criteria: { manual: ltcResident }
       - groupId: COVID_PREGNANT
         label: 孕婦
+        reportCodes: [第4類]
         priorityPhase: 1
         criteria: { manual: pregnant }
       - groupId: COVID_HIGHRISK
         label: 滿 6 個月以上高風險對象(流感潛在疾病條件,及結核病、失能、精神疾病、失智症)
+        reportCodes: [第5類]
         priorityPhase: 1
         sourceIds: [SRC_CDC_COVID_PLAN_115, SRC_CDC_FLU_ANNEX1_115, SRC_NHI_CATASTROPHIC_1140101, SRC_HPA_RARE_1150723]
         criteria:
@@ -658,18 +679,22 @@ vaccines:
                 - manual: covidOtherRisk
       - groupId: COVID_HCW
         label: 醫事及衛生防疫相關人員
+        reportCodes: [第6類]
         priorityPhase: 1
         criteria: { manual: healthcareWorker }
       - groupId: COVID_CHILDCARE_STAFF
         label: 幼兒園及托育機構工作人員、居家托育人員(保母)
+        reportCodes: [第7類]
         priorityPhase: 1
         criteria: { manual: childcareWorker }
       - groupId: COVID_INFANT_CAREGIVER
         label: 6 個月內嬰兒之雙親或實際扶養者
+        reportCodes: [第8類]
         priorityPhase: 1
         criteria: { manual: infantCaregiver }
       - groupId: COVID_NAIVE_CHILD
         label: 從未接種 COVID-19 疫苗之滿 6 個月至未滿 6 歲幼兒
+        reportCodes: [第9類]
         priorityPhase: 1
         criteria:
           all:
@@ -678,6 +703,7 @@ vaccines:
       # ---------- 第二階段(2026-11-02 起)----------
       - groupId: COVID_ADULT_50_64
         label: 50–64 歲無高風險成人
+        reportCodes: [第10類]
         priorityPhase: 2
         criteria: { ageByYear: { min: 50, max: 64 } }
 

@@ -570,8 +570,31 @@ test('流感 NIIS 接種對象別代碼(工作手冊附件14)', () => {
   assert.equal(V(run(patient({ birth: '1958-01-01', vacc: [] }), '2026-09-28'), 'FLU').report.primary[0].code, 'F03A');
   // 不符合者不給
   assert.equal(V(run(patient({ birth: '1996-01-01', vacc: [] }), at), 'FLU').report, null);
-  // 肺鏈、COVID 無代碼表 → null
+  // 肺鏈無代碼表 → null
   assert.equal(V(run(patient({ birth: '1958-01-01', vacc: [] }), at), 'PNEUMO_PCV20_21').report, null);
+});
+
+test('COVID-19 計畫對象類別(第二章壹 1–10 類;不需填報 NIIS)', () => {
+  const at = '2026-10-15';
+  const R = (p, d = at) => V(run(patient({ vacc: [], ...p }), d), 'COVID').report;
+  const e = R({ birth: '1958-01-01' });
+  assert.equal(e.label, '計畫對象類別');
+  assert.deepEqual(e.primary.map((o) => o.code), ['第1類']);
+  assert.match(e.note, /不需填對象別/);
+  assert.equal(e.hint, null, '無職業別優先提示(流感專用)');
+  // 65 歲醫事人員:依表列順序第1類為主,第6類列為亦符合
+  const hcw = R({ birth: '1958-01-01', manual: { healthcareWorker: true } });
+  assert.equal(hcw.primary[0].code, '第1類');
+  assert.ok(hcw.others.some((o) => o.code === '第6類'));
+  // 思覺失調症病歷預勾高風險 → 第5類
+  assert.deepEqual(R({ birth: '1986-01-01', dx: [['F209', '2026-08-01']] }).primary.map((o) => o.code), ['第5類']);
+  // 55 歲原住民 → 第2類;孕婦 → 第4類
+  assert.equal(R({ birth: '1971-01-01', manual: { indigenous: true } }).primary[0].code, '第2類');
+  assert.equal(R({ birth: '1996-01-01', sex: 'F', manual: { pregnant: true } }).primary[0].code, '第4類');
+  // 58 歲無高風險,第二階段 11/2 開打前 → 第10類(尚未開打也給)
+  assert.equal(R({ birth: '1968-01-01' }).primary[0].code, '第10類');
+  // 30 歲無任何條件 → 不給
+  assert.equal(R({ birth: '1996-01-01' }), null);
 });
 
 test('命中 ICD 只列 3 碼(YC 2026-09-28),多的以「等 N 碼」表示', () => {

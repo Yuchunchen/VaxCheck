@@ -5,7 +5,7 @@ import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 import { computeDisplay, decisiveKeys } from './display.js';
 
-export const ENGINE_VERSION = '0.4.26';   // 0.4.26:season.historyEnd(接種史的季)+ 分組新增「已接種」(display.bucket = done);舊引擎讀到新規則會在 7/1 後把已接種者顯示成非公費期間,故 minEngine 隨之升高。0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
+export const ENGINE_VERSION = '0.4.27';   // 0.4.27:reportCodes.note(COVID-19 計畫對象類別附註「上傳 NIIS 不需填對象別」);舊引擎讀到新規則會把第1–10類顯示成填報代碼而無附註,故 minEngine 隨之升高。0.4.26:season.historyEnd(接種史的季)+ 分組新增「已接種」(display.bucket = done);舊引擎讀到新規則會在 7/1 後把已接種者顯示成非公費期間,故 minEngine 隨之升高。0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -163,7 +163,7 @@ function reportOf(vaccine, matched) {
   const hasOccInTable = rc.table.some((r) => r.occupational);
   const hint = rc.occupationalFirst && hasOccInTable && !primary.some((o) => o.occupational)
     ? '職業別優先填報:若為醫事人員、托育或機構照顧工作人員、防疫或禽畜業人員,改填對應 F02B/F04B/F07 代碼' : null;
-  return { label: rc.label || '接種對象別', sourceRef: rc.sourceRef || null, primary, others, choose: primary.length > 1, hint };
+  return { label: rc.label || '接種對象別', sourceRef: rc.sourceRef || null, note: rc.note || null, primary, others, choose: primary.length > 1, hint };
 }
 
 // 問題卡旁的診斷證據:人工條件的病歷證據只有寬泛碼(不預勾)時,列出命中的寬泛碼供醫師核對;沒有則不加欄位

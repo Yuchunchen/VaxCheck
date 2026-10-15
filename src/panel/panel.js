@@ -161,7 +161,7 @@ export function renderPanel(wrap, state, on) {
         ));
       const body = li.querySelector('.vx-body');
 
-      // NIIS 接種對象別代碼(填報用;職業別優先)
+      // 接種對象別:流感 = NIIS 填報代碼(職業別優先);COVID-19 = 計畫對象類別(不需填報,附 note)
       const rp = v.report;
       if (rp && !['ineligible', 'done'].includes(v.display?.bucket) && !['completed', 'not_funded', 'contraindicated'].includes(v.verdict)) {   // 只要有已符合的群(今日或開打後)就給填報代碼
         const opt = (o) => `${o.code} ${o.label}`;
@@ -173,7 +173,8 @@ export function renderPanel(wrap, state, on) {
           rp.primary.some((o) => o.icd.length) && h('small', {}, ((icd) => `依據 ICD:${icd.slice(0, 3).join('、')}${icd.length > 3 ? ` 等 ${icd.length} 碼` : ''}`)([...new Set(rp.primary.flatMap((o) => o.icd))])),
           rp.others.length > 0 && h('small', {}, `亦符合:${rp.others.map(opt).join('、')}`),
           notes.map((n) => h('small', {}, n)),
-          rp.hint && h('small', {}, rp.hint)));
+          rp.hint && h('small', {}, rp.hint),
+          rp.note && h('small', {}, rp.note)));
       }
       // 病歷自動判定(可取消):逐項列出命中的 ICD / 旗標
       for (const e of v.evidence) {

@@ -1056,7 +1056,7 @@
             "table"
           ],
           "additionalProperties": false,
-          "description": "NIIS 接種對象別代碼表(例:流感工作手冊附件14)。只供面板顯示填報代碼,不影響資格與劑次",
+          "description": "接種對象別代碼表(例:流感工作手冊附件14;COVID-19 計畫第二章實施對象類別)。只供面板顯示身分別或填報代碼,不影響資格與劑次",
           "properties": {
             "label": {
               "type": "string"
@@ -1067,6 +1067,10 @@
             "occupationalFirst": {
               "type": "boolean",
               "description": "多群符合時職業別優先填報"
+            },
+            "note": {
+              "type": "string",
+              "description": "整張代碼表的附註,面板顯示於代碼列下方(例:COVID-19 上傳 NIIS 不需填對象別)"
             },
             "table": {
               "type": "array",

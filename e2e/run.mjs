@@ -101,7 +101,8 @@ await page.screenshot({ path: path.join(SHOTS, '3-merged-needs-input.png') });
 await shadow(page, () => { const r = document.querySelector('#vaxcheck-panel').shadowRoot; [...r.querySelectorAll('.vx-check')].find((l) => l.textContent.includes('IPD 高風險')).querySelector('.vx-yes').click(); });
 await sleep(600);
 check('勾 IPD 高風險「是」→ 8 週路徑 → 可打', (await verdictOf(page, '肺炎鏈球菌')) === '可打');
-check('面板分組(可接種在前)、判定依據 ✓ → 未確認 → ✗', ...(await checkLayout(page)));
+// 用真實日期:10/1 起 68 歲病患流感、COVID-19 也都可打 → 只剩「可接種」一組(需 1 組);多組順序由 C 段示範頁(固定判定日)驗證
+check('面板分組(可接種在前)、判定依據 ✓ → 未確認 → ✗', ...(await checkLayout(page, 1)));
 await shadow(page, () => document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-why').forEach((d, i) => { if (i < 2) d.open = true; }));
 await page.screenshot({ path: path.join(SHOTS, '4-panel-groups.png') });
 
