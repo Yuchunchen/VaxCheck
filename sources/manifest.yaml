@@ -178,3 +178,34 @@ files:
     receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
     archivedAt: "2026-11-04"
     note: "封面「115年4月更新」;PDF 建立 2026-04-28(PDF 中繼資料標題沿用舊範本「96年安養養護…肺炎鏈球菌疫苗接種計畫摘要」,非內容)。主旨為接種處置費核付,非資格計畫。與規則相關:附表1 兒童常規時程(13價結合型肺炎鏈球菌疫苗 2個月第1劑、4個月第2劑、12~15個月第3劑/第4劑「依幼兒實際接種之劑次」);附表2 兒童公費疫苗藥品代碼(114.12版,13PCV = K000906206 Prevenar 13);肆一(二)兒童常規處置費限 13 歲以下。未含兒童 PCV 補接種原則、劑間最短間隔、高風險兒童規定。成人肺鏈段落(115-01-15 起 PCV20 或 PPV23)已被 115-08-10 起適用之成人計畫(PCV20/21)取代;附件3 為 114 年度流感,不適用 115 年度。目前尚無規則引用(ruleSourceIds 待兒童肺鏈規則建立時補)。"
+  - id: CDC_CHILD_SCHEDULE_11509
+    vaccine: COMMON
+    kind: other
+    title: "我國現行兒童預防接種時程(自 115 年 10 月 1 日起實施;115.09 版)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-09"
+    effectiveFrom: "2026-10-01"
+    file: common/2026-09_cdc-child-immunization-schedule-11509.pdf
+    textFile: common/2026-09_cdc-child-immunization-schedule-11509.txt
+    sha256: 8bc4e8698940689a824099ccf6f0e07ab52ce6fcaa2f943edb2d496e3cda8aa6
+    bytes: 323799
+    pages: 1
+    originalName: "現行兒童預防接種時程表_(11509版)_中文.pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    note: "PDF 建立 2026-10-07。紅字(本版新增/修訂):流感列「9 歲以下初次接種或 3 歲以下累計僅曾接種 1 劑者,接種 2 劑,2 劑間隔 4 週以上;其餘狀況每年 1 劑」;附註3「國小學童於學校集中接種流感疫苗…統一提供 1 劑公費疫苗,故國小一、二年級學童若有第 2 劑流感疫苗接種需求,仍可於學校接種第一劑至少隔 4 週後,至醫療院所自費接種第 2 劑」(與流感工作手冊 115 年 7 月版學生篇劑次表「未滿9歲但已入學 1劑」一致)。13 價結合型肺炎鏈球菌疫苗(PCV13):2 個月第一劑、4 個月第二劑、12–15 個月第三劑(目視確認第三劑跨 12 與 15 months 兩欄)。未含 PCV13 劑間最短間隔與補接種原則。"
+  - id: CDC_VACCINE_INTERVAL_11505
+    vaccine: COMMON
+    kind: other
+    title: "各項預防接種間隔時間一覽表;活性減毒與活性減毒疫苗接種間隔時間一覽表(115.05 版)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-05"
+    file: common/2026-05_cdc-vaccine-interval-table-11505.pdf
+    textFile: common/2026-05_cdc-vaccine-interval-table-11505.txt
+    sha256: 601cdae83086af6d409a99a40772a19fc2b8fc93d1f8a666771455bd460f1160
+    bytes: 570104
+    pages: 3
+    originalName: "各項預防接種間隔時間一覽表.pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    note: "PDF 建立 2026-05-21(中繼資料標題為亂碼,以內文「115.05版」為準)。內容為不同疫苗之間的間隔:不活化疫苗(含 PCV、PPV、流感)與其他疫苗可同時或間隔任何時間;活性減毒注射式疫苗之間不同時接種須間隔 28 天;免疫球蛋白/血液製劑後之活性減毒疫苗間隔。不含同一疫苗各劑之間的最短間隔(例如 PCV13 第 1、2、3 劑)。目前規則無需引用(流感、肺鏈、新冠皆不活化,與其他疫苗無間隔限制;VaxCheck 不判定跨疫苗間隔)。"

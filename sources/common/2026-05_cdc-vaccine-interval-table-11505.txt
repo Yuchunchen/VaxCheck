@@ -1,0 +1,104 @@
+                                各項預防接種間隔時間一覽表
+                                                                             115.05版
+                      疫 苗 種 類                      最 短 間 隔 時 間
+         ◆ B型肝炎疫苗（HepB）             ◆ 與其他不活化疫苗可同時（分開不同部位接種）或
+         ◆ 白喉破傷風非細胞性百日咳混合疫苗           間隔任何時間接種
+           （DTaP）
+         ◆ 白喉破傷風非細胞性百日咳及不活化小兒麻痺混合疫苗
+           混合疫苗（DTaP-IPV）
+         ◆ 減量破傷風白喉非細胞性百日咳混合
+           疫苗（Tdap）
+         ◆ 減量破傷風白喉非細胞性百日咳及
+           不活化小兒麻痺混合疫苗（Tdap -IPV）
+         ◆ 白喉破傷風混合疫苗（DT）
+         ◆ 破傷風減量白喉混合疫苗（Td）
+         ◆ 注射式小兒麻痺疫苗（IPV）
+         ◆ 日本腦炎疫苗（JE）
+   不活化疫苗
+         ◆ A型肝炎疫苗（HepA）
+         ◆ b型嗜血桿菌疫苗（Hib）
+         ◆ 流感疫苗（Influenza）
+         ◆ 狂犬病疫苗（Rabies）
+         ◆ 多醣體流行性腦脊髓膜炎疫苗（MPSV4）
+         ◆ 結合型流行性腦脊髓膜炎疫苗（MCV4）
+         ◆ 結合型肺炎鏈球菌疫苗(PCV）
+         ◆ 多醣體肺炎鏈球菌疫苗(PPV)
+         ◆ 人類乳突病毒疫苗(HPV)
+         ◆ A型肝炎B型肝炎混合疫苗（HepA-HepB）1
+         ◆ 五合一疫苗（DTaP-IPV-Hib）
+         ◆ 六合一疫苗（DTaP-IPV-HepB-Hib）
+
+            ◆ 卡介苗（BCG）                   ◆ 可同時接種，如不同時接種最少要間隔 28 天。如
+            ◆ 水痘疫苗（Varicella）              為卡介苗或口服活性減毒疫苗則可與其他活性減
+            ◆ 麻疹腮腺炎德國麻疹混合疫苗                毒注射式疫苗同時或間隔任何時間接種 2。
+              （MMR）                      ◆ 接受一般肌肉注射免疫球蛋白治療或 HBIG 者，宜
+            ◆ 黃熱病疫苗（Yellow fever）          間隔 3 個月後再接種 MMR、水痘或 JE 等活性減毒
+            ◆ 輪狀病毒疫苗（Rotavirus）            疫苗。麻疹個案接觸者，如施打預防性肌肉注射免
+            ◆ 口服小兒麻痺疫苗（OPV）1               疫球蛋白，則應間隔 6 個月以上再接種 MMR、水
+            ◆ 活性減毒嵌合型日本腦炎疫苗                痘或 JE 等活性減毒疫苗(palivizumab 無須間隔)
+              (JE-CV_ LiveAtd)           ◆ 輸過血或接受靜脈注射血液製品者，宜間隔 6 個月
+            ◆ 活性減毒流感疫苗（LAIV）               後再接種 MMR、水痘或 JE 疫苗（Washed RBCs
+   活性減毒疫苗                                  無須間隔）  。
+                                         ◆ 曾靜脈注射高劑量（≧1g/kg）免疫球蛋白治療時，
+                                           宜間隔 11 個月後再接受 MMR、水痘或 JE 疫苗。
+                                         ◆ 接種 MMR、水痘或 JE 活性減毒疫苗後至少間隔 2
+                                           週，方可接受免疫球蛋白輸液等血液製劑治療；間
+                                           隔時間小於前述者，應重新補接種，並依所接受的
+                                           免疫球蛋白輸液按上述規範之間隔(如 3、6、11 個
+                                           月)後補種。
+                                         ◆ 活性減毒流感疫苗與血液製劑之間無時間間隔限制
+                                           ，可與血液製劑同時，或於其前後任何時間接種，
+                                           均視為完成接種。
+                                         ◆ 霍亂疫苗與黃熱病疫苗應間隔3週以上。
+   不活化疫苗
+                                         ◆ 其他可同時(分開不同部位接種)或間隔任何時間接
+     與                    (上列兩種類)          種。
+   活性減毒疫苗
+
+備註：1.國內已無進口。
+   2.活性減毒疫苗間之接種間隔建議詳見「活性減毒與活性減毒疫苗接種間隔時間一覽表」。
+                  活性減毒與活性減毒疫苗接種間隔時間一覽表
+                                                                       115.05 版
+
+   疫苗項目                   接種間隔建議                                  備註
+卡介苗(BCG)    可與任何活性減毒疫苗同時接種或間隔任何時間接種 1,2。
+
+口 服 小 兒 麻 痺 疫 苗 可與其他活性減毒注射式疫苗同時或間隔任何時間接種，同為口服    ‧ WHO 2016 Polio vaccine position paper:
+(OPV)、輪狀病毒疫 的小兒麻痺疫苗與輪狀病毒疫苗須至少間隔 2 週 3,4,5。         Rotavirus 如與 OPV 同時口服，Rotavirus 的免
+苗(Rotavirus)                                       疫反應會受到 OPV 干擾，如已完成 OPV 基礎
+                                                   劑則 Rotavirus 不會受到 OPV 的影響。
+                                                 ‧ 接種間隔建議依我國 ACIP 先前會議結論。
+
+麻疹腮腺炎德國麻疹 可同時分開不同部位接種，如不同時接種最少要間隔 28 天 1,2,3,9。 ‧ 如未同時接種，且 2 劑疫苗接種間隔少於 28
+混合疫苗(MMR)、水                                        天，則第 2 劑疫苗須重打，且應與前 1 劑(無
+痘疫苗(Varicella)、活                                   效第 2 劑)接種疫苗最少間隔 28 天。
+性減毒嵌合型日本腦
+炎疫苗(JE-CV
+LiveAtd)、活性減毒
+流感疫苗（LAIV）
+黃熱病疫苗(YF)        可與水痘、MMR、JE 等其他活性減毒注射式疫苗同時分開不同部 ‧ 依美國 Yellow Book 建議，黃熱病疫苗與
+                 位接種，如不同時接種最少要間隔 28 天 1,2,6,7,8。   MMR 疫苗可同時接種，如不同時接種最少要
+                                                   間隔 30 天以上。
+                                                 ‧ 依英國 PHE 及澳洲衛生部之建議，黃熱病疫
+                                                   苗與 MMR 疫苗不宜同時接種，且最少應間隔
+                                                   28 天。同時接種黃熱病與 MMR 疫苗可能降
+                                                   低腮腺炎、德國麻疹及黃熱病抗原之免疫反
+                                                   應，如經評估，亟需獲得相關保護抗體，則
+                                                   可間隔任何時間接種，但須再補接種一劑
+                                                   MMR 疫苗。
+參考文獻
+1. Public Health England. Revised recommendations for the administration of more than on live vaccine (2015).
+2. National Immunisation Office of Ireland. Immunization Guidelines, Chapter2 General Immunisation Procedures.
+   Guidelines for time interval between live and non live vaccines antigens (2016).
+3. General Recommendations on Immunization (MMWR2011; 60:1-61).
+4. Ping-Ing Lee et al. Recommendations for Rotavirus Vaccine. Pediatrics and Neonatology (2013) 54,355-359.
+5. World Health Organization. Polio vaccine: WHO position paper. Co-administration with other vaccines. Weekly
+   epidemiological Record. 2016;91(12):155-156.
+6. Mutual interference on the immune response to yellow fever vaccine and a combined vaccine against measles, mumps and
+   rubella. Vaccine 29 (2011) 6327-6334
+7. Australian Government Department of Health. Australian Immunisation Handbook. Information about yellow fever
+   disease. Vaccines, dosage and administration. Co-administration with other vaccines.
+8. USA CDC. Yellow Book, Chapter2. General Recommendations for Vaccination & Immunoprophylaxis.
+9. Centers for Disease Control and Prevention. (2026, May 8). Live attenuated influenza vaccine [LAIV] (the nasal spray flu
+   vaccine). https://www.cdc.gov/flu/vaccine-types/nasalspray.html?s_cid=qr2022
+
