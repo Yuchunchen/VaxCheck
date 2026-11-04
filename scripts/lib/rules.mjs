@@ -150,7 +150,7 @@ export function semanticCheck(rs, niisCodes, errors) {
     for (const c of v.dosing?.cases || []) {
       if (c.criteria) checkTree(c.criteria, `${v.vaccineId}.${c.id}`);
       walk(c.when, (n) => {
-        const arr = n.none || (Array.isArray(n.has) ? n.has : n.has?.codes);
+        const arr = n.none || (Array.isArray(n.has) ? n.has : n.has?.codes) || n.doses?.codes || n.firstDose?.codes;
         (arr || []).forEach((x) => okCode(x) || errors.push(`${v.vaccineId}.${c.id}:疫苗代碼不在對照表 ${x}`));
       });
       (c.then.intervalFrom || []).forEach((x) => okCode(x) || errors.push(`${v.vaccineId}.${c.id}:intervalFrom 代碼不在對照表 ${x}`));

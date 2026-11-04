@@ -193,6 +193,7 @@ files:
     originalName: "現行兒童預防接種時程表_(11509版)_中文.pdf"
     receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
     archivedAt: "2026-11-04"
+    ruleSourceIds: [SRC_CDC_CHILD_SCHEDULE_11509]
     note: "PDF 建立 2026-10-07。紅字(本版新增/修訂):流感列「9 歲以下初次接種或 3 歲以下累計僅曾接種 1 劑者,接種 2 劑,2 劑間隔 4 週以上;其餘狀況每年 1 劑」;附註3「國小學童於學校集中接種流感疫苗…統一提供 1 劑公費疫苗,故國小一、二年級學童若有第 2 劑流感疫苗接種需求,仍可於學校接種第一劑至少隔 4 週後,至醫療院所自費接種第 2 劑」(與流感工作手冊 115 年 7 月版學生篇劑次表「未滿9歲但已入學 1劑」一致)。13 價結合型肺炎鏈球菌疫苗(PCV13):2 個月第一劑、4 個月第二劑、12–15 個月第三劑(目視確認第三劑跨 12 與 15 months 兩欄)。未含 PCV13 劑間最短間隔與補接種原則。"
   - id: CDC_VACCINE_INTERVAL_11505
     vaccine: COMMON
@@ -209,3 +210,68 @@ files:
     receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
     archivedAt: "2026-11-04"
     note: "PDF 建立 2026-05-21(中繼資料標題為亂碼,以內文「115.05版」為準)。內容為不同疫苗之間的間隔:不活化疫苗(含 PCV、PPV、流感)與其他疫苗可同時或間隔任何時間;活性減毒注射式疫苗之間不同時接種須間隔 28 天;免疫球蛋白/血液製劑後之活性減毒疫苗間隔。不含同一疫苗各劑之間的最短間隔(例如 PCV13 第 1、2、3 劑)。目前規則無需引用(流感、肺鏈、新冠皆不活化,與其他疫苗無間隔限制;VaxCheck 不判定跨疫苗間隔)。"
+  - id: CDC_PCV13_CHILD_PRINCIPLE_10504
+    vaccine: PNEUMO
+    kind: other
+    title: "5 歲以下幼童公費 13 價結合型肺炎鏈球菌疫苗(PCV13)接種原則(105 年 4 月修訂)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2016-04"
+    file: pneumo/2016-04_pcv13-child-principle-10504.pdf
+    textFile: pneumo/2016-04_pcv13-child-principle-10504.txt
+    sha256: c46895063d38730f85f959d5c5c09ed679df661b5ef23ae3299802b72ff8134b
+    bytes: 88298
+    pages: 1
+    originalName: "5歲以下幼童13價結合型肺炎鏈球菌疫苗接種原則(105年4月修訂).pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    ruleSourceIds: [SRC_CDC_PCV13_CHILD_PRINCIPLE_10504]
+    note: "PDF 建立 2016-04-20。依幼兒目前年齡(1 歲以下 / 滿 1 歲–未滿 2 歲 / 滿 2 歲–未滿 5 歲)與 PCV13 已接種劑次列公費提供劑次與時程;備註3 高危險群依第 1 劑接種月齡(2–<7 個月 / 7–<12 個月 / 12–<60 個月)。115.09 版兒童接種時程(CDC_CHILD_SCHEDULE_11509)仍為 PCV13 2、4、12–15 個月,與本原則一致。"
+  - id: CDC_PCV13_CHILD_QA_10504
+    vaccine: PNEUMO
+    kind: qa
+    title: "105 年公費 13 價結合型肺炎鏈球菌疫苗(PCV13)接種 Q&A(105 年 4 月版)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2016-04"
+    file: pneumo/2016-04_pcv13-child-qa-10504.pdf
+    textFile: pneumo/2016-04_pcv13-child-qa-10504.txt
+    sha256: 85febd465d957ce979ec73bba01a7a1b39ab319e8adf211b864d1c649c1d2da2
+    bytes: 109534
+    pages: 3
+    originalName: "5歲以下幼童13價結合型肺炎鏈球菌疫苗問與答(105年4月版).pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    ruleSourceIds: [SRC_CDC_PCV13_CHILD_QA_10504]
+    note: "PDF 建立 2016-04-20。Q1 實施對象出生滿 2 個月至未滿 60 個月、未曾接種或尚未完成;Q4 特殊狀況最早出生滿 6 週;Q5 最短間隔(1 歲前基礎劑 8 週,第 1 劑於滿 7 個月才開始者與第 2 劑可縮短為 4 週;1 歲後追加劑滿 12 個月以後且與前劑 8 週);Q6 高危險群六大類;Q7 高危險群接/補種原則。"
+  - id: CDC_PCV13_CHILD_HIGHRISK_ICD
+    vaccine: PNEUMO
+    kind: annex
+    title: "幼童肺炎鏈球菌高危險群之 ICD code 參考表(ICD-9-CM 2001 年版 / ICD-10-CM 2015 年版)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2025-03"
+    file: pneumo/2025-03_pcv13-child-highrisk-icd.ods
+    textFile: pneumo/2025-03_pcv13-child-highrisk-icd.tsv
+    sha256: d1a2dac90fada29fe4c228c6cbf7baeecc5f547c0387e72839151edc3ec9c8d2
+    bytes: 9157
+    pages: 1
+    originalName: "幼童肺炎鏈球菌高危險群之ICDcode參考表.ods"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    ruleSourceIds: [SRC_CDC_PCV13_CHILD_HIGHRISK_ICD]
+    codelists: [rules/codelists/pcv13-child-highrisk.cdc.json]
+    note: "試算表(工作表「IPD高危險群」);pages 記 1 = 工作表數。檔案中繼資料:建立 2006-09-16、最後修改 2025-03-10(與成人 IPD 參考表 1140310 同日),published 依最後修改日。六大類與 Q&A Q6 相同。人工耳植入僅列 ICD-10-PCS 處置碼(含 O9HD… 筆誤);惡性腫瘤欄寫「參照重大傷病對照表(類別1:惡性腫瘤)」= CDC_PCV13_CHILD_HIGHRISK_ICD_MALIGNANCY。"
+  - id: CDC_PCV13_CHILD_HIGHRISK_ICD_MALIGNANCY
+    vaccine: PNEUMO
+    kind: annex
+    title: "幼童肺炎鏈球菌高危險群之 ICD code 參考表—惡性腫瘤(重大傷病類別 01;ICD-9-CM 對 ICD-10-CM)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2016-04"
+    file: pneumo/2016-04_pcv13-child-highrisk-icd-malignancy.ods
+    textFile: pneumo/2016-04_pcv13-child-highrisk-icd-malignancy.tsv
+    sha256: b54b946153a340e6e0232660f817256dd2202cc212bf06cd3608db507064fb25
+    bytes: 60116
+    pages: 1
+    originalName: "幼童肺炎鏈球菌高危險群之ICDcode參考表-惡性腫瘤.ods"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    ruleSourceIds: [SRC_CDC_PCV13_CHILD_HIGHRISK_ICD]
+    note: "rules/codelists/pcv13-child-highrisk.cdc.json 的 malignancy 段由本檔產生(雜湊記在 JSON 的 malignancySourceSha256;sourceSha256 為主表)。試算表(工作表「惡性腫瘤」,1,444 列,ICD-10-CM 不含小數點,去重後 1,135 碼,全為 C 碼)。檔案中繼資料:建立 2015-12-23、最後修改 2016-04-20。"

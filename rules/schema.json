@@ -601,6 +601,60 @@
               }
             }
           }
+        },
+        {
+          "type": "object",
+          "required": [
+            "doses"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "doses": {
+              "type": "object",
+              "required": ["codes"],
+              "additionalProperties": false,
+              "description": "v0.4.28:依接種當時月齡計數的劑數。ageAtDose.min 含當日;max 與 age 葉同語意(≤ max = 未滿 max + 1 單位)。需 dosing.requireDoseDates",
+              "properties": {
+                "codes": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "ageAtDose": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "min": { "$ref": "#/definitions/ageValue" },
+                    "max": { "$ref": "#/definitions/ageValue" }
+                  }
+                },
+                "min": { "type": "integer", "minimum": 0 },
+                "max": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "firstDose"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "firstDose": {
+              "type": "object",
+              "required": ["codes", "ageAtDose"],
+              "additionalProperties": false,
+              "description": "v0.4.28:第 1 劑接種當時月齡落在區間內;無紀錄為 false",
+              "properties": {
+                "codes": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "ageAtDose": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "min": { "$ref": "#/definitions/ageValue" },
+                    "max": { "$ref": "#/definitions/ageValue" }
+                  }
+                }
+              }
+            }
+          }
         }
       ]
     },
@@ -629,6 +683,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "requireDoseDates": {
+          "type": "boolean",
+          "description": "v0.4.28:cases 依接種月齡判定;缺生日或 historyMatch 代碼有接種日期不明的紀錄 → needs_review"
         },
         "cases": {
           "type": "array",
@@ -689,6 +747,13 @@
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "minAge": {
+                    "$ref": "#/definitions/ageValue"
+                  },
+                  "nextDose": {
+                    "type": "boolean",
+                    "description": "v0.4.28:劑次 = intervalFrom(預設 when 內代碼)已接種劑數 + 1"
                   },
                   "note": {
                     "type": "string"

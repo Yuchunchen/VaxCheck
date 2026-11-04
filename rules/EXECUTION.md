@@ -74,6 +74,7 @@ NIIS 查完合併進 Bundle 後重跑同一段:`vaccination` 變成 true/false,P
 ```
 computeCases(dosing, 接種史):
   接種史未查 → pending_history
+  requireDoseDates(v0.4.28)且缺生日或接種日期不明 → needs_review(劑次依接種月齡,不猜)
   for case in cases(由上往下):
     when 不命中 → 下一個
     criteria 存在且 unknown → 記住第一個「待定 case」,並先算好它的 then 結果(確認後會怎樣),繼續往下

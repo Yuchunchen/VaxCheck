@@ -1,0 +1,6027 @@
+{
+ "id": "CDC_PCV13_CHILD_HIGHRISK_ICD",
+ "title": "幼童肺炎鏈球菌高危險群之ICD code參考表(含惡性腫瘤分表)",
+ "issuer": "衛生福利部疾病管制署",
+ "icdVersion": "原表 ICD-10-CM 2015 年版;3 碼類目在規則中展開為其下所有細碼(含 2023 版)",
+ "sourceFiles": {
+  "main": "sources/pneumo/2025-03_pcv13-child-highrisk-icd.ods",
+  "malignancy": "sources/pneumo/2016-04_pcv13-child-highrisk-icd-malignancy.ods"
+ },
+ "sourceSha256": "d1a2dac90fada29fe4c228c6cbf7baeecc5f547c0387e72839151edc3ec9c8d2",
+ "malignancySourceSha256": "b54b946153a340e6e0232660f817256dd2202cc212bf06cd3608db507064fb25",
+ "generatedBy": "scripts/build-pcv13-child-codelist.mjs",
+ "note": "供醫師評估參考:高危險群幼童請主動出具診斷書等證明文件(Q&A Q9)。病歷診斷碼只用來預勾「肺鏈高危險群幼童」,醫師可取消。惡性腫瘤須另有接受免疫抑制劑或放射治療(規則以一年內抗癌藥處方推估,同成人 IPD)。",
+ "deviations": [
+  {
+   "section": "spleen",
+   "code": "Q89.0*",
+   "src": "Q89",
+   "reason": "原表 Q89 為整個類目,含 Q89.1 腎上腺、Q89.2 其他內分泌腺、Q89.3 內臟逆位、Q89.4 連體、Q89.7–Q89.9 等非脾臟畸形;依病名(ICD-9 759.0 脾臟異常)收斂為 Q89.0*(Q89.01 無脾、Q89.09 其他脾臟先天畸形)"
+  },
+  {
+   "section": "immune",
+   "code": "D82-D83",
+   "src": "D83-82",
+   "reason": "原表寫「D83-82」,依區間寫法改為 D82-D83"
+  },
+  {
+   "section": "chronic",
+   "code": "Q25.4*",
+   "src": "Q25.4",
+   "reason": "原表「其他之主動脈畸形」「其他主動脈畸形」兩列寫 Q25(整個類目,含 Q25.0 開放性動脈導管等非發紺性畸形);依病名(ICD-9 747.2/747.29 其他主動脈畸形)收斂為 Q25.4*,與「主動脈閉鎖及狹窄」(原表 Q25.4)同碼"
+  },
+  {
+   "section": "chronic",
+   "code": "Q25.5-Q25.7",
+   "src": "Q25.5-25.7",
+   "reason": "原表寫「Q25.5-25.7」,補上字母為 Q25.5-Q25.7"
+  },
+  {
+   "section": "transplant",
+   "code": "Z95.3",
+   "src": "Z95",
+   "reason": "原表 Z95 為整個類目(含 Z95.0 心律調節器、Z95.1 冠狀動脈繞道、Z95.5 冠狀動脈支架等非移植植入物);依病名(心臟瓣膜移植)收斂為 Z95.3 異種心臟瓣膜、Z95.4 其他心臟瓣膜置換"
+  }
+ ],
+ "notTranscribed": [
+  {
+   "section": "三、人工耳植入者",
+   "reason": "原表只列 ICD-10-PCS 處置碼(09HD…、09PD…,含 O9HD… 筆誤),健保雲端診斷資料無處置碼;證據改用成人 IPD 參考表 1140310 的人工耳診斷碼(IPD_COCHLEAR_DX)"
+  },
+  {
+   "section": "六(一)、惡性腫瘤",
+   "reason": "原表寫「參照重大傷病對照表(類別1:惡性腫瘤)」→ 見 malignancy 段(另一試算表)"
+  }
+ ],
+ "sections": {
+  "spleen": {
+   "label": "一、脾臟功能缺損",
+   "count": 3,
+   "codes": [
+    {
+     "code": "Q89.0*",
+     "en": "Anomalies of spleen",
+     "zh": "脾臟異常",
+     "src": "Q89"
+    },
+    {
+     "code": "D57",
+     "en": "Sickle-cell anemia",
+     "zh": "鐮刀狀紅血球貧血",
+     "src": "D57"
+    },
+    {
+     "code": "D56",
+     "en": "Thalassemias",
+     "zh": "地中海型貧血",
+     "src": "D56",
+     "note": "含 D56.3 輕型地中海型貧血(原表類目;成人 IPD 表 1140310 亦列)"
+    }
+   ]
+  },
+  "immune": {
+   "label": "二、先天或後天免疫功能不全(包括愛滋病毒感染者)",
+   "count": 9,
+   "codes": [
+    {
+     "code": "D80",
+     "en": "Deficiency of humoral immunity",
+     "zh": "體液免疫缺乏症",
+     "src": "D80"
+    },
+    {
+     "code": "D82-D83",
+     "en": "Deficiency of cell-mediated immunity",
+     "zh": "細胞性免疫缺乏症",
+     "src": "D83-82"
+    },
+    {
+     "code": "D81",
+     "en": "Combined immunity deficiency",
+     "zh": "複合性免疫力缺乏症",
+     "src": "D81"
+    },
+    {
+     "code": "D89",
+     "en": "Unspecified disorder of immune mechanism",
+     "zh": "未明示之免疫疾病",
+     "src": "D89"
+    },
+    {
+     "code": "B20",
+     "en": "Human immunodeficiency virus (HIV) infection disease",
+     "zh": "人類免疫不全病毒感染疾病",
+     "src": "B20"
+    },
+    {
+     "code": "B97.35",
+     "en": "HIV-2 infections in conditions classified elsewhere and of unspecified site",
+     "zh": "特定情況之第二型人類免疫不全病毒感染",
+     "src": "B97.35"
+    },
+    {
+     "code": "D60",
+     "en": "Aplastic anemia",
+     "zh": "再生不良性貧血",
+     "src": "D60-61,D46"
+    },
+    {
+     "code": "D61",
+     "en": "Aplastic anemia",
+     "zh": "再生不良性貧血",
+     "src": "D60-61,D46"
+    },
+    {
+     "code": "D46",
+     "en": "Myelodysplastic syndromes",
+     "zh": "骨髓化生不良症候群",
+     "src": "D60-61,D46",
+     "note": "原表與再生不良性貧血同列(D60-61,D46)"
+    }
+   ]
+  },
+  "chronic": {
+   "label": "四、慢性疾病(慢性腎病變含腎病症候群、先天發紺性心臟病含心臟衰竭、慢性肺臟病〔氣喘除外〕、糖尿病)",
+   "count": 20,
+   "codes": [
+    {
+     "code": "N04",
+     "en": "Nephrotic syndrome",
+     "zh": "腎徵候群",
+     "src": "N04"
+    },
+    {
+     "code": "N03",
+     "en": "Chronic glomerulonephritis",
+     "zh": "慢性絲球腎炎",
+     "src": "N03,N08"
+    },
+    {
+     "code": "N08",
+     "en": "Chronic glomerulonephritis",
+     "zh": "慢性絲球腎炎",
+     "src": "N03,N08"
+    },
+    {
+     "code": "N18",
+     "en": "Chronic renal failure",
+     "zh": "慢性腎衰竭",
+     "src": "N18"
+    },
+    {
+     "code": "N19",
+     "en": "Renal failure, unspecified",
+     "zh": "腎衰竭,未明示者",
+     "src": "N19"
+    },
+    {
+     "code": "I12",
+     "en": "Hypertensive renal disease",
+     "zh": "高血壓性腎臟病",
+     "src": "I12"
+    },
+    {
+     "code": "I13",
+     "en": "Hypertensive heart and renal disease",
+     "zh": "高血壓性心臟及腎臟病",
+     "src": "I13",
+     "note": "原表 4 列(含惡性、良性、未明示)皆為 I13"
+    },
+    {
+     "code": "Q20",
+     "en": "Common truncus; transposition of great vessels; common ventricle; cor biloculare",
+     "zh": "共同動脈幹、大血管轉位、共同單一心室、兩腔心",
+     "src": "Q20",
+     "note": "原表 4 列皆為 Q20"
+    },
+    {
+     "code": "Q21.3*",
+     "en": "Tetralogy of fallot",
+     "zh": "法洛氏四合症",
+     "src": "Q21.3"
+    },
+    {
+     "code": "Q21.2*",
+     "en": "Endocardial cushion defects",
+     "zh": "心內膜墊缺陷",
+     "src": "Q21.2"
+    },
+    {
+     "code": "Q25.1*",
+     "en": "Coarctation of aorta",
+     "zh": "主動脈縮窄",
+     "src": "Q25.1"
+    },
+    {
+     "code": "Q25.2*",
+     "en": "Anomalies of aortic arch",
+     "zh": "主動脈弓畸形",
+     "src": "Q25.2"
+    },
+    {
+     "code": "Q25.4*",
+     "en": "Atresia and stenosis of aorta; other anomalies of aorta",
+     "zh": "主動脈閉鎖及狹窄、其他主動脈畸形",
+     "src": "Q25.4"
+    },
+    {
+     "code": "Q25.5-Q25.7",
+     "en": "Anomalies of pulmonary artery",
+     "zh": "肺動脈畸形",
+     "src": "Q25.5-25.7"
+    },
+    {
+     "code": "Q26.9",
+     "en": "Anomalies of great veins",
+     "zh": "大靜脈畸形",
+     "src": "Q26.9"
+    },
+    {
+     "code": "I50",
+     "en": "Heart failure",
+     "zh": "心臟衰竭",
+     "src": "I50"
+    },
+    {
+     "code": "P27",
+     "en": "Chronic respiratory disease arising in the perinatal period",
+     "zh": "周產期引起之慢性呼吸性疾病",
+     "src": "P27"
+    },
+    {
+     "code": "J47",
+     "en": "Bronchiectasis",
+     "zh": "支氣管擴張症",
+     "src": "J47"
+    },
+    {
+     "code": "E08-E11",
+     "en": "Diabetes mellitus",
+     "zh": "糖尿病",
+     "src": "E08-E11,E13"
+    },
+    {
+     "code": "E13",
+     "en": "Diabetes mellitus",
+     "zh": "糖尿病",
+     "src": "E08-E11,E13"
+    }
+   ]
+  },
+  "csf_leak": {
+   "label": "五、腦脊髓液滲漏",
+   "count": 1,
+   "codes": [
+    {
+     "code": "G96.0*",
+     "en": "Cerebrospinal fluid leak",
+     "zh": "腦脊髓液滲漏",
+     "src": "G96.0",
+     "note": "2023 版細分 G96.00–G96.09"
+    }
+   ]
+  },
+  "transplant": {
+   "label": "六(二)、器官移植",
+   "count": 9,
+   "codes": [
+    {
+     "code": "Z94",
+     "en": "Organ or tissue replaced by transplant",
+     "zh": "器官或組織之移植術後",
+     "src": "Z94"
+    },
+    {
+     "code": "Z94.0",
+     "en": "Kidney replaced by transplant",
+     "zh": "腎臟移植術後",
+     "src": "Z94.0"
+    },
+    {
+     "code": "Z94.1",
+     "en": "Heart replaced by transplant",
+     "zh": "心臟移植術後",
+     "src": "Z94.1"
+    },
+    {
+     "code": "Z94.2",
+     "en": "Lung replaced by transplant",
+     "zh": "肺臟移植術後",
+     "src": "Z94.2"
+    },
+    {
+     "code": "Z94.4",
+     "en": "Liver replaced by transplant",
+     "zh": "肝臟移植術後",
+     "src": "Z94.4"
+    },
+    {
+     "code": "Z94.89",
+     "en": "Other specified organ or tissue replaced by transplant",
+     "zh": "其他特定器官或組織移植術後",
+     "src": "Z94.89"
+    },
+    {
+     "code": "Z94.9",
+     "en": "Unspecified organ or tissue replaced by transplant",
+     "zh": "未明示之器官或組織之移植術後",
+     "src": "Z94.9"
+    },
+    {
+     "code": "Z95.3",
+     "en": "Heart valve replaced by transplant",
+     "zh": "心臟瓣膜移植術後",
+     "src": "Z95"
+    },
+    {
+     "code": "Z95.4",
+     "en": "Heart valve replaced by transplant",
+     "zh": "心臟瓣膜移植術後",
+     "src": "Z95"
+    }
+   ]
+  },
+  "malignancy": {
+   "label": "六(一)、接受免疫抑制劑或放射治療的惡性腫瘤(重大傷病類別 01)",
+   "count": 1135,
+   "rows": 1444,
+   "codes": [
+    {
+     "code": "C00.0*",
+     "en": "Malignant neoplasm of external upper lip",
+     "zh": "上唇外側惡性腫瘤"
+    },
+    {
+     "code": "C00.1*",
+     "en": "Malignant neoplasm of external lower lip",
+     "zh": "下唇外側惡性腫瘤"
+    },
+    {
+     "code": "C00.3*",
+     "en": "Malignant neoplasm of upper lip, inner aspect",
+     "zh": "上唇內側惡性腫瘤"
+    },
+    {
+     "code": "C00.4*",
+     "en": "Malignant neoplasm of lower lip, inner aspect",
+     "zh": "下唇內側惡性腫瘤"
+    },
+    {
+     "code": "C00.5*",
+     "en": "Malignant neoplasm of lip, unspecified, inner aspect",
+     "zh": "唇內側惡性腫瘤"
+    },
+    {
+     "code": "C00.6*",
+     "en": "Malignant neoplasm of commissure of lip, unspecified",
+     "zh": "唇連合惡性腫瘤"
+    },
+    {
+     "code": "C00.8*",
+     "en": "Malignant neoplasm of overlapping sites of lip",
+     "zh": "唇重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C00.2*",
+     "en": "Malignant neoplasm of external lip, unspecified",
+     "zh": "唇外側惡性腫瘤"
+    },
+    {
+     "code": "C00.9*",
+     "en": "Malignant neoplasm of lip, unspecified",
+     "zh": "唇惡性腫瘤"
+    },
+    {
+     "code": "C01*",
+     "en": "Malignant neoplasm of base of tongue",
+     "zh": "舌基部惡性腫瘤"
+    },
+    {
+     "code": "C02.0*",
+     "en": "Malignant neoplasm of dorsal surface of tongue",
+     "zh": "舌背面惡性腫瘤"
+    },
+    {
+     "code": "C02.1*",
+     "en": "Malignant neoplasm of border of tongue",
+     "zh": "舌(邊)緣惡性腫瘤"
+    },
+    {
+     "code": "C02.2*",
+     "en": "Malignant neoplasm of ventral surface of tongue",
+     "zh": "舌腹面惡性腫瘤"
+    },
+    {
+     "code": "C02.3*",
+     "en": "Malignant neoplasm of anterior two-thirds of tongue, part unspecified",
+     "zh": "舌前三分之二部位之惡性腫瘤，未明示部位"
+    },
+    {
+     "code": "C02.8*",
+     "en": "Malignant neoplasm of overlapping sites of tongue",
+     "zh": "舌重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C02.4*",
+     "en": "Malignant neoplasm of lingual tonsil",
+     "zh": "舌扁桃體惡性腫瘤"
+    },
+    {
+     "code": "C02.9*",
+     "en": "Malignant neoplasm of tongue, unspecified",
+     "zh": "舌部惡性腫瘤"
+    },
+    {
+     "code": "C07*",
+     "en": "Malignant neoplasm of parotid gland",
+     "zh": "腮腺惡性腫瘤"
+    },
+    {
+     "code": "C08.0*",
+     "en": "Malignant neoplasm of submandibular gland",
+     "zh": "頜下腺惡性腫瘤"
+    },
+    {
+     "code": "C08.1*",
+     "en": "Malignant neoplasm of sublingual gland",
+     "zh": "舌下腺惡性腫瘤"
+    },
+    {
+     "code": "C08.9*",
+     "en": "Malignant neoplasm of major salivary gland, unspecified",
+     "zh": "主要唾液腺惡性腫瘤"
+    },
+    {
+     "code": "C03.0*",
+     "en": "Malignant neoplasm of upper gum",
+     "zh": "上齒齦惡性腫瘤"
+    },
+    {
+     "code": "C03.1*",
+     "en": "Malignant neoplasm of lower gum",
+     "zh": "下齒齦惡性腫瘤"
+    },
+    {
+     "code": "C03.9*",
+     "en": "Malignant neoplasm of gum, unspecified",
+     "zh": "齒齦惡性腫瘤"
+    },
+    {
+     "code": "C04.0*",
+     "en": "Malignant neoplasm of anterior floor of mouth",
+     "zh": "口底前部惡性腫瘤"
+    },
+    {
+     "code": "C04.1*",
+     "en": "Malignant neoplasm of lateral floor of mouth",
+     "zh": "口底側部惡性腫瘤"
+    },
+    {
+     "code": "C04.8*",
+     "en": "Malignant neoplasm of overlapping sites of floor of mouth",
+     "zh": "口底重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C04.9*",
+     "en": "Malignant neoplasm of floor of mouth, unspecified",
+     "zh": "口底惡性腫瘤"
+    },
+    {
+     "code": "C06.0*",
+     "en": "Malignant neoplasm of cheek mucosa",
+     "zh": "頰粘膜惡性腫瘤"
+    },
+    {
+     "code": "C06.1*",
+     "en": "Malignant neoplasm of vestibule of mouth",
+     "zh": "口前庭部惡性腫瘤"
+    },
+    {
+     "code": "C05.0*",
+     "en": "Malignant neoplasm of hard palate",
+     "zh": "硬顎惡性腫瘤"
+    },
+    {
+     "code": "C05.1*",
+     "en": "Malignant neoplasm of soft palate",
+     "zh": "軟顎惡性腫瘤"
+    },
+    {
+     "code": "C05.2*",
+     "en": "Malignant neoplasm of uvula",
+     "zh": "懸雍垂惡性腫瘤"
+    },
+    {
+     "code": "C05.8*",
+     "en": "Malignant neoplasm of overlapping sites of palate",
+     "zh": "顎重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C05.9*",
+     "en": "Malignant neoplasm of palate, unspecified",
+     "zh": "顎惡性腫瘤"
+    },
+    {
+     "code": "C06.2*",
+     "en": "Malignant neoplasm of retromolar area",
+     "zh": "臼齒後區惡性腫瘤"
+    },
+    {
+     "code": "C06.80*",
+     "en": "Malignant neoplasm of overlapping sites of unspecified parts of mouth",
+     "zh": "口腔未明示重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C06.89*",
+     "en": "Malignant neoplasm of overlapping sites of other parts of mouth",
+     "zh": "口腔其他重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C06.9*",
+     "en": "Malignant neoplasm of mouth, unspecified",
+     "zh": "口惡性腫瘤"
+    },
+    {
+     "code": "C09.8*",
+     "en": "Malignant neoplasm of overlapping sites of tonsil",
+     "zh": "扁桃體重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C09.9*",
+     "en": "Malignant neoplasm of tonsil, unspecified",
+     "zh": "扁桃腺惡性腫瘤"
+    },
+    {
+     "code": "C09.0*",
+     "en": "Malignant neoplasm of tonsillar fossa",
+     "zh": "扁桃腺窩惡性腫瘤"
+    },
+    {
+     "code": "C09.1*",
+     "en": "Malignant neoplasm of tonsillar pillar (anterior) (posterior)",
+     "zh": "扁桃腺柱(前,後)惡性腫瘤"
+    },
+    {
+     "code": "C10.0*",
+     "en": "Malignant neoplasm of vallecula",
+     "zh": "會厭谿部惡性腫瘤"
+    },
+    {
+     "code": "C10.1*",
+     "en": "Malignant neoplasm of anterior surface of epiglottis",
+     "zh": "會厭前面惡性腫瘤"
+    },
+    {
+     "code": "C10.8*",
+     "en": "Malignant neoplasm of overlapping sites of oropharynx",
+     "zh": "口咽重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C10.2*",
+     "en": "Malignant neoplasm of lateral wall of oropharynx",
+     "zh": "口咽側壁惡性腫瘤"
+    },
+    {
+     "code": "C10.3*",
+     "en": "Malignant neoplasm of posterior wall of oropharynx",
+     "zh": "口咽後壁惡性腫瘤"
+    },
+    {
+     "code": "C10.4*",
+     "en": "Malignant neoplasm of branchial cleft",
+     "zh": "鰓裂惡性腫瘤"
+    },
+    {
+     "code": "C10.9*",
+     "en": "Malignant neoplasm of oropharynx, unspecified",
+     "zh": "口咽惡性腫瘤"
+    },
+    {
+     "code": "C11.0*",
+     "en": "Malignant neoplasm of superior wall of nasopharynx",
+     "zh": "鼻咽上壁惡性腫瘤"
+    },
+    {
+     "code": "C11.1*",
+     "en": "Malignant neoplasm of posterior wall of nasopharynx",
+     "zh": "鼻咽後壁惡性腫瘤"
+    },
+    {
+     "code": "C11.2*",
+     "en": "Malignant neoplasm of lateral wall of nasopharynx",
+     "zh": "鼻咽側壁惡性腫瘤"
+    },
+    {
+     "code": "C11.3*",
+     "en": "Malignant neoplasm of anterior wall of nasopharynx",
+     "zh": "鼻咽前壁惡性腫瘤"
+    },
+    {
+     "code": "C11.8*",
+     "en": "Malignant neoplasm of overlapping sites of nasopharynx",
+     "zh": "鼻咽重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C11.9*",
+     "en": "Malignant neoplasm of nasopharynx, unspecified",
+     "zh": "鼻咽惡性腫瘤"
+    },
+    {
+     "code": "C13.0*",
+     "en": "Malignant neoplasm of postcricoid region",
+     "zh": "環狀軟骨後部惡性腫瘤"
+    },
+    {
+     "code": "C12*",
+     "en": "Malignant neoplasm of pyriform sinus",
+     "zh": "梨狀竇惡性腫瘤"
+    },
+    {
+     "code": "C13.1*",
+     "en": "Malignant neoplasm of aryepiglottic fold, hypopharyngeal aspect",
+     "zh": "杓狀軟骨皺壁下咽面惡性腫瘤"
+    },
+    {
+     "code": "C13.2*",
+     "en": "Malignant neoplasm of posterior wall of hypopharynx",
+     "zh": "下咽後壁惡性腫瘤"
+    },
+    {
+     "code": "C13.8*",
+     "en": "Malignant neoplasm of overlapping sites of hypopharynx",
+     "zh": "下咽重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C13.9*",
+     "en": "Malignant neoplasm of hypopharynx, unspecified",
+     "zh": "下咽惡性腫瘤"
+    },
+    {
+     "code": "C14.0*",
+     "en": "Malignant neoplasm of pharynx, unspecified",
+     "zh": "咽部惡性腫瘤"
+    },
+    {
+     "code": "C14.2*",
+     "en": "Malignant neoplasm of Waldeyer's ring",
+     "zh": "Waldeyer氏扁桃環惡性腫瘤"
+    },
+    {
+     "code": "C14.8*",
+     "en": "Malignant neoplasm of overlapping sites of lip, oral cavity and pharynx",
+     "zh": "唇，口腔及咽重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C15.3*",
+     "en": "Malignant neoplasm of upper third of esophagus",
+     "zh": "食道上三分之一惡性腫瘤"
+    },
+    {
+     "code": "C15.4*",
+     "en": "Malignant neoplasm of middle third of esophagus",
+     "zh": "食道中三分之一惡性腫瘤"
+    },
+    {
+     "code": "C15.5*",
+     "en": "Malignant neoplasm of lower third of esophagus",
+     "zh": "食道下三分之一惡性腫瘤"
+    },
+    {
+     "code": "C15.8*",
+     "en": "Malignant neoplasm of overlapping sites of esophagus",
+     "zh": "食道重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C15.9*",
+     "en": "Malignant neoplasm of esophagus, unspecified",
+     "zh": "食道惡性腫瘤"
+    },
+    {
+     "code": "C16.0*",
+     "en": "Malignant neoplasm of cardia",
+     "zh": "賁門部惡性腫瘤"
+    },
+    {
+     "code": "C7A.092*",
+     "en": "Malignant carcinoid tumor of the stomach",
+     "zh": "胃惡性類癌"
+    },
+    {
+     "code": "C16.4*",
+     "en": "Malignant neoplasm of pylorus",
+     "zh": "幽門部惡性腫瘤"
+    },
+    {
+     "code": "C16.3*",
+     "en": "Malignant neoplasm of pyloric antrum",
+     "zh": "幽門竇惡性腫瘤"
+    },
+    {
+     "code": "C16.1*",
+     "en": "Malignant neoplasm of fundus of stomach",
+     "zh": "胃底部惡性腫瘤"
+    },
+    {
+     "code": "C16.2*",
+     "en": "Malignant neoplasm of body of stomach",
+     "zh": "胃體部惡性腫瘤"
+    },
+    {
+     "code": "C16.5*",
+     "en": "Malignant neoplasm of lesser curvature of stomach, unspecified",
+     "zh": "胃小彎惡性腫瘤"
+    },
+    {
+     "code": "C16.6*",
+     "en": "Malignant neoplasm of greater curvature of stomach, unspecified",
+     "zh": "胃大彎惡性腫瘤"
+    },
+    {
+     "code": "C16.8*",
+     "en": "Malignant neoplasm of overlapping sites of stomach",
+     "zh": "胃重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C16.9*",
+     "en": "Malignant neoplasm of stomach, unspecified",
+     "zh": "胃惡性腫瘤"
+    },
+    {
+     "code": "C17.0*",
+     "en": "Malignant neoplasm of duodenum",
+     "zh": "十二指腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.010*",
+     "en": "Malignant carcinoid tumor of the duodenum",
+     "zh": "十二指腸惡性類癌"
+    },
+    {
+     "code": "C17.1*",
+     "en": "Malignant neoplasm of jejunum",
+     "zh": "空腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.011*",
+     "en": "Malignant carcinoid tumor of the jejunum",
+     "zh": "空腸惡性類癌"
+    },
+    {
+     "code": "C17.2*",
+     "en": "Malignant neoplasm of ileum",
+     "zh": "迴腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.012*",
+     "en": "Malignant carcinoid tumor of the ileum",
+     "zh": "迴腸惡性類癌"
+    },
+    {
+     "code": "C17.3*",
+     "en": "Meckel's diverticulum, malignant",
+     "zh": "惡性Meckel氏憩室"
+    },
+    {
+     "code": "C17.8*",
+     "en": "Malignant neoplasm of overlapping sites of small intestine",
+     "zh": "小腸重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C17.9*",
+     "en": "Malignant neoplasm of small intestine, unspecified",
+     "zh": "小腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.019*",
+     "en": "Malignant carcinoid tumor of the small intestine, unspecified portion",
+     "zh": "未明示部位小腸惡性類癌"
+    },
+    {
+     "code": "C18.3*",
+     "en": "Malignant neoplasm of hepatic flexure",
+     "zh": "結腸肝(彎)曲部惡性腫瘤"
+    },
+    {
+     "code": "C18.4*",
+     "en": "Malignant neoplasm of transverse colon",
+     "zh": "橫結腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.023*",
+     "en": "Malignant carcinoid tumor of the transverse colon",
+     "zh": "橫結腸惡性類癌"
+    },
+    {
+     "code": "C18.6*",
+     "en": "Malignant neoplasm of descending colon",
+     "zh": "降結腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.024*",
+     "en": "Malignant carcinoid tumor of the descending colon",
+     "zh": "降結腸惡性類癌"
+    },
+    {
+     "code": "C18.7*",
+     "en": "Malignant neoplasm of sigmoid colon",
+     "zh": "乙狀結腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.025*",
+     "en": "Malignant carcinoid tumor of the sigmoid colon",
+     "zh": "乙狀結腸惡性類癌"
+    },
+    {
+     "code": "C18.0*",
+     "en": "Malignant neoplasm of cecum",
+     "zh": "盲腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.021*",
+     "en": "Malignant carcinoid tumor of the cecum",
+     "zh": "盲腸惡性類癌"
+    },
+    {
+     "code": "C18.1*",
+     "en": "Malignant neoplasm of appendix",
+     "zh": "闌尾惡性腫瘤"
+    },
+    {
+     "code": "C7A.020*",
+     "en": "Malignant carcinoid tumor of the appendix",
+     "zh": "闌尾惡性類癌"
+    },
+    {
+     "code": "C18.2*",
+     "en": "Malignant neoplasm of ascending colon",
+     "zh": "升結腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.022*",
+     "en": "Malignant carcinoid tumor of the ascending colon",
+     "zh": "升結腸惡性類癌"
+    },
+    {
+     "code": "C18.5*",
+     "en": "Malignant neoplasm of splenic flexure",
+     "zh": "結腸脾(彎)曲部惡性腫瘤"
+    },
+    {
+     "code": "C18.8*",
+     "en": "Malignant neoplasm of overlapping sites of colon",
+     "zh": "大腸重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C18.9*",
+     "en": "Malignant neoplasm of colon, unspecified",
+     "zh": "結腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.029*",
+     "en": "Malignant carcinoid tumor of the large intestine, unspecified portion",
+     "zh": "未明示部位大腸惡性類癌"
+    },
+    {
+     "code": "C19*",
+     "en": "Malignant neoplasm of rectosigmoid junction",
+     "zh": "直腸乙狀結腸連接處惡性腫瘤"
+    },
+    {
+     "code": "C20*",
+     "en": "Malignant neoplasm of rectum",
+     "zh": "直腸惡性腫瘤"
+    },
+    {
+     "code": "C7A.026*",
+     "en": "Malignant carcinoid tumor of the rectum",
+     "zh": "直腸惡性類癌"
+    },
+    {
+     "code": "C21.1*",
+     "en": "Malignant neoplasm of anal canal",
+     "zh": "肛管惡性腫瘤"
+    },
+    {
+     "code": "C21.0*",
+     "en": "Malignant neoplasm of anus, unspecified",
+     "zh": "肛門惡性腫瘤"
+    },
+    {
+     "code": "C21.2*",
+     "en": "Malignant neoplasm of cloacogenic zone",
+     "zh": "泄殖腔帶惡性腫瘤"
+    },
+    {
+     "code": "C21.8*",
+     "en": "Malignant neoplasm of overlapping sites of rectum, anus and anal canal",
+     "zh": "直腸、肛門及肛(門)管重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C22.0*",
+     "en": "Liver cell carcinoma",
+     "zh": "肝上皮細胞癌(肝細胞癌)"
+    },
+    {
+     "code": "C22.2*",
+     "en": "Hepatoblastoma",
+     "zh": "肝芽細胞瘤"
+    },
+    {
+     "code": "C22.3*",
+     "en": "Angiosarcoma of liver",
+     "zh": "肝血管肉瘤"
+    },
+    {
+     "code": "C22.4*",
+     "en": "Other sarcomas of liver",
+     "zh": "肝其他肉瘤"
+    },
+    {
+     "code": "C22.7*",
+     "en": "Other specified carcinomas of liver",
+     "zh": "其他特定肝上皮細胞癌"
+    },
+    {
+     "code": "C22.8*",
+     "en": "Malignant neoplasm of liver, primary, unspecified as to type",
+     "zh": "原發性肝惡性腫瘤，未明示型"
+    },
+    {
+     "code": "C22.1*",
+     "en": "Intrahepatic bile duct carcinoma",
+     "zh": "肝內膽管癌"
+    },
+    {
+     "code": "C22.9*",
+     "en": "Malignant neoplasm of liver, not specified as primary or secondary",
+     "zh": "未明示為原發性或續發性之肝惡性腫瘤"
+    },
+    {
+     "code": "C23*",
+     "en": "Malignant neoplasm of gallbladder",
+     "zh": "膽囊惡性腫瘤"
+    },
+    {
+     "code": "C24.0*",
+     "en": "Malignant neoplasm of extrahepatic bile duct",
+     "zh": "肝外膽管惡性腫瘤"
+    },
+    {
+     "code": "C24.1*",
+     "en": "Malignant neoplasm of ampulla of Vater",
+     "zh": "十二指腸壺腹惡性腫瘤"
+    },
+    {
+     "code": "C24.8*",
+     "en": "Malignant neoplasm of overlapping sites of biliary tract",
+     "zh": "膽道重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C24.9*",
+     "en": "Malignant neoplasm of biliary tract, unspecified",
+     "zh": "膽道惡性腫瘤"
+    },
+    {
+     "code": "C25.0*",
+     "en": "Malignant neoplasm of head of pancreas",
+     "zh": "胰臟頭部惡性腫瘤"
+    },
+    {
+     "code": "C25.1*",
+     "en": "Malignant neoplasm of body of pancreas",
+     "zh": "胰臟體部惡性腫瘤"
+    },
+    {
+     "code": "C25.2*",
+     "en": "Malignant neoplasm of tail of pancreas",
+     "zh": "胰臟尾部惡性腫瘤"
+    },
+    {
+     "code": "C25.3*",
+     "en": "Malignant neoplasm of pancreatic duct",
+     "zh": "胰管惡性腫瘤"
+    },
+    {
+     "code": "C25.4*",
+     "en": "Malignant neoplasm of endocrine pancreas",
+     "zh": "胰內分泌性惡性腫瘤"
+    },
+    {
+     "code": "C25.7*",
+     "en": "Malignant neoplasm of other parts of pancreas",
+     "zh": "胰其他部位之惡性腫瘤"
+    },
+    {
+     "code": "C25.8*",
+     "en": "Malignant neoplasm of overlapping sites of pancreas",
+     "zh": "胰臟重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C25.9*",
+     "en": "Malignant neoplasm of pancreas, unspecified",
+     "zh": "胰臟惡性腫瘤"
+    },
+    {
+     "code": "C48.0*",
+     "en": "Malignant neoplasm of retroperitoneum",
+     "zh": "後腹腔惡性腫瘤"
+    },
+    {
+     "code": "C48.1*",
+     "en": "Malignant neoplasm of specified parts of peritoneum",
+     "zh": "腹膜明示部位之惡性腫瘤"
+    },
+    {
+     "code": "C45.1*",
+     "en": "Mesothelioma of peritoneum",
+     "zh": "腹膜間皮瘤"
+    },
+    {
+     "code": "C48.8*",
+     "en": "Malignant neoplasm of overlapping sites of retroperitoneum and peritoneum",
+     "zh": "後腹腔及腹膜重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C48.2*",
+     "en": "Malignant neoplasm of peritoneum, unspecified",
+     "zh": "腹膜惡性腫瘤"
+    },
+    {
+     "code": "C26.0*",
+     "en": "Malignant neoplasm of intestinal tract, part unspecified",
+     "zh": "未明示部位腸道惡性腫瘤"
+    },
+    {
+     "code": "C26.1*",
+     "en": "Malignant neoplasm of spleen",
+     "zh": "脾惡性腫瘤"
+    },
+    {
+     "code": "C26.9*",
+     "en": "Malignant neoplasm of ill-defined sites within the digestive system",
+     "zh": "消化系統內界定不明的部位惡性腫瘤"
+    },
+    {
+     "code": "C30.0*",
+     "en": "Malignant neoplasm of nasal cavity",
+     "zh": "鼻腔惡性腫瘤"
+    },
+    {
+     "code": "C30.1*",
+     "en": "Malignant neoplasm of middle ear",
+     "zh": "中耳惡性腫瘤"
+    },
+    {
+     "code": "C31.0*",
+     "en": "Malignant neoplasm of maxillary sinus",
+     "zh": "上頜竇惡性腫瘤"
+    },
+    {
+     "code": "C31.1*",
+     "en": "Malignant neoplasm of ethmoidal sinus",
+     "zh": "篩竇惡性腫瘤"
+    },
+    {
+     "code": "C31.2*",
+     "en": "Malignant neoplasm of frontal sinus",
+     "zh": "額竇惡性腫瘤"
+    },
+    {
+     "code": "C31.3*",
+     "en": "Malignant neoplasm of sphenoid sinus",
+     "zh": "蝶竇惡性腫瘤"
+    },
+    {
+     "code": "C31.8*",
+     "en": "Malignant neoplasm of overlapping sites of accessory sinuses",
+     "zh": "副鼻竇重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C31.9*",
+     "en": "Malignant neoplasm of accessory sinus, unspecified",
+     "zh": "副鼻竇惡性腫瘤"
+    },
+    {
+     "code": "C32.0*",
+     "en": "Malignant neoplasm of glottis",
+     "zh": "聲門惡性腫瘤"
+    },
+    {
+     "code": "C32.1*",
+     "en": "Malignant neoplasm of supraglottis",
+     "zh": "上聲門惡性腫瘤"
+    },
+    {
+     "code": "C32.2*",
+     "en": "Malignant neoplasm of subglottis",
+     "zh": "下聲門惡性腫瘤"
+    },
+    {
+     "code": "C32.3*",
+     "en": "Malignant neoplasm of laryngeal cartilage",
+     "zh": "喉軟骨惡性腫瘤"
+    },
+    {
+     "code": "C32.8*",
+     "en": "Malignant neoplasm of overlapping sites of larynx",
+     "zh": "喉重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C32.9*",
+     "en": "Malignant neoplasm of larynx, unspecified",
+     "zh": "喉惡性腫瘤"
+    },
+    {
+     "code": "C33*",
+     "en": "Malignant neoplasm of trachea",
+     "zh": "氣管惡性腫瘤"
+    },
+    {
+     "code": "C34.00*",
+     "en": "Malignant neoplasm of unspecified main bronchus",
+     "zh": "未明示側性主支氣管惡性腫瘤"
+    },
+    {
+     "code": "C34.01*",
+     "en": "Malignant neoplasm of right main bronchus",
+     "zh": "右側主支氣管惡性腫瘤"
+    },
+    {
+     "code": "C34.02*",
+     "en": "Malignant neoplasm of left main bronchus",
+     "zh": "左側主支氣管惡性腫瘤"
+    },
+    {
+     "code": "C7A.090*",
+     "en": "Malignant carcinoid tumor of the bronchus and lung",
+     "zh": "支氣管及肺惡性類癌"
+    },
+    {
+     "code": "C34.10*",
+     "en": "Malignant neoplasm of upper lobe, unspecified bronchus or lung",
+     "zh": "未明示側性肺上葉、支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.11*",
+     "en": "Malignant neoplasm of upper lobe, right bronchus or lung",
+     "zh": "上葉之右側支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.12*",
+     "en": "Malignant neoplasm of upper lobe, left bronchus or lung",
+     "zh": "上葉之左側支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.2*",
+     "en": "Malignant neoplasm of middle lobe, bronchus or lung",
+     "zh": "中葉之支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.30*",
+     "en": "Malignant neoplasm of lower lobe, unspecified bronchus or lung",
+     "zh": "下葉之未明示側性支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.31*",
+     "en": "Malignant neoplasm of lower lobe, right bronchus or lung",
+     "zh": "下葉之右支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.32*",
+     "en": "Malignant neoplasm of lower lobe, left bronchus or lung",
+     "zh": "下葉之左支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.80*",
+     "en": "Malignant neoplasm of overlapping sites of unspecified bronchus and lung",
+     "zh": "未明示側性支氣管及肺重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C34.81*",
+     "en": "Malignant neoplasm of overlapping sites of right bronchus and lung",
+     "zh": "右側支氣管及肺重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C34.82*",
+     "en": "Malignant neoplasm of overlapping sites of left bronchus and lung",
+     "zh": "左側支氣管及肺重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C34.90*",
+     "en": "Malignant neoplasm of unspecified part of unspecified bronchus or lung",
+     "zh": "未明示側性支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.91*",
+     "en": "Malignant neoplasm of unspecified part of right bronchus or lung",
+     "zh": "右側支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C34.92*",
+     "en": "Malignant neoplasm of unspecified part of left bronchus or lung",
+     "zh": "左側支氣管或肺惡性腫瘤"
+    },
+    {
+     "code": "C38.4*",
+     "en": "Malignant neoplasm of pleura",
+     "zh": "胸(肋)膜惡性腫瘤"
+    },
+    {
+     "code": "C45.0*",
+     "en": "Mesothelioma of pleura",
+     "zh": "胸(肋)膜間皮瘤"
+    },
+    {
+     "code": "C37*",
+     "en": "Malignant neoplasm of thymus",
+     "zh": "胸腺惡性腫瘤"
+    },
+    {
+     "code": "C7A.091*",
+     "en": "Malignant carcinoid tumor of the thymus",
+     "zh": "胸腺惡性類癌"
+    },
+    {
+     "code": "C38.0*",
+     "en": "Malignant neoplasm of heart",
+     "zh": "心臟惡性腫瘤"
+    },
+    {
+     "code": "C45.2*",
+     "en": "Mesothelioma of pericardium",
+     "zh": "心包膜間皮瘤"
+    },
+    {
+     "code": "C38.1*",
+     "en": "Malignant neoplasm of anterior mediastinum",
+     "zh": "前縱膈惡性腫瘤"
+    },
+    {
+     "code": "C38.2*",
+     "en": "Malignant neoplasm of posterior mediastinum",
+     "zh": "後縱膈惡性腫瘤"
+    },
+    {
+     "code": "C38.8*",
+     "en": "Malignant neoplasm of overlapping sites of heart, mediastinum and pleura",
+     "zh": "心臟、縱隔及胸(肋)膜重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C38.3*",
+     "en": "Malignant neoplasm of mediastinum, part unspecified",
+     "zh": "未明示部位縱膈惡性腫瘤"
+    },
+    {
+     "code": "C39.0*",
+     "en": "Malignant neoplasm of upper respiratory tract, part unspecified",
+     "zh": "未明示部位上呼吸道惡性腫瘤"
+    },
+    {
+     "code": "C39.9*",
+     "en": "Malignant neoplasm of lower respiratory tract, part unspecified",
+     "zh": "未明示部位下呼吸道惡性腫瘤"
+    },
+    {
+     "code": "C41.0*",
+     "en": "Malignant neoplasm of bones of skull and face",
+     "zh": "顱骨及顏面骨之惡性腫瘤"
+    },
+    {
+     "code": "C41.1*",
+     "en": "Malignant neoplasm of mandible",
+     "zh": "下頜骨惡性腫瘤"
+    },
+    {
+     "code": "C41.2*",
+     "en": "Malignant neoplasm of vertebral column",
+     "zh": "脊柱(椎)惡性腫瘤"
+    },
+    {
+     "code": "C41.3*",
+     "en": "Malignant neoplasm of ribs, sternum and clavicle",
+     "zh": "肋骨，胸骨及鎖骨之惡性腫瘤"
+    },
+    {
+     "code": "C40.00*",
+     "en": "Malignant neoplasm of scapula and long bones of unspecified upper limb",
+     "zh": "未明示側性上肢長骨及肩胛骨之惡性腫瘤"
+    },
+    {
+     "code": "C40.01*",
+     "en": "Malignant neoplasm of scapula and long bones of right upper limb",
+     "zh": "右側上肢長骨及肩胛骨之惡性腫瘤"
+    },
+    {
+     "code": "C40.02*",
+     "en": "Malignant neoplasm of scapula and long bones of left upper limb",
+     "zh": "左側上肢長骨及肩胛骨之惡性腫瘤"
+    },
+    {
+     "code": "C40.10*",
+     "en": "Malignant neoplasm of short bones of unspecified upper limb",
+     "zh": "未明示側性上肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C40.11*",
+     "en": "Malignant neoplasm of short bones of right upper limb",
+     "zh": "右側上肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C40.12*",
+     "en": "Malignant neoplasm of short bones of left upper limb",
+     "zh": "左側上肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C41.4*",
+     "en": "Malignant neoplasm of pelvic bones, sacrum and coccyx",
+     "zh": "骨盆(骨)，薦骨及尾骨之惡性腫瘤"
+    },
+    {
+     "code": "C40.20*",
+     "en": "Malignant neoplasm of long bones of unspecified lower limb",
+     "zh": "未明示側性下肢長骨惡性腫瘤"
+    },
+    {
+     "code": "C40.21*",
+     "en": "Malignant neoplasm of long bones of right lower limb",
+     "zh": "右側下肢長骨惡性腫瘤"
+    },
+    {
+     "code": "C40.22*",
+     "en": "Malignant neoplasm of long bones of left lower limb",
+     "zh": "左側下肢長骨惡性腫瘤"
+    },
+    {
+     "code": "C40.30*",
+     "en": "Malignant neoplasm of short bones of unspecified lower limb",
+     "zh": "未明示側性下肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C40.31*",
+     "en": "Malignant neoplasm of short bones of right lower limb",
+     "zh": "右側下肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C40.32*",
+     "en": "Malignant neoplasm of short bones of left lower limb",
+     "zh": "左側下肢短骨惡性腫瘤"
+    },
+    {
+     "code": "C40.80*",
+     "en": "Malignant neoplasm of overlapping sites of bone and articular cartilage of unspecified limb",
+     "zh": "未明示側性肢體骨及關節軟骨重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C40.81*",
+     "en": "Malignant neoplasm of overlapping sites of bone and articular cartilage of right limb",
+     "zh": "右側肢體骨及關節軟骨重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C40.82*",
+     "en": "Malignant neoplasm of overlapping sites of bone and articular cartilage of left limb",
+     "zh": "左側肢體骨及關節軟骨重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C40.90*",
+     "en": "Malignant neoplasm of unspecified bones and articular cartilage of unspecified limb",
+     "zh": "未明示側性肢體骨及關節軟骨惡性腫瘤"
+    },
+    {
+     "code": "C40.91*",
+     "en": "Malignant neoplasm of unspecified bones and articular cartilage of right limb",
+     "zh": "右側肢體骨及關節軟骨惡性腫瘤"
+    },
+    {
+     "code": "C40.92*",
+     "en": "Malignant neoplasm of unspecified bones and articular cartilage of left limb",
+     "zh": "左側肢體骨及關節軟骨惡性腫瘤"
+    },
+    {
+     "code": "C41.9*",
+     "en": "Malignant neoplasm of bone and articular cartilage, unspecified",
+     "zh": "骨及關節軟骨之惡性腫瘤"
+    },
+    {
+     "code": "C47.0*",
+     "en": "Malignant neoplasm of peripheral nerves of head, face and neck",
+     "zh": "頭、顏面及頸周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.0*",
+     "en": "Malignant neoplasm of connective and soft tissue of head, face and neck",
+     "zh": "頭、顏面及頸的結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.10*",
+     "en": "Malignant neoplasm of peripheral nerves of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C47.11*",
+     "en": "Malignant neoplasm of peripheral nerves of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C47.12*",
+     "en": "Malignant neoplasm of peripheral nerves of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.10*",
+     "en": "Malignant neoplasm of connective and soft tissue of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C49.11*",
+     "en": "Malignant neoplasm of connective and soft tissue of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C49.12*",
+     "en": "Malignant neoplasm of connective and soft tissue of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.20*",
+     "en": "Malignant neoplasm of peripheral nerves of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C47.21*",
+     "en": "Malignant neoplasm of peripheral nerves of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C47.22*",
+     "en": "Malignant neoplasm of peripheral nerves of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.20*",
+     "en": "Malignant neoplasm of connective and soft tissue of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C49.21*",
+     "en": "Malignant neoplasm of connective and soft tissue of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C49.22*",
+     "en": "Malignant neoplasm of connective and soft tissue of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.3*",
+     "en": "Malignant neoplasm of peripheral nerves of thorax",
+     "zh": "胸(部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.3*",
+     "en": "Malignant neoplasm of connective and soft tissue of thorax",
+     "zh": "胸(部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.4*",
+     "en": "Malignant neoplasm of peripheral nerves of abdomen",
+     "zh": "腹(部)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.4*",
+     "en": "Malignant neoplasm of connective and soft tissue of abdomen",
+     "zh": "腹(部)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.5*",
+     "en": "Malignant neoplasm of peripheral nerves of pelvis",
+     "zh": "骨盆(腔)周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.5*",
+     "en": "Malignant neoplasm of connective and soft tissue of pelvis",
+     "zh": "骨盆(腔)結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.6*",
+     "en": "Malignant neoplasm of peripheral nerves of trunk, unspecified",
+     "zh": "軀幹周邊神經之惡性腫瘤"
+    },
+    {
+     "code": "C49.6*",
+     "en": "Malignant neoplasm of connective and soft tissue of trunk, unspecified",
+     "zh": "軀幹結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C47.8*",
+     "en": "Malignant neoplasm of overlapping sites of peripheral nerves and autonomic nervous system",
+     "zh": "周邊神經及自主神經系統重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C49.8*",
+     "en": "Malignant neoplasm of overlapping sites of connective and soft tissue",
+     "zh": "結締及軟組織重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C47.9*",
+     "en": "Malignant neoplasm of peripheral nerves and autonomic nervous system, unspecified",
+     "zh": "周邊神經及自主神經系統之惡性腫瘤"
+    },
+    {
+     "code": "C49.9*",
+     "en": "Malignant neoplasm of connective and soft tissue, unspecified",
+     "zh": "結締及軟組織之惡性腫瘤"
+    },
+    {
+     "code": "C43.0*",
+     "en": "Malignant melanoma of lip",
+     "zh": "唇惡性黑色素瘤"
+    },
+    {
+     "code": "C43.10*",
+     "en": "Malignant melanoma of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.11*",
+     "en": "Malignant melanoma of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.12*",
+     "en": "Malignant melanoma of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.20*",
+     "en": "Malignant melanoma of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道惡性黑色素瘤"
+    },
+    {
+     "code": "C43.21*",
+     "en": "Malignant melanoma of right ear and external auricular canal",
+     "zh": "右側耳及外耳道惡性黑色素瘤"
+    },
+    {
+     "code": "C43.22*",
+     "en": "Malignant melanoma of left ear and external auricular canal",
+     "zh": "左側耳及外耳道惡性黑色素瘤"
+    },
+    {
+     "code": "C43.30*",
+     "en": "Malignant melanoma of unspecified part of face",
+     "zh": "顏面未明示部位之惡性黑色素瘤"
+    },
+    {
+     "code": "C43.31*",
+     "en": "Malignant melanoma of nose",
+     "zh": "鼻惡性黑色素瘤"
+    },
+    {
+     "code": "C43.39*",
+     "en": "Malignant melanoma of other parts of face",
+     "zh": "顏面其他部位之惡性黑色素瘤"
+    },
+    {
+     "code": "C43.4*",
+     "en": "Malignant melanoma of scalp and neck",
+     "zh": "頭皮及頸惡性黑色素瘤"
+    },
+    {
+     "code": "C43.51*",
+     "en": "Malignant melanoma of anal skin",
+     "zh": "肛門皮膚惡性黑色素瘤"
+    },
+    {
+     "code": "C43.52*",
+     "en": "Malignant melanoma of skin of breast",
+     "zh": "乳房皮膚惡性黑色素瘤"
+    },
+    {
+     "code": "C43.59*",
+     "en": "Malignant melanoma of other part of trunk",
+     "zh": "軀幹其他部位惡性黑色素瘤"
+    },
+    {
+     "code": "C43.60*",
+     "en": "Malignant melanoma of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)惡性黑色素瘤含肩"
+    },
+    {
+     "code": "C43.61*",
+     "en": "Malignant melanoma of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.62*",
+     "en": "Malignant melanoma of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.70*",
+     "en": "Malignant melanoma of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.71*",
+     "en": "Malignant melanoma of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.72*",
+     "en": "Malignant melanoma of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)惡性黑色素瘤"
+    },
+    {
+     "code": "C43.8*",
+     "en": "Malignant melanoma of overlapping sites of skin",
+     "zh": "皮膚重疊部位之惡性黑色素瘤"
+    },
+    {
+     "code": "C43.9*",
+     "en": "Malignant melanoma of skin, unspecified",
+     "zh": "皮膚惡性黑色素瘤"
+    },
+    {
+     "code": "C44.00*",
+     "en": "Unspecified malignant neoplasm of skin of lip",
+     "zh": "唇部皮膚惡性腫瘤"
+    },
+    {
+     "code": "C44.01*",
+     "en": "Basal cell carcinoma of skin of lip",
+     "zh": "唇部皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.02*",
+     "en": "Squamous cell carcinoma of skin of lip",
+     "zh": "唇部皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.09*",
+     "en": "Other specified malignant neoplasm of skin of lip",
+     "zh": "唇部皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.0*",
+     "en": "Merkel cell carcinoma of lip",
+     "zh": "唇梅克爾細胞癌"
+    },
+    {
+     "code": "C44.101*",
+     "en": "Unspecified malignant neoplasm of skin of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.102*",
+     "en": "Unspecified malignant neoplasm of skin of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.109*",
+     "en": "Unspecified malignant neoplasm of skin of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.111*",
+     "en": "Basal cell carcinoma of skin of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.112*",
+     "en": "Basal cell carcinoma of skin of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.119*",
+     "en": "Basal cell carcinoma of skin of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.121*",
+     "en": "Squamous cell carcinoma of skin of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.122*",
+     "en": "Squamous cell carcinoma of skin of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.129*",
+     "en": "Squamous cell carcinoma of skin of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.191*",
+     "en": "Other specified malignant neoplasm of skin of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.192*",
+     "en": "Other specified malignant neoplasm of skin of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.199*",
+     "en": "Other specified malignant neoplasm of skin of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.10*",
+     "en": "Merkel cell carcinoma of unspecified eyelid, including canthus",
+     "zh": "未明示側性眼瞼(含眼角)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.11*",
+     "en": "Merkel cell carcinoma of right eyelid, including canthus",
+     "zh": "右側眼瞼(含眼角)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.12*",
+     "en": "Merkel cell carcinoma of left eyelid, including canthus",
+     "zh": "左側眼瞼(含眼角)梅克爾細胞癌"
+    },
+    {
+     "code": "C44.201*",
+     "en": "Unspecified malignant neoplasm of skin of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.202*",
+     "en": "Unspecified malignant neoplasm of skin of right ear and external auricular canal",
+     "zh": "右側耳及外耳道皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.209*",
+     "en": "Unspecified malignant neoplasm of skin of left ear and external auricular canal",
+     "zh": "左側耳及外耳道皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.211*",
+     "en": "Basal cell carcinoma of skin of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.212*",
+     "en": "Basal cell carcinoma of skin of right ear and external auricular canal",
+     "zh": "右側耳及外耳道皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.219*",
+     "en": "Basal cell carcinoma of skin of left ear and external auricular canal",
+     "zh": "左側耳及外耳道皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.221*",
+     "en": "Squamous cell carcinoma of skin of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.222*",
+     "en": "Squamous cell carcinoma of skin of right ear and external auricular canal",
+     "zh": "右側耳及外耳道皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.229*",
+     "en": "Squamous cell carcinoma of skin of left ear and external auricular canal",
+     "zh": "左側耳及外耳道皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.291*",
+     "en": "Other specified malignant neoplasm of skin of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.292*",
+     "en": "Other specified malignant neoplasm of skin of right ear and external auricular canal",
+     "zh": "右側耳及外耳道皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.299*",
+     "en": "Other specified malignant neoplasm of skin of left ear and external auricular canal",
+     "zh": "左側耳及外耳道皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.20*",
+     "en": "Merkel cell carcinoma of unspecified ear and external auricular canal",
+     "zh": "未明示側性耳及外耳道梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.21*",
+     "en": "Merkel cell carcinoma of right ear and external auricular canal",
+     "zh": "右側耳及外耳道梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.22*",
+     "en": "Merkel cell carcinoma of left ear and external auricular canal",
+     "zh": "左側耳及外耳道梅克爾細胞癌"
+    },
+    {
+     "code": "C44.300*",
+     "en": "Unspecified malignant neoplasm of skin of unspecified part of face",
+     "zh": "顏面皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.301*",
+     "en": "Unspecified malignant neoplasm of skin of nose",
+     "zh": "鼻皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.309*",
+     "en": "Unspecified malignant neoplasm of skin of other parts of face",
+     "zh": "顏面其他部位皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.310*",
+     "en": "Basal cell carcinoma of skin of unspecified parts of face",
+     "zh": "顏面皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.311*",
+     "en": "Basal cell carcinoma of skin of nose",
+     "zh": "鼻皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.319*",
+     "en": "Basal cell carcinoma of skin of other parts of face",
+     "zh": "顏面其他部位皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.320*",
+     "en": "Squamous cell carcinoma of skin of unspecified parts of face",
+     "zh": "顏面皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.321*",
+     "en": "Squamous cell carcinoma of skin of nose",
+     "zh": "鼻皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.329*",
+     "en": "Squamous cell carcinoma of skin of other parts of face",
+     "zh": "顏面其他部位皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.390*",
+     "en": "Other specified malignant neoplasm of skin of unspecified parts of face",
+     "zh": "顏面皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.391*",
+     "en": "Other specified malignant neoplasm of skin of nose",
+     "zh": "鼻皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.399*",
+     "en": "Other specified malignant neoplasm of skin of other parts of face",
+     "zh": "顏面其他部位皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.30*",
+     "en": "Merkel cell carcinoma of unspecified part of face",
+     "zh": "顏面未明示部位梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.31*",
+     "en": "Merkel cell carcinoma of nose",
+     "zh": "鼻梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.39*",
+     "en": "Merkel cell carcinoma of other parts of face",
+     "zh": "顏面其他部位梅克爾細胞癌"
+    },
+    {
+     "code": "C44.40*",
+     "en": "Unspecified malignant neoplasm of skin of scalp and neck",
+     "zh": "頭皮及頸部皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.41*",
+     "en": "Basal cell carcinoma of skin of scalp and neck",
+     "zh": "頭皮及頸部皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.42*",
+     "en": "Squamous cell carcinoma of skin of scalp and neck",
+     "zh": "頭皮及頸部皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.49*",
+     "en": "Other specified malignant neoplasm of skin of scalp and neck",
+     "zh": "頭皮及頸部皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.4*",
+     "en": "Merkel cell carcinoma of scalp and neck",
+     "zh": "頭皮及頸梅克爾細胞癌"
+    },
+    {
+     "code": "C44.500*",
+     "en": "Unspecified malignant neoplasm of anal skin",
+     "zh": "肛門皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.501*",
+     "en": "Unspecified malignant neoplasm of skin of breast",
+     "zh": "乳房皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.509*",
+     "en": "Unspecified malignant neoplasm of skin of other part of trunk",
+     "zh": "軀幹其他部位皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.510*",
+     "en": "Basal cell carcinoma of anal skin",
+     "zh": "肛門皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.511*",
+     "en": "Basal cell carcinoma of skin of breast",
+     "zh": "乳房皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.519*",
+     "en": "Basal cell carcinoma of skin of other part of trunk",
+     "zh": "軀幹其他部位皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.520*",
+     "en": "Squamous cell carcinoma of anal skin",
+     "zh": "肛門皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.521*",
+     "en": "Squamous cell carcinoma of skin of breast",
+     "zh": "乳房皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.529*",
+     "en": "Squamous cell carcinoma of skin of other part of trunk",
+     "zh": "軀幹其他部位皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.590*",
+     "en": "Other specified malignant neoplasm of anal skin",
+     "zh": "肛門皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.591*",
+     "en": "Other specified malignant neoplasm of skin of breast",
+     "zh": "乳房皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.599*",
+     "en": "Other specified malignant neoplasm of skin of other part of trunk",
+     "zh": "軀幹其他部位皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.51*",
+     "en": "Merkel cell carcinoma of anal skin",
+     "zh": "肛門皮膚梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.52*",
+     "en": "Merkel cell carcinoma of skin of breast",
+     "zh": "乳房皮膚梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.59*",
+     "en": "Merkel cell carcinoma of other part of trunk",
+     "zh": "軀幹其他部位梅克爾細胞癌"
+    },
+    {
+     "code": "C44.601*",
+     "en": "Unspecified malignant neoplasm of skin of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.602*",
+     "en": "Unspecified malignant neoplasm of skin of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.609*",
+     "en": "Unspecified malignant neoplasm of skin of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.611*",
+     "en": "Basal cell carcinoma of skin of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.612*",
+     "en": "Basal cell carcinoma of skin of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.619*",
+     "en": "Basal cell carcinoma of skin of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.621*",
+     "en": "Squamous cell carcinoma of skin of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.622*",
+     "en": "Squamous cell carcinoma of skin of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.629*",
+     "en": "Squamous cell carcinoma of skin of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.691*",
+     "en": "Other specified malignant neoplasm of skin of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.692*",
+     "en": "Other specified malignant neoplasm of skin of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.699*",
+     "en": "Other specified malignant neoplasm of skin of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.60*",
+     "en": "Merkel cell carcinoma of unspecified upper limb, including shoulder",
+     "zh": "未明示側性上肢(含肩部)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.61*",
+     "en": "Merkel cell carcinoma of right upper limb, including shoulder",
+     "zh": "右側上肢(含肩部)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.62*",
+     "en": "Merkel cell carcinoma of left upper limb, including shoulder",
+     "zh": "左側上肢(含肩部)梅克爾細胞癌"
+    },
+    {
+     "code": "C44.701*",
+     "en": "Unspecified malignant neoplasm of skin of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.702*",
+     "en": "Unspecified malignant neoplasm of skin of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.709*",
+     "en": "Unspecified malignant neoplasm of skin of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.711*",
+     "en": "Basal cell carcinoma of skin of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.712*",
+     "en": "Basal cell carcinoma of skin of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.719*",
+     "en": "Basal cell carcinoma of skin of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.721*",
+     "en": "Squamous cell carcinoma of skin of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.722*",
+     "en": "Squamous cell carcinoma of skin of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.729*",
+     "en": "Squamous cell carcinoma of skin of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.791*",
+     "en": "Other specified malignant neoplasm of skin of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.792*",
+     "en": "Other specified malignant neoplasm of skin of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C44.799*",
+     "en": "Other specified malignant neoplasm of skin of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.70*",
+     "en": "Merkel cell carcinoma of unspecified lower limb, including hip",
+     "zh": "未明示側性下肢(含髖部)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.71*",
+     "en": "Merkel cell carcinoma of right lower limb, including hip",
+     "zh": "右側下肢(含髖部)梅克爾細胞癌"
+    },
+    {
+     "code": "C4A.72*",
+     "en": "Merkel cell carcinoma of left lower limb, including hip",
+     "zh": "左側下肢(含髖部)梅克爾細胞癌"
+    },
+    {
+     "code": "C44.80*",
+     "en": "Unspecified malignant neoplasm of overlapping sites of skin",
+     "zh": "皮膚重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C44.81*",
+     "en": "Basal cell carcinoma of overlapping sites of skin",
+     "zh": "皮膚重疊部位之基底細胞癌"
+    },
+    {
+     "code": "C44.82*",
+     "en": "Squamous cell carcinoma of overlapping sites of skin",
+     "zh": "皮膚重疊部位之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.89*",
+     "en": "Other specified malignant neoplasm of overlapping sites of skin",
+     "zh": "皮膚重疊部位之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.8*",
+     "en": "Merkel cell carcinoma of overlapping sites",
+     "zh": "重疊部位梅克爾細胞癌"
+    },
+    {
+     "code": "C44.90*",
+     "en": "Unspecified malignant neoplasm of skin, unspecified",
+     "zh": "皮膚之惡性腫瘤"
+    },
+    {
+     "code": "C44.91*",
+     "en": "Basal cell carcinoma of skin, unspecified",
+     "zh": "皮膚之基底細胞癌"
+    },
+    {
+     "code": "C44.92*",
+     "en": "Squamous cell carcinoma of skin, unspecified",
+     "zh": "皮膚之鱗狀細胞癌"
+    },
+    {
+     "code": "C44.99*",
+     "en": "Other specified malignant neoplasm of skin, unspecified",
+     "zh": "皮膚之其他特定惡性腫瘤"
+    },
+    {
+     "code": "C4A.9*",
+     "en": "Merkel cell carcinoma, unspecified",
+     "zh": "梅克爾細胞癌"
+    },
+    {
+     "code": "C50.011*",
+     "en": "Malignant neoplasm of nipple and areola, right female breast",
+     "zh": "女性右側乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.012*",
+     "en": "Malignant neoplasm of nipple and areola, left female breast",
+     "zh": "女性左側乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.019*",
+     "en": "Malignant neoplasm of nipple and areola, unspecified female breast",
+     "zh": "女性未明示側性乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.111*",
+     "en": "Malignant neoplasm of central portion of right female breast",
+     "zh": "女性右側乳房中央位置之惡性腫瘤"
+    },
+    {
+     "code": "C50.112*",
+     "en": "Malignant neoplasm of central portion of left female breast",
+     "zh": "女性左側乳房中央位置之惡性腫瘤"
+    },
+    {
+     "code": "C50.119*",
+     "en": "Malignant neoplasm of central portion of unspecified female breast",
+     "zh": "女性未明示側性乳房之中央位置惡性腫瘤"
+    },
+    {
+     "code": "C50.211*",
+     "en": "Malignant neoplasm of upper-inner quadrant of right female breast",
+     "zh": "女性右側乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.212*",
+     "en": "Malignant neoplasm of upper-inner quadrant of left female breast",
+     "zh": "左側女性乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.219*",
+     "en": "Malignant neoplasm of upper-inner quadrant of unspecified female breast",
+     "zh": "女性未明示側性乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.311*",
+     "en": "Malignant neoplasm of lower-inner quadrant of right female breast",
+     "zh": "女性右側乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.312*",
+     "en": "Malignant neoplasm of lower-inner quadrant of left female breast",
+     "zh": "左側女性乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.319*",
+     "en": "Malignant neoplasm of lower-inner quadrant of unspecified female breast",
+     "zh": "女性未明示側性乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.411*",
+     "en": "Malignant neoplasm of upper-outer quadrant of right female breast",
+     "zh": "女性右側乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.412*",
+     "en": "Malignant neoplasm of upper-outer quadrant of left female breast",
+     "zh": "女性左側乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.419*",
+     "en": "Malignant neoplasm of upper-outer quadrant of unspecified female breast",
+     "zh": "女性未明示側性乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.511*",
+     "en": "Malignant neoplasm of lower-outer quadrant of right female breast",
+     "zh": "女性右側乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.512*",
+     "en": "Malignant neoplasm of lower-outer quadrant of left female breast",
+     "zh": "女性左側乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.519*",
+     "en": "Malignant neoplasm of lower-outer quadrant of unspecified female breast",
+     "zh": "女性未明示側性乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.611*",
+     "en": "Malignant neoplasm of axillary tail of right female breast",
+     "zh": "女性右側乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.612*",
+     "en": "Malignant neoplasm of axillary tail of left female breast",
+     "zh": "女性左側乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.619*",
+     "en": "Malignant neoplasm of axillary tail of unspecified female breast",
+     "zh": "女性未明示側性乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.811*",
+     "en": "Malignant neoplasm of overlapping sites of right female breast",
+     "zh": "女性右側乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.812*",
+     "en": "Malignant neoplasm of overlapping sites of left female breast",
+     "zh": "女性左側乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.819*",
+     "en": "Malignant neoplasm of overlapping sites of unspecified female breast",
+     "zh": "女性未明示側性乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.911*",
+     "en": "Malignant neoplasm of unspecified site of right female breast",
+     "zh": "女性右側乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C50.912*",
+     "en": "Malignant neoplasm of unspecified site of left female breast",
+     "zh": "左側女性乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C50.919*",
+     "en": "Malignant neoplasm of unspecified site of unspecified female breast",
+     "zh": "女性乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C50.021*",
+     "en": "Malignant neoplasm of nipple and areola, right male breast",
+     "zh": "男性右側乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.022*",
+     "en": "Malignant neoplasm of nipple and areola, left male breast",
+     "zh": "男性左側乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.029*",
+     "en": "Malignant neoplasm of nipple and areola, unspecified male breast",
+     "zh": "男性未明示側性乳房乳頭及乳暈之惡性腫瘤"
+    },
+    {
+     "code": "C50.121*",
+     "en": "Malignant neoplasm of central portion of right male breast",
+     "zh": "男性右側乳房中央位置之惡性腫瘤"
+    },
+    {
+     "code": "C50.122*",
+     "en": "Malignant neoplasm of central portion of left male breast",
+     "zh": "左側男性乳房中央位置之惡性腫瘤"
+    },
+    {
+     "code": "C50.129*",
+     "en": "Malignant neoplasm of central portion of unspecified male breast",
+     "zh": "男性未明示側性乳房中央位置之惡性腫瘤"
+    },
+    {
+     "code": "C50.221*",
+     "en": "Malignant neoplasm of upper-inner quadrant of right male breast",
+     "zh": "男性右側乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.222*",
+     "en": "Malignant neoplasm of upper-inner quadrant of left male breast",
+     "zh": "男性左側乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.229*",
+     "en": "Malignant neoplasm of upper-inner quadrant of unspecified male breast",
+     "zh": "男性未明示側性乳房內上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.321*",
+     "en": "Malignant neoplasm of lower-inner quadrant of right male breast",
+     "zh": "男性右側乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.322*",
+     "en": "Malignant neoplasm of lower-inner quadrant of left male breast",
+     "zh": "男性左側乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.329*",
+     "en": "Malignant neoplasm of lower-inner quadrant of unspecified male breast",
+     "zh": "男性未明示側性乳房內下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.421*",
+     "en": "Malignant neoplasm of upper-outer quadrant of right male breast",
+     "zh": "男性右側乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.422*",
+     "en": "Malignant neoplasm of upper-outer quadrant of left male breast",
+     "zh": "男性左側乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.429*",
+     "en": "Malignant neoplasm of upper-outer quadrant of unspecified male breast",
+     "zh": "男性未明示側性乳房外上四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.521*",
+     "en": "Malignant neoplasm of lower-outer quadrant of right male breast",
+     "zh": "男性右側乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.522*",
+     "en": "Malignant neoplasm of lower-outer quadrant of left male breast",
+     "zh": "男性左側乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.529*",
+     "en": "Malignant neoplasm of lower-outer quadrant of unspecified male breast",
+     "zh": "男性未明示側性乳房外下四分之一惡性腫瘤"
+    },
+    {
+     "code": "C50.621*",
+     "en": "Malignant neoplasm of axillary tail of right male breast",
+     "zh": "男性右側乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.622*",
+     "en": "Malignant neoplasm of axillary tail of left male breast",
+     "zh": "男性左側乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.629*",
+     "en": "Malignant neoplasm of axillary tail of unspecified male breast",
+     "zh": "男性未明示側性乳房腋側尾端之惡性腫瘤"
+    },
+    {
+     "code": "C50.821*",
+     "en": "Malignant neoplasm of overlapping sites of right male breast",
+     "zh": "男性右側乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.822*",
+     "en": "Malignant neoplasm of overlapping sites of left male breast",
+     "zh": "男性左側乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.829*",
+     "en": "Malignant neoplasm of overlapping sites of unspecified male breast",
+     "zh": "男性未明示側性乳房重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C50.921*",
+     "en": "Malignant neoplasm of unspecified site of right male breast",
+     "zh": "男性右側乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C50.922*",
+     "en": "Malignant neoplasm of unspecified site of left male breast",
+     "zh": "男性左側乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C50.929*",
+     "en": "Malignant neoplasm of unspecified site of unspecified male breast",
+     "zh": "男性未明示側性乳房未明示部位惡性腫瘤"
+    },
+    {
+     "code": "C46.0*",
+     "en": "Kaposi's sarcoma of skin",
+     "zh": "皮膚卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.1*",
+     "en": "Kaposi's sarcoma of soft tissue",
+     "zh": "軟組織卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.2*",
+     "en": "Kaposi's sarcoma of palate",
+     "zh": "顎卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.4*",
+     "en": "Kaposi's sarcoma of gastrointestinal sites",
+     "zh": "胃腸道卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.50*",
+     "en": "Kaposi's sarcoma of unspecified lung",
+     "zh": "未明示側性肺卡波西(Kaposi)(氏)肉瘤"
+    },
+    {
+     "code": "C46.51*",
+     "en": "Kaposi's sarcoma of right lung",
+     "zh": "右側肺卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.52*",
+     "en": "Kaposi's sarcoma of left lung",
+     "zh": "左側肺卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.3*",
+     "en": "Kaposi's sarcoma of lymph nodes",
+     "zh": "淋巴結卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.7*",
+     "en": "Kaposi's sarcoma of other sites",
+     "zh": "其他部位卡波西氏肉瘤"
+    },
+    {
+     "code": "C46.9*",
+     "en": "Kaposi's sarcoma, unspecified",
+     "zh": "卡波西氏肉瘤"
+    },
+    {
+     "code": "C55*",
+     "en": "Malignant neoplasm of uterus, part unspecified",
+     "zh": "未明示部位子宮惡性腫瘤"
+    },
+    {
+     "code": "C53.0*",
+     "en": "Malignant neoplasm of endocervix",
+     "zh": "子宮頸內部惡性腫瘤"
+    },
+    {
+     "code": "C53.1*",
+     "en": "Malignant neoplasm of exocervix",
+     "zh": "子宮頸外部惡性腫瘤"
+    },
+    {
+     "code": "C53.8*",
+     "en": "Malignant neoplasm of overlapping sites of cervix uteri",
+     "zh": "子宮頸重疊部位之性惡性腫瘤"
+    },
+    {
+     "code": "C53.9*",
+     "en": "Malignant neoplasm of cervix uteri, unspecified",
+     "zh": "子宮頸惡性腫瘤"
+    },
+    {
+     "code": "C58*",
+     "en": "Malignant neoplasm of placenta",
+     "zh": "胎盤惡性腫瘤"
+    },
+    {
+     "code": "C54.1*",
+     "en": "Malignant neoplasm of endometrium",
+     "zh": "子宮內膜惡性腫瘤"
+    },
+    {
+     "code": "C54.2*",
+     "en": "Malignant neoplasm of myometrium",
+     "zh": "子宮肌層惡性腫瘤"
+    },
+    {
+     "code": "C54.3*",
+     "en": "Malignant neoplasm of fundus uteri",
+     "zh": "子宮底惡性腫瘤"
+    },
+    {
+     "code": "C54.9*",
+     "en": "Malignant neoplasm of corpus uteri, unspecified",
+     "zh": "子宮體惡性腫瘤"
+    },
+    {
+     "code": "C54.0*",
+     "en": "Malignant neoplasm of isthmus uteri",
+     "zh": "子宮峽部惡性腫瘤"
+    },
+    {
+     "code": "C54.8*",
+     "en": "Malignant neoplasm of overlapping sites of corpus uteri",
+     "zh": "子宮體重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C56.1*",
+     "en": "Malignant neoplasm of right ovary",
+     "zh": "右側卵巢惡性腫瘤"
+    },
+    {
+     "code": "C56.2*",
+     "en": "Malignant neoplasm of left ovary",
+     "zh": "左側卵巢惡性腫瘤"
+    },
+    {
+     "code": "C56.9*",
+     "en": "Malignant neoplasm of unspecified ovary",
+     "zh": "未明示側性卵巢惡性腫瘤"
+    },
+    {
+     "code": "C57.00*",
+     "en": "Malignant neoplasm of unspecified fallopian tube",
+     "zh": "未明示側性輸卵管惡性腫瘤"
+    },
+    {
+     "code": "C57.01*",
+     "en": "Malignant neoplasm of right fallopian tube",
+     "zh": "右側輸卵管惡性腫瘤"
+    },
+    {
+     "code": "C57.02*",
+     "en": "Malignant neoplasm of left fallopian tube",
+     "zh": "左側輸卵管惡性腫瘤"
+    },
+    {
+     "code": "C57.10*",
+     "en": "Malignant neoplasm of unspecified broad ligament",
+     "zh": "未明示側性闊韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.11*",
+     "en": "Malignant neoplasm of right broad ligament",
+     "zh": "右側闊韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.12*",
+     "en": "Malignant neoplasm of left broad ligament",
+     "zh": "左側闊韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.3*",
+     "en": "Malignant neoplasm of parametrium",
+     "zh": "子宮旁結締組織惡性腫瘤"
+    },
+    {
+     "code": "C57.20*",
+     "en": "Malignant neoplasm of unspecified round ligament",
+     "zh": "未明示側性圓韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.21*",
+     "en": "Malignant neoplasm of right round ligament",
+     "zh": "右側圓韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.22*",
+     "en": "Malignant neoplasm of left round ligament",
+     "zh": "左側圓韌帶惡性腫瘤"
+    },
+    {
+     "code": "C57.4*",
+     "en": "Malignant neoplasm of uterine adnexa, unspecified",
+     "zh": "子宮附屬器官之惡性腫瘤"
+    },
+    {
+     "code": "C52*",
+     "en": "Malignant neoplasm of vagina",
+     "zh": "陰道惡性腫瘤"
+    },
+    {
+     "code": "C51.0*",
+     "en": "Malignant neoplasm of labium majus",
+     "zh": "大陰唇惡性腫瘤"
+    },
+    {
+     "code": "C51.1*",
+     "en": "Malignant neoplasm of labium minus",
+     "zh": "小陰唇惡性腫瘤"
+    },
+    {
+     "code": "C51.2*",
+     "en": "Malignant neoplasm of clitoris",
+     "zh": "陰蒂惡性腫瘤"
+    },
+    {
+     "code": "C51.9*",
+     "en": "Malignant neoplasm of vulva, unspecified",
+     "zh": "外陰惡性腫瘤"
+    },
+    {
+     "code": "C51.8*",
+     "en": "Malignant neoplasm of overlapping sites of vulva",
+     "zh": "外陰重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C57.7*",
+     "en": "Malignant neoplasm of other specified female genital organs",
+     "zh": "其他特定女性生殖器官之惡性腫瘤"
+    },
+    {
+     "code": "C57.8*",
+     "en": "Malignant neoplasm of overlapping sites of female genital organs",
+     "zh": "女性生殖器官重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C57.9*",
+     "en": "Malignant neoplasm of female genital organ, unspecified",
+     "zh": "女性生殖器官惡性腫瘤"
+    },
+    {
+     "code": "C61*",
+     "en": "Malignant neoplasm of prostate",
+     "zh": "攝護腺惡性腫瘤"
+    },
+    {
+     "code": "C62.00*",
+     "en": "Malignant neoplasm of unspecified undescended testis",
+     "zh": "未明示側性未下降睪丸[隱睪]之惡性腫瘤"
+    },
+    {
+     "code": "C62.01*",
+     "en": "Malignant neoplasm of undescended right testis",
+     "zh": "右側未下降睪丸[隱睪]之惡性腫瘤"
+    },
+    {
+     "code": "C62.02*",
+     "en": "Malignant neoplasm of undescended left testis",
+     "zh": "左側未下降睪丸[隱睪]之惡性腫瘤"
+    },
+    {
+     "code": "C62.10*",
+     "en": "Malignant neoplasm of unspecified descended testis",
+     "zh": "未明示側性下降睪丸之惡性腫瘤"
+    },
+    {
+     "code": "C62.11*",
+     "en": "Malignant neoplasm of descended right testis",
+     "zh": "右側下降睪丸之惡性腫瘤"
+    },
+    {
+     "code": "C62.12*",
+     "en": "Malignant neoplasm of descended left testis",
+     "zh": "左側下降睪丸之惡性腫瘤"
+    },
+    {
+     "code": "C62.90*",
+     "en": "Malignant neoplasm of unspecified testis, unspecified whether descended or undescended",
+     "zh": "未明示側性睪丸之惡性腫瘤，未明示是否下降或未下降"
+    },
+    {
+     "code": "C62.91*",
+     "en": "Malignant neoplasm of right testis, unspecified whether descended or undescended",
+     "zh": "右側睪丸之惡性腫瘤，未明示是否下降或未下降"
+    },
+    {
+     "code": "C62.92*",
+     "en": "Malignant neoplasm of left testis, unspecified whether descended or undescended",
+     "zh": "左側睪丸之惡性腫瘤，未明示是否下降或未下降"
+    },
+    {
+     "code": "C60.0*",
+     "en": "Malignant neoplasm of prepuce",
+     "zh": "包皮惡性腫瘤"
+    },
+    {
+     "code": "C60.1*",
+     "en": "Malignant neoplasm of glans penis",
+     "zh": "龜頭惡性腫瘤"
+    },
+    {
+     "code": "C60.2*",
+     "en": "Malignant neoplasm of body of penis",
+     "zh": "陰莖惡性腫瘤"
+    },
+    {
+     "code": "C60.9*",
+     "en": "Malignant neoplasm of penis, unspecified",
+     "zh": "陰莖惡性腫瘤"
+    },
+    {
+     "code": "C63.00*",
+     "en": "Malignant neoplasm of unspecified epididymis",
+     "zh": "未明示側性副睪惡性腫瘤"
+    },
+    {
+     "code": "C63.01*",
+     "en": "Malignant neoplasm of right epididymis",
+     "zh": "右側副睪惡性腫瘤"
+    },
+    {
+     "code": "C63.02*",
+     "en": "Malignant neoplasm of left epididymis",
+     "zh": "左側副睪惡性腫瘤"
+    },
+    {
+     "code": "C63.10*",
+     "en": "Malignant neoplasm of unspecified spermatic cord",
+     "zh": "未明示側性精索惡性腫瘤"
+    },
+    {
+     "code": "C63.11*",
+     "en": "Malignant neoplasm of right spermatic cord",
+     "zh": "右側精索惡性腫瘤"
+    },
+    {
+     "code": "C63.12*",
+     "en": "Malignant neoplasm of left spermatic cord",
+     "zh": "左側精索惡性腫瘤"
+    },
+    {
+     "code": "C63.2*",
+     "en": "Malignant neoplasm of scrotum",
+     "zh": "陰囊惡性腫瘤"
+    },
+    {
+     "code": "C60.8*",
+     "en": "Malignant neoplasm of overlapping sites of penis",
+     "zh": "陰莖重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C63.7*",
+     "en": "Malignant neoplasm of other specified male genital organs",
+     "zh": "其他特定男性生殖器官之惡性腫瘤"
+    },
+    {
+     "code": "C63.8*",
+     "en": "Malignant neoplasm of overlapping sites of male genital organs",
+     "zh": "男性生殖器官重疊性部位之惡性腫瘤"
+    },
+    {
+     "code": "C63.9*",
+     "en": "Malignant neoplasm of male genital organ, unspecified",
+     "zh": "男性生殖器官之惡性腫瘤"
+    },
+    {
+     "code": "C67.0*",
+     "en": "Malignant neoplasm of trigone of bladder",
+     "zh": "膀胱三角惡性腫瘤"
+    },
+    {
+     "code": "C67.1*",
+     "en": "Malignant neoplasm of dome of bladder",
+     "zh": "膀胱圓頂惡性腫瘤"
+    },
+    {
+     "code": "C67.2*",
+     "en": "Malignant neoplasm of lateral wall of bladder",
+     "zh": "膀胱側壁惡性腫瘤"
+    },
+    {
+     "code": "C67.3*",
+     "en": "Malignant neoplasm of anterior wall of bladder",
+     "zh": "膀胱前壁惡性腫瘤"
+    },
+    {
+     "code": "C67.4*",
+     "en": "Malignant neoplasm of posterior wall of bladder",
+     "zh": "膀胱後壁惡性腫瘤"
+    },
+    {
+     "code": "C67.5*",
+     "en": "Malignant neoplasm of bladder neck",
+     "zh": "膀胱頸惡性腫瘤"
+    },
+    {
+     "code": "C67.6*",
+     "en": "Malignant neoplasm of ureteric orifice",
+     "zh": "輸尿管口惡性腫瘤"
+    },
+    {
+     "code": "C67.7*",
+     "en": "Malignant neoplasm of urachus",
+     "zh": "臍尿管惡性腫瘤"
+    },
+    {
+     "code": "C67.8*",
+     "en": "Malignant neoplasm of overlapping sites of bladder",
+     "zh": "膀胱重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C67.9*",
+     "en": "Malignant neoplasm of bladder, unspecified",
+     "zh": "膀胱惡性腫瘤"
+    },
+    {
+     "code": "C64.1*",
+     "en": "Malignant neoplasm of right kidney, except renal pelvis",
+     "zh": "右側腎惡性腫瘤，腎盂除外"
+    },
+    {
+     "code": "C64.2*",
+     "en": "Malignant neoplasm of left kidney, except renal pelvis",
+     "zh": "左側腎惡性腫瘤，腎盂除外"
+    },
+    {
+     "code": "C64.9*",
+     "en": "Malignant neoplasm of unspecified kidney, except renal pelvis",
+     "zh": "未明示側性腎惡性腫瘤，腎盂除外"
+    },
+    {
+     "code": "C7A.093*",
+     "en": "Malignant carcinoid tumor of the kidney",
+     "zh": "腎惡性類癌"
+    },
+    {
+     "code": "C65.1*",
+     "en": "Malignant neoplasm of right renal pelvis",
+     "zh": "右側腎盂惡性腫瘤"
+    },
+    {
+     "code": "C65.2*",
+     "en": "Malignant neoplasm of left renal pelvis",
+     "zh": "左側腎盂惡性腫瘤"
+    },
+    {
+     "code": "C65.9*",
+     "en": "Malignant neoplasm of unspecified renal pelvis",
+     "zh": "未明示側性腎盂惡性腫瘤"
+    },
+    {
+     "code": "C66.1*",
+     "en": "Malignant neoplasm of right ureter",
+     "zh": "右側輸尿管惡性腫瘤"
+    },
+    {
+     "code": "C66.2*",
+     "en": "Malignant neoplasm of left ureter",
+     "zh": "左側輸尿管惡性腫瘤"
+    },
+    {
+     "code": "C66.9*",
+     "en": "Malignant neoplasm of unspecified ureter",
+     "zh": "未明示側性輸尿管惡性腫瘤"
+    },
+    {
+     "code": "C68.0*",
+     "en": "Malignant neoplasm of urethra",
+     "zh": "尿道惡性腫瘤"
+    },
+    {
+     "code": "C68.1*",
+     "en": "Malignant neoplasm of paraurethral glands",
+     "zh": "尿道旁腺惡性腫瘤"
+    },
+    {
+     "code": "C68.8*",
+     "en": "Malignant neoplasm of overlapping sites of urinary organs",
+     "zh": "泌尿器官重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C68.9*",
+     "en": "Malignant neoplasm of urinary organ, unspecified",
+     "zh": "泌尿器官之惡性腫瘤"
+    },
+    {
+     "code": "C69.40*",
+     "en": "Malignant neoplasm of unspecified ciliary body",
+     "zh": "未明示側性睫狀體惡性腫瘤"
+    },
+    {
+     "code": "C69.41*",
+     "en": "Malignant neoplasm of right ciliary body",
+     "zh": "右側睫狀體惡性腫瘤"
+    },
+    {
+     "code": "C69.42*",
+     "en": "Malignant neoplasm of left ciliary body",
+     "zh": "左側睫狀體惡性腫瘤"
+    },
+    {
+     "code": "C69.60*",
+     "en": "Malignant neoplasm of unspecified orbit",
+     "zh": "未明示側性眼眶惡性腫瘤"
+    },
+    {
+     "code": "C69.61*",
+     "en": "Malignant neoplasm of right orbit",
+     "zh": "右側眼眶惡性腫瘤"
+    },
+    {
+     "code": "C69.62*",
+     "en": "Malignant neoplasm of left orbit",
+     "zh": "左側眼眶惡性腫瘤"
+    },
+    {
+     "code": "C69.50*",
+     "en": "Malignant neoplasm of unspecified lacrimal gland and duct",
+     "zh": "未明示側性淚腺及淚管惡性腫瘤"
+    },
+    {
+     "code": "C69.51*",
+     "en": "Malignant neoplasm of right lacrimal gland and duct",
+     "zh": "右側淚腺及淚管惡性腫瘤"
+    },
+    {
+     "code": "C69.52*",
+     "en": "Malignant neoplasm of left lacrimal gland and duct",
+     "zh": "左側淚腺及淚管惡性腫瘤"
+    },
+    {
+     "code": "C69.00*",
+     "en": "Malignant neoplasm of unspecified conjunctiva",
+     "zh": "未明示側性結膜惡性腫瘤"
+    },
+    {
+     "code": "C69.01*",
+     "en": "Malignant neoplasm of right conjunctiva",
+     "zh": "右側結膜惡性腫瘤"
+    },
+    {
+     "code": "C69.02*",
+     "en": "Malignant neoplasm of left conjunctiva",
+     "zh": "左側結膜惡性腫瘤"
+    },
+    {
+     "code": "C69.10*",
+     "en": "Malignant neoplasm of unspecified cornea",
+     "zh": "未明示側性角膜惡性腫瘤"
+    },
+    {
+     "code": "C69.11*",
+     "en": "Malignant neoplasm of right cornea",
+     "zh": "右側角膜惡性腫瘤"
+    },
+    {
+     "code": "C69.12*",
+     "en": "Malignant neoplasm of left cornea",
+     "zh": "左側角膜惡性腫瘤"
+    },
+    {
+     "code": "C69.20*",
+     "en": "Malignant neoplasm of unspecified retina",
+     "zh": "未明示側性視網膜惡性腫瘤"
+    },
+    {
+     "code": "C69.21*",
+     "en": "Malignant neoplasm of right retina",
+     "zh": "右側視網膜惡性腫瘤"
+    },
+    {
+     "code": "C69.22*",
+     "en": "Malignant neoplasm of left retina",
+     "zh": "左側視網膜惡性腫瘤"
+    },
+    {
+     "code": "C69.30*",
+     "en": "Malignant neoplasm of unspecified choroid",
+     "zh": "未明示側性眼脈絡膜惡性腫瘤"
+    },
+    {
+     "code": "C69.31*",
+     "en": "Malignant neoplasm of right choroid",
+     "zh": "右側眼脈絡膜惡性腫瘤"
+    },
+    {
+     "code": "C69.32*",
+     "en": "Malignant neoplasm of left choroid",
+     "zh": "左側眼脈絡膜惡性腫瘤"
+    },
+    {
+     "code": "C69.80*",
+     "en": "Malignant neoplasm of overlapping sites of unspecified eye and adnexa",
+     "zh": "未明示側性眼及附屬器官重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C69.81*",
+     "en": "Malignant neoplasm of overlapping sites of right eye and adnexa",
+     "zh": "右側眼及附屬器官重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C69.82*",
+     "en": "Malignant neoplasm of overlapping sites of left eye and adnexa",
+     "zh": "左側眼及附屬器官重疊部位之惡性腫瘤"
+    },
+    {
+     "code": "C69.90*",
+     "en": "Malignant neoplasm of unspecified site of unspecified eye",
+     "zh": "未明示側性眼之惡性腫瘤"
+    },
+    {
+     "code": "C69.91*",
+     "en": "Malignant neoplasm of unspecified site of right eye",
+     "zh": "右側眼之惡性腫瘤"
+    },
+    {
+     "code": "C69.92*",
+     "en": "Malignant neoplasm of unspecified site of left eye",
+     "zh": "左側眼之惡性腫瘤"
+    },
+    {
+     "code": "C71.0*",
+     "en": "Malignant neoplasm of cerebrum, except lobes and ventricles",
+     "zh": "大腦(腦葉及腦室除外)惡性腫瘤"
+    },
+    {
+     "code": "C71.1*",
+     "en": "Malignant neoplasm of frontal lobe",
+     "zh": "額葉惡性腫瘤"
+    },
+    {
+     "code": "C71.2*",
+     "en": "Malignant neoplasm of temporal lobe",
+     "zh": "顳葉惡性腫瘤"
+    },
+    {
+     "code": "C71.3*",
+     "en": "Malignant neoplasm of parietal lobe",
+     "zh": "頂葉惡性腫瘤"
+    },
+    {
+     "code": "C71.4*",
+     "en": "Malignant neoplasm of occipital lobe",
+     "zh": "枕葉惡性腫瘤"
+    },
+    {
+     "code": "C71.5*",
+     "en": "Malignant neoplasm of cerebral ventricle",
+     "zh": "大腦室惡性腫瘤"
+    },
+    {
+     "code": "C71.6*",
+     "en": "Malignant neoplasm of cerebellum",
+     "zh": "小腦惡性腫瘤"
+    },
+    {
+     "code": "C71.7*",
+     "en": "Malignant neoplasm of brain stem",
+     "zh": "腦幹惡性腫瘤"
+    },
+    {
+     "code": "C71.9*",
+     "en": "Malignant neoplasm of brain, unspecified",
+     "zh": "腦惡性腫瘤"
+    },
+    {
+     "code": "C72.20*",
+     "en": "Malignant neoplasm of unspecified olfactory nerve",
+     "zh": "未明示側性嗅覺神經惡性腫瘤"
+    },
+    {
+     "code": "C72.21*",
+     "en": "Malignant neoplasm of right olfactory nerve",
+     "zh": "右側嗅覺神經惡性腫瘤"
+    },
+    {
+     "code": "C72.22*",
+     "en": "Malignant neoplasm of left olfactory nerve",
+     "zh": "左側嗅覺神經惡性腫瘤"
+    },
+    {
+     "code": "C72.30*",
+     "en": "Malignant neoplasm of unspecified optic nerve",
+     "zh": "未明示側性視神經惡性腫瘤"
+    },
+    {
+     "code": "C72.31*",
+     "en": "Malignant neoplasm of right optic nerve",
+     "zh": "右側視神經惡性腫瘤"
+    },
+    {
+     "code": "C72.32*",
+     "en": "Malignant neoplasm of left optic nerve",
+     "zh": "左側視神經惡性腫瘤"
+    },
+    {
+     "code": "C72.40*",
+     "en": "Malignant neoplasm of unspecified acoustic nerve",
+     "zh": "未明示側性聽神經惡性腫瘤"
+    },
+    {
+     "code": "C72.41*",
+     "en": "Malignant neoplasm of right acoustic nerve",
+     "zh": "右側聽神經惡性腫瘤"
+    },
+    {
+     "code": "C72.42*",
+     "en": "Malignant neoplasm of left acoustic nerve",
+     "zh": "左側聽神經惡性腫瘤"
+    },
+    {
+     "code": "C72.50*",
+     "en": "Malignant neoplasm of unspecified cranial nerve",
+     "zh": "未明示顱神經惡性腫瘤"
+    },
+    {
+     "code": "C72.59*",
+     "en": "Malignant neoplasm of other cranial nerves",
+     "zh": "其他顱神經惡性腫瘤"
+    },
+    {
+     "code": "C70.0*",
+     "en": "Malignant neoplasm of cerebral meninges",
+     "zh": "大腦膜惡性腫瘤"
+    },
+    {
+     "code": "C70.9*",
+     "en": "Malignant neoplasm of meninges, unspecified",
+     "zh": "腦(脊髓)膜惡性腫瘤"
+    },
+    {
+     "code": "C72.0*",
+     "en": "Malignant neoplasm of spinal cord",
+     "zh": "脊髓惡性腫瘤"
+    },
+    {
+     "code": "C72.1*",
+     "en": "Malignant neoplasm of cauda equina",
+     "zh": "馬尾惡性腫瘤"
+    },
+    {
+     "code": "C70.1*",
+     "en": "Malignant neoplasm of spinal meninges",
+     "zh": "脊髓膜惡性腫瘤"
+    },
+    {
+     "code": "C72.9*",
+     "en": "Malignant neoplasm of central nervous system, unspecified",
+     "zh": "中樞神經系統惡性腫瘤"
+    },
+    {
+     "code": "C73*",
+     "en": "Malignant neoplasm of thyroid gland",
+     "zh": "甲狀腺惡性腫瘤"
+    },
+    {
+     "code": "C74.00*",
+     "en": "Malignant neoplasm of cortex of unspecified adrenal gland",
+     "zh": "未明示側性腎上腺皮質惡性腫瘤"
+    },
+    {
+     "code": "C74.01*",
+     "en": "Malignant neoplasm of cortex of right adrenal gland",
+     "zh": "右側腎上腺皮質惡性腫瘤"
+    },
+    {
+     "code": "C74.02*",
+     "en": "Malignant neoplasm of cortex of left adrenal gland",
+     "zh": "左側腎上腺皮質惡性腫瘤"
+    },
+    {
+     "code": "C74.10*",
+     "en": "Malignant neoplasm of medulla of unspecified adrenal gland",
+     "zh": "未明示側性腎上腺髓質惡性腫瘤"
+    },
+    {
+     "code": "C74.11*",
+     "en": "Malignant neoplasm of medulla of right adrenal gland",
+     "zh": "右側腎上腺髓質惡性腫瘤"
+    },
+    {
+     "code": "C74.12*",
+     "en": "Malignant neoplasm of medulla of left adrenal gland",
+     "zh": "左側腎上腺髓質惡性腫瘤"
+    },
+    {
+     "code": "C74.90*",
+     "en": "Malignant neoplasm of unspecified part of unspecified adrenal gland",
+     "zh": "未明示側性腎上腺惡性腫瘤"
+    },
+    {
+     "code": "C74.91*",
+     "en": "Malignant neoplasm of unspecified part of right adrenal gland",
+     "zh": "右側腎上腺惡性腫瘤"
+    },
+    {
+     "code": "C74.92*",
+     "en": "Malignant neoplasm of unspecified part of left adrenal gland",
+     "zh": "左側腎上腺惡性腫瘤"
+    },
+    {
+     "code": "C75.0*",
+     "en": "Malignant neoplasm of parathyroid gland",
+     "zh": "副甲狀腺惡性腫瘤"
+    },
+    {
+     "code": "C75.1*",
+     "en": "Malignant neoplasm of pituitary gland",
+     "zh": "腦下腺惡性腫瘤"
+    },
+    {
+     "code": "C75.2*",
+     "en": "Malignant neoplasm of craniopharyngeal duct",
+     "zh": "顱咽管惡性腫瘤"
+    },
+    {
+     "code": "C75.3*",
+     "en": "Malignant neoplasm of pineal gland",
+     "zh": "松果腺惡性腫瘤"
+    },
+    {
+     "code": "C75.4*",
+     "en": "Malignant neoplasm of carotid body",
+     "zh": "頸動脈體惡性腫瘤"
+    },
+    {
+     "code": "C75.5*",
+     "en": "Malignant neoplasm of aortic body and other paraganglia",
+     "zh": "主動脈體及其他副神經節之惡性腫瘤"
+    },
+    {
+     "code": "C75.8*",
+     "en": "Malignant neoplasm with pluriglandular involvement, unspecified",
+     "zh": "多腺體侵犯之惡性腫瘤"
+    },
+    {
+     "code": "C75.9*",
+     "en": "Malignant neoplasm of endocrine gland, unspecified",
+     "zh": "內分泌腺惡性腫瘤"
+    },
+    {
+     "code": "C76.0*",
+     "en": "Malignant neoplasm of head, face and neck",
+     "zh": "頭，顏面及頸之惡性腫瘤"
+    },
+    {
+     "code": "C76.1*",
+     "en": "Malignant neoplasm of thorax",
+     "zh": "胸部惡性腫瘤"
+    },
+    {
+     "code": "C76.2*",
+     "en": "Malignant neoplasm of abdomen",
+     "zh": "腹部惡性腫瘤"
+    },
+    {
+     "code": "C76.3*",
+     "en": "Malignant neoplasm of pelvis",
+     "zh": "骨盆惡性腫瘤"
+    },
+    {
+     "code": "C76.40*",
+     "en": "Malignant neoplasm of unspecified upper limb",
+     "zh": "未明示側性上肢惡性腫瘤"
+    },
+    {
+     "code": "C76.41*",
+     "en": "Malignant neoplasm of right upper limb",
+     "zh": "右側上肢惡性腫瘤"
+    },
+    {
+     "code": "C76.42*",
+     "en": "Malignant neoplasm of left upper limb",
+     "zh": "左側上肢惡性腫瘤"
+    },
+    {
+     "code": "C76.50*",
+     "en": "Malignant neoplasm of unspecified lower limb",
+     "zh": "未明示側性下肢惡性腫瘤"
+    },
+    {
+     "code": "C76.51*",
+     "en": "Malignant neoplasm of right lower limb",
+     "zh": "右側下肢惡性腫瘤"
+    },
+    {
+     "code": "C76.52*",
+     "en": "Malignant neoplasm of left lower limb",
+     "zh": "左側下肢惡性腫瘤"
+    },
+    {
+     "code": "C45.7*",
+     "en": "Mesothelioma of other sites",
+     "zh": "其他部位間皮瘤"
+    },
+    {
+     "code": "C76.8*",
+     "en": "Malignant neoplasm of other specified ill-defined sites",
+     "zh": "其他特定界定不明部位之惡性腫瘤"
+    },
+    {
+     "code": "C77.0*",
+     "en": "Secondary and unspecified malignant neoplasm of lymph nodes of head, face and neck",
+     "zh": "頭，顏面及頸部淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C7B.01*",
+     "en": "Secondary carcinoid tumors of distant lymph nodes",
+     "zh": "遠處淋巴結續發性惡性類癌"
+    },
+    {
+     "code": "C77.1*",
+     "en": "Secondary and unspecified malignant neoplasm of intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.2*",
+     "en": "Secondary and unspecified malignant neoplasm of intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.3*",
+     "en": "Secondary and unspecified malignant neoplasm of axilla and upper limb lymph nodes",
+     "zh": "腋窩及上肢淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.4*",
+     "en": "Secondary and unspecified malignant neoplasm of inguinal and lower limb lymph nodes",
+     "zh": "鼠蹊及下肢淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.5*",
+     "en": "Secondary and unspecified malignant neoplasm of intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.8*",
+     "en": "Secondary and unspecified malignant neoplasm of lymph nodes of multiple regions",
+     "zh": "多發部位淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C77.9*",
+     "en": "Secondary and unspecified malignant neoplasm of lymph node, unspecified",
+     "zh": "未明示部位淋巴結之續發性及未明性惡性腫瘤"
+    },
+    {
+     "code": "C78.00*",
+     "en": "Secondary malignant neoplasm of unspecified lung",
+     "zh": "未明示側性肺續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.01*",
+     "en": "Secondary malignant neoplasm of right lung",
+     "zh": "右側肺續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.02*",
+     "en": "Secondary malignant neoplasm of left lung",
+     "zh": "左側肺續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.1*",
+     "en": "Secondary malignant neoplasm of mediastinum",
+     "zh": "縱膈之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.2*",
+     "en": "Secondary malignant neoplasm of pleura",
+     "zh": "胸(肋)膜之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.30*",
+     "en": "Secondary malignant neoplasm of unspecified respiratory organ",
+     "zh": "未明示呼吸器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.39*",
+     "en": "Secondary malignant neoplasm of other respiratory organs",
+     "zh": "其他呼吸器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.4*",
+     "en": "Secondary malignant neoplasm of small intestine",
+     "zh": "小腸續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.5*",
+     "en": "Secondary malignant neoplasm of large intestine and rectum",
+     "zh": "大腸及直腸之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.6*",
+     "en": "Secondary malignant neoplasm of retroperitoneum and peritoneum",
+     "zh": "後腹腔及腹膜之續發性惡性腫瘤"
+    },
+    {
+     "code": "C7B.04*",
+     "en": "Secondary carcinoid tumors of peritoneum",
+     "zh": "腹膜之續發性惡性類癌"
+    },
+    {
+     "code": "C78.7*",
+     "en": "Secondary malignant neoplasm of liver and intrahepatic bile duct",
+     "zh": "肝及肝內膽管之續發性惡性腫瘤"
+    },
+    {
+     "code": "C7B.02*",
+     "en": "Secondary carcinoid tumors of liver",
+     "zh": "肝之續發性惡性類癌"
+    },
+    {
+     "code": "C78.80*",
+     "en": "Secondary malignant neoplasm of unspecified digestive organ",
+     "zh": "未明示消化器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C78.89*",
+     "en": "Secondary malignant neoplasm of other digestive organs",
+     "zh": "其他消化器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.00*",
+     "en": "Secondary malignant neoplasm of unspecified kidney and renal pelvis",
+     "zh": "未明示側性腎及腎盂之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.01*",
+     "en": "Secondary malignant neoplasm of right kidney and renal pelvis",
+     "zh": "右側腎及腎盂之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.02*",
+     "en": "Secondary malignant neoplasm of left kidney and renal pelvis",
+     "zh": "左側腎及腎盂之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.10*",
+     "en": "Secondary malignant neoplasm of unspecified urinary organs",
+     "zh": "未明示泌尿器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.11*",
+     "en": "Secondary malignant neoplasm of bladder",
+     "zh": "膀胱續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.19*",
+     "en": "Secondary malignant neoplasm of other urinary organs",
+     "zh": "其他泌尿器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.2*",
+     "en": "Secondary malignant neoplasm of skin",
+     "zh": "皮膚之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.31*",
+     "en": "Secondary malignant neoplasm of brain",
+     "zh": "腦續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.49*",
+     "en": "Secondary malignant neoplasm of other parts of nervous system",
+     "zh": "神經系統其他部位之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.32*",
+     "en": "Secondary malignant neoplasm of cerebral meninges",
+     "zh": "腦膜續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.40*",
+     "en": "Secondary malignant neoplasm of unspecified part of nervous system",
+     "zh": "神經系統未明示部位之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.51*",
+     "en": "Secondary malignant neoplasm of bone",
+     "zh": "骨骼續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.52*",
+     "en": "Secondary malignant neoplasm of bone marrow",
+     "zh": "骨髓續發性惡性腫瘤"
+    },
+    {
+     "code": "C7B.03*",
+     "en": "Secondary carcinoid tumors of bone",
+     "zh": "骨骼之續發性惡性類癌"
+    },
+    {
+     "code": "C79.60*",
+     "en": "Secondary malignant neoplasm of unspecified ovary",
+     "zh": "未明示側性卵巢續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.61*",
+     "en": "Secondary malignant neoplasm of right ovary",
+     "zh": "右側卵巢續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.62*",
+     "en": "Secondary malignant neoplasm of left ovary",
+     "zh": "左側卵巢續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.70*",
+     "en": "Secondary malignant neoplasm of unspecified adrenal gland",
+     "zh": "未明示側性腎上腺之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.71*",
+     "en": "Secondary malignant neoplasm of right adrenal gland",
+     "zh": "右側腎上腺之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.72*",
+     "en": "Secondary malignant neoplasm of left adrenal gland",
+     "zh": "左側腎上腺之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.81*",
+     "en": "Secondary malignant neoplasm of breast",
+     "zh": "乳房之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.82*",
+     "en": "Secondary malignant neoplasm of genital organs",
+     "zh": "生殖器官之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.89*",
+     "en": "Secondary malignant neoplasm of other specified sites",
+     "zh": "其他特定部位之續發性惡性腫瘤"
+    },
+    {
+     "code": "C79.9*",
+     "en": "Secondary malignant neoplasm of unspecified site",
+     "zh": "未明示部位之續發性惡性腫瘤"
+    },
+    {
+     "code": "C7A.1*",
+     "en": "Malignant poorly differentiated neuroendocrine tumors",
+     "zh": "分化不良型惡性神經內分泌腫瘤"
+    },
+    {
+     "code": "C7A.8*",
+     "en": "Other malignant neuroendocrine tumors",
+     "zh": "其他惡性神經內分泌腫瘤"
+    },
+    {
+     "code": "C7B.09*",
+     "en": "Secondary carcinoid tumors of other sites",
+     "zh": "其他部位之續發性惡性類癌"
+    },
+    {
+     "code": "C7B.1*",
+     "en": "Secondary Merkel cell carcinoma",
+     "zh": "續發性Merkel細胞癌"
+    },
+    {
+     "code": "C7B.8*",
+     "en": "Other secondary neuroendocrine tumors",
+     "zh": "其他續發性惡性神經外胚層腫瘤"
+    },
+    {
+     "code": "C80.0*",
+     "en": "Disseminated malignant neoplasm, unspecified",
+     "zh": "未明示瀰漫性惡性腫瘤"
+    },
+    {
+     "code": "C45.9*",
+     "en": "Mesothelioma, unspecified",
+     "zh": "間皮瘤"
+    },
+    {
+     "code": "C7A.00*",
+     "en": "Malignant carcinoid tumor of unspecified site",
+     "zh": "未明示部位之惡性類癌"
+    },
+    {
+     "code": "C7A.094*",
+     "en": "Malignant carcinoid tumor of the foregut NOS",
+     "zh": "前腸惡性類癌"
+    },
+    {
+     "code": "C7A.095*",
+     "en": "Malignant carcinoid tumor of the midgut NOS",
+     "zh": "中腸惡性類癌"
+    },
+    {
+     "code": "C7A.096*",
+     "en": "Malignant carcinoid tumor of the hindgut NOS",
+     "zh": "後腸惡性類癌"
+    },
+    {
+     "code": "C7B.00*",
+     "en": "Secondary carcinoid tumors, unspecified site",
+     "zh": "未明示部位續發性惡性類癌"
+    },
+    {
+     "code": "C80.1*",
+     "en": "Malignant (primary) neoplasm, unspecified",
+     "zh": "未明示惡性腫瘤（原發性）"
+    },
+    {
+     "code": "C83.30*",
+     "en": "Diffuse large B-cell lymphoma, unspecified site",
+     "zh": "未明示部位之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.39*",
+     "en": "Diffuse large B-cell lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.60*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, unspecified site",
+     "zh": "未明示部位之異生性大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.69*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, extranodal and solid organ sites",
+     "zh": "結節外實體器官之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.70*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, unspecified site",
+     "zh": "未明示部位之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C84.79*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, extranodal and solid organ sites",
+     "zh": "結節外實體器官之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C85.20*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, unspecified site",
+     "zh": "未明示部位之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.21*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.22*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.23*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.24*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋下及上肢淋巴腺之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.25*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "鼠蹊部及下肢淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.26*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.27*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, spleen",
+     "zh": "脾臟之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.28*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, lymph nodes of multiple sites",
+     "zh": "多發性部位淋巴結之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.29*",
+     "en": "Mediastinal (thymic) large B-cell lymphoma, extranodal and solid organ sites",
+     "zh": "淋巴結外及實體器官之縱膈(胸腺)巨大B細胞淋巴瘤"
+    },
+    {
+     "code": "C96.4*",
+     "en": "Sarcoma of dendritic cells (accessory cells)",
+     "zh": "樹突細胞肉瘤（輔佐細胞）"
+    },
+    {
+     "code": "C96.5*",
+     "en": "Multifocal and unisystemic Langerhans-cell histiocytosis",
+     "zh": "多病灶及單系統性蘭格漢氏-細胞組織球增生症"
+    },
+    {
+     "code": "C83.31*",
+     "en": "Diffuse large B-cell lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.61*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.71*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.32*",
+     "en": "Diffuse large B-cell lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.62*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.72*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.33*",
+     "en": "Diffuse large B-cell lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.63*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之異生性巨大細胞淋巴瘤為ALK-陽性"
+    },
+    {
+     "code": "C84.73*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之異生性巨大細胞淋巴瘤為ALK-陰性"
+    },
+    {
+     "code": "C83.34*",
+     "en": "Diffuse large B-cell lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之瀰漫性大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.64*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.74*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.35*",
+     "en": "Diffuse large B-cell lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.65*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之異生性巨大細胞淋巴瘤-ALK陽性"
+    },
+    {
+     "code": "C84.75*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之異生性巨大細胞淋巴瘤-ALK陰性"
+    },
+    {
+     "code": "C83.36*",
+     "en": "Diffuse large B-cell lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.66*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.76*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.37*",
+     "en": "Diffuse large B-cell lymphoma, spleen",
+     "zh": "脾臟之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.67*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, spleen",
+     "zh": "脾臟之異生性巨大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.77*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, spleen",
+     "zh": "脾臟之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.38*",
+     "en": "Diffuse large B-cell lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之瀰漫性巨大B-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.68*",
+     "en": "Anaplastic large cell lymphoma, ALK-positive, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之異生性大細胞淋巴瘤ALK-陽性"
+    },
+    {
+     "code": "C84.78*",
+     "en": "Anaplastic large cell lymphoma, ALK-negative, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之異生性巨大細胞淋巴瘤ALK-陰性"
+    },
+    {
+     "code": "C83.50*",
+     "en": "Lymphoblastic (diffuse) lymphoma, unspecified site",
+     "zh": "未明示部位之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.59*",
+     "en": "Lymphoblastic (diffuse) lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官部位之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.51*",
+     "en": "Lymphoblastic (diffuse) lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.52*",
+     "en": "Lymphoblastic (diffuse) lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.53*",
+     "en": "Lymphoblastic (diffuse) lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.54*",
+     "en": "Lymphoblastic (diffuse) lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.55*",
+     "en": "Lymphoblastic (diffuse) lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.56*",
+     "en": "Lymphoblastic (diffuse) lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.57*",
+     "en": "Lymphoblastic (diffuse) lymphoma, spleen",
+     "zh": "脾臟之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.58*",
+     "en": "Lymphoblastic (diffuse) lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之淋巴芽球性(瀰漫性)淋巴瘤"
+    },
+    {
+     "code": "C83.70*",
+     "en": "Burkitt lymphoma, unspecified site",
+     "zh": "未明示部位之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.79*",
+     "en": "Burkitt lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官部位之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.71*",
+     "en": "Burkitt lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.72*",
+     "en": "Burkitt lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.73*",
+     "en": "Burkitt lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.74*",
+     "en": "Burkitt lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.75*",
+     "en": "Burkitt lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.76*",
+     "en": "Burkitt lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.77*",
+     "en": "Burkitt lymphoma, spleen",
+     "zh": "脾臟之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.78*",
+     "en": "Burkitt lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之Burkitt淋巴瘤"
+    },
+    {
+     "code": "C83.00*",
+     "en": "Small cell B-cell lymphoma, unspecified site",
+     "zh": "未明示部位小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.09*",
+     "en": "Small cell B-cell lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.80*",
+     "en": "Other non-follicular lymphoma, unspecified site",
+     "zh": "未明示部位之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.89*",
+     "en": "Other non-follicular lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.90*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, unspecified site",
+     "zh": "未明示部位之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.99*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C86.5*",
+     "en": "Angioimmunoblastic T-cell lymphoma",
+     "zh": "血管免疫母細胞T細胞淋巴瘤"
+    },
+    {
+     "code": "C86.6*",
+     "en": "Primary cutaneous CD30-positive T-cell proliferations",
+     "zh": "原發性皮膚CD30-陽性T細胞增殖"
+    },
+    {
+     "code": "C83.01*",
+     "en": "Small cell B-cell lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.81*",
+     "en": "Other non-follicular lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.91*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.02*",
+     "en": "Small cell B-cell lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.82*",
+     "en": "Other non-follicular lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.92*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.03*",
+     "en": "Small cell B-cell lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.83*",
+     "en": "Other non-follicular lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.93*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.04*",
+     "en": "Small cell B-cell lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.84*",
+     "en": "Other non-follicular lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.94*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.05*",
+     "en": "Small cell B-cell lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.85*",
+     "en": "Other non-follicular lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.95*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.06*",
+     "en": "Small cell B-cell lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.86*",
+     "en": "Other non-follicular lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.96*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.07*",
+     "en": "Small cell B-cell lymphoma, spleen",
+     "zh": "脾臟之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.87*",
+     "en": "Other non-follicular lymphoma, spleen",
+     "zh": "脾臟之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.97*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, spleen",
+     "zh": "脾臟之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C83.08*",
+     "en": "Small cell B-cell lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之小細胞B-細胞淋巴瘤"
+    },
+    {
+     "code": "C83.88*",
+     "en": "Other non-follicular lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之其他非濾泡型淋巴瘤"
+    },
+    {
+     "code": "C83.98*",
+     "en": "Non-follicular (diffuse) lymphoma, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之非濾泡型（瀰漫性）淋巴瘤"
+    },
+    {
+     "code": "C81.70*",
+     "en": "Other classical Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.79*",
+     "en": "Other classical Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.71*",
+     "en": "Other classical Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.72*",
+     "en": "Other classical Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.73*",
+     "en": "Other classical Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.74*",
+     "en": "Other classical Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之其他型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.75*",
+     "en": "Other classical Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.76*",
+     "en": "Other classical Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.77*",
+     "en": "Other classical Hodgkin lymphoma, spleen",
+     "zh": "脾臟之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.78*",
+     "en": "Other classical Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之其他典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.90*",
+     "en": "Hodgkin lymphoma, unspecified, unspecified site",
+     "zh": "未明示部位之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.99*",
+     "en": "Hodgkin lymphoma, unspecified, extranodal and solid organ sites",
+     "zh": "結節外實體器官之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.91*",
+     "en": "Hodgkin lymphoma, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.92*",
+     "en": "Hodgkin lymphoma, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.93*",
+     "en": "Hodgkin lymphoma, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.94*",
+     "en": "Hodgkin lymphoma, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.95*",
+     "en": "Hodgkin lymphoma, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.96*",
+     "en": "Hodgkin lymphoma, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.97*",
+     "en": "Hodgkin lymphoma, unspecified, spleen",
+     "zh": "脾臟之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.98*",
+     "en": "Hodgkin lymphoma, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.00*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, unspecified site",
+     "zh": "結節性淋巴球為主之Hodgkin(何杰金)淋巴瘤，未明示部位"
+    },
+    {
+     "code": "C81.09*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "淋巴結外、實質器官結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.40*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.49*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.01*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結結節性淋巴球為主之Hodgkin(何杰金)淋巴瘤"
+    },
+    {
+     "code": "C81.41*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.02*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.42*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.03*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.43*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.04*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.44*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.05*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.45*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "鼠蹊及下肢淋巴結富含淋巴球型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.06*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.46*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之富含淋巴球典型何杰金淋巴瘤癌"
+    },
+    {
+     "code": "C81.07*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, spleen",
+     "zh": "脾臟內淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.47*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, spleen",
+     "zh": "脾臟內淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.08*",
+     "en": "Nodular lymphocyte predominant Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結結節性淋巴球為主之何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.48*",
+     "en": "Lymphocyte-rich classical Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之富含淋巴球典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.10*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.19*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "淋巴結外、實質器官之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.11*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.12*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.13*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.14*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.15*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.16*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.17*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, spleen",
+     "zh": "脾臟之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.18*",
+     "en": "Nodular sclerosis classical Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多發部位淋巴結之結節硬化性典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.20*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.29*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.21*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.22*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.23*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.24*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.25*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.26*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.27*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, spleen",
+     "zh": "脾臟之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.28*",
+     "en": "Mixed cellularity classical Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多處淋巴結之混合細胞典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.30*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.39*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.31*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.32*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之淋巴球缺乏型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.33*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.34*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.35*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.36*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.37*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, spleen",
+     "zh": "脾臟之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C81.38*",
+     "en": "Lymphocyte depleted classical Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之淋巴球缺乏典型何杰金淋巴瘤"
+    },
+    {
+     "code": "C82.00*",
+     "en": "Follicular lymphoma grade I, unspecified site",
+     "zh": "未明示部位之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.09*",
+     "en": "Follicular lymphoma grade I, extranodal and solid organ sites",
+     "zh": "結節外實體器官之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.10*",
+     "en": "Follicular lymphoma grade II, unspecified site",
+     "zh": "未明示部位之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.19*",
+     "en": "Follicular lymphoma grade II, extranodal and solid organ sites",
+     "zh": "結節外實體器官之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.20*",
+     "en": "Follicular lymphoma grade III, unspecified, unspecified site",
+     "zh": "未明示部位之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.29*",
+     "en": "Follicular lymphoma grade III, unspecified, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.30*",
+     "en": "Follicular lymphoma grade IIIa, unspecified site",
+     "zh": "未明示部位之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.39*",
+     "en": "Follicular lymphoma grade IIIa, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.40*",
+     "en": "Follicular lymphoma grade IIIb, unspecified site",
+     "zh": "未明示部位IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.49*",
+     "en": "Follicular lymphoma grade IIIb, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.50*",
+     "en": "Diffuse follicle center lymphoma, unspecified site",
+     "zh": "未明示部位瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.59*",
+     "en": "Diffuse follicle center lymphoma, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.60*",
+     "en": "Cutaneous follicle center lymphoma, unspecified site",
+     "zh": "未明示部位皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.69*",
+     "en": "Cutaneous follicle center lymphoma, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.80*",
+     "en": "Other types of follicular lymphoma, unspecified site",
+     "zh": "未明示部位其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.89*",
+     "en": "Other types of follicular lymphoma, extranodal and solid organ sites",
+     "zh": "結節外及實體器官之其他類型濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.90*",
+     "en": "Follicular lymphoma, unspecified, unspecified site",
+     "zh": "未明示部位之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.99*",
+     "en": "Follicular lymphoma, unspecified, extranodal and solid organ sites",
+     "zh": "結節外實體器官之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.01*",
+     "en": "Follicular lymphoma grade I, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.11*",
+     "en": "Follicular lymphoma grade II, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.21*",
+     "en": "Follicular lymphoma grade III, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.31*",
+     "en": "Follicular lymphoma grade IIIa, lymph nodes of head, face, and neck",
+     "zh": "頭,臉及頸部淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.41*",
+     "en": "Follicular lymphoma grade IIIb, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.51*",
+     "en": "Diffuse follicle center lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.61*",
+     "en": "Cutaneous follicle center lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.81*",
+     "en": "Other types of follicular lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.91*",
+     "en": "Follicular lymphoma, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.02*",
+     "en": "Follicular lymphoma grade I, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.12*",
+     "en": "Follicular lymphoma grade II, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.22*",
+     "en": "Follicular lymphoma grade III, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.32*",
+     "en": "Follicular lymphoma grade IIIa, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.42*",
+     "en": "Follicular lymphoma grade IIIb, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.52*",
+     "en": "Diffuse follicle center lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.62*",
+     "en": "Cutaneous follicle center lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.82*",
+     "en": "Other types of follicular lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.92*",
+     "en": "Follicular lymphoma, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.03*",
+     "en": "Follicular lymphoma grade I, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之I期濾泡性淋巴瘤"
+    },
+    {
+     "code": "C82.13*",
+     "en": "Follicular lymphoma grade II, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.23*",
+     "en": "Follicular lymphoma grade III, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.33*",
+     "en": "Follicular lymphoma grade IIIa, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.43*",
+     "en": "Follicular lymphoma grade IIIb, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.53*",
+     "en": "Diffuse follicle center lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.63*",
+     "en": "Cutaneous follicle center lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.83*",
+     "en": "Other types of follicular lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.93*",
+     "en": "Follicular lymphoma, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.04*",
+     "en": "Follicular lymphoma grade I, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.14*",
+     "en": "Follicular lymphoma grade II, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.24*",
+     "en": "Follicular lymphoma grade III, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.34*",
+     "en": "Follicular lymphoma grade IIIa, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.44*",
+     "en": "Follicular lymphoma grade IIIb, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.54*",
+     "en": "Diffuse follicle center lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.64*",
+     "en": "Cutaneous follicle center lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.84*",
+     "en": "Other types of follicular lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.94*",
+     "en": "Follicular lymphoma, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.05*",
+     "en": "Follicular lymphoma grade I, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.15*",
+     "en": "Follicular lymphoma grade II, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.25*",
+     "en": "Follicular lymphoma grade III, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.35*",
+     "en": "Follicular lymphoma grade IIIa, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.45*",
+     "en": "Follicular lymphoma grade IIIb, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.55*",
+     "en": "Diffuse follicle center lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.65*",
+     "en": "Cutaneous follicle center lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.85*",
+     "en": "Other types of follicular lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.95*",
+     "en": "Follicular lymphoma, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.06*",
+     "en": "Follicular lymphoma grade I, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.16*",
+     "en": "Follicular lymphoma grade II, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.26*",
+     "en": "Follicular lymphoma grade III, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.36*",
+     "en": "Follicular lymphoma grade IIIa, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.46*",
+     "en": "Follicular lymphoma grade IIIb, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之IIIb期濾泡性淋巴瘤"
+    },
+    {
+     "code": "C82.56*",
+     "en": "Diffuse follicle center lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.66*",
+     "en": "Cutaneous follicle center lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.86*",
+     "en": "Other types of follicular lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.96*",
+     "en": "Follicular lymphoma, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.07*",
+     "en": "Follicular lymphoma grade I, spleen",
+     "zh": "脾臟之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.17*",
+     "en": "Follicular lymphoma grade II, spleen",
+     "zh": "脾臟之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.27*",
+     "en": "Follicular lymphoma grade III, unspecified, spleen",
+     "zh": "脾臟之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.37*",
+     "en": "Follicular lymphoma grade IIIa, spleen",
+     "zh": "脾臟之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.47*",
+     "en": "Follicular lymphoma grade IIIb, spleen",
+     "zh": "脾臟之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.57*",
+     "en": "Diffuse follicle center lymphoma, spleen",
+     "zh": "脾臟之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.67*",
+     "en": "Cutaneous follicle center lymphoma, spleen",
+     "zh": "脾臟之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.87*",
+     "en": "Other types of follicular lymphoma, spleen",
+     "zh": "脾臟之其他類型濾胞性淋巴瘤"
+    },
+    {
+     "code": "C82.97*",
+     "en": "Follicular lymphoma, unspecified, spleen",
+     "zh": "脾臟之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.08*",
+     "en": "Follicular lymphoma grade I, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之I期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.18*",
+     "en": "Follicular lymphoma grade II, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之II期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.28*",
+     "en": "Follicular lymphoma grade III, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之III期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.38*",
+     "en": "Follicular lymphoma grade IIIa, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之IIIa期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.48*",
+     "en": "Follicular lymphoma grade IIIb, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之IIIb期濾泡型淋巴瘤"
+    },
+    {
+     "code": "C82.58*",
+     "en": "Diffuse follicle center lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之瀰漫性濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.68*",
+     "en": "Cutaneous follicle center lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之皮膚濾泡型中心淋巴瘤"
+    },
+    {
+     "code": "C82.88*",
+     "en": "Other types of follicular lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之其他類型濾胞型淋巴瘤"
+    },
+    {
+     "code": "C82.98*",
+     "en": "Follicular lymphoma, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之濾泡型淋巴瘤"
+    },
+    {
+     "code": "C84.00*",
+     "en": "Mycosis fungoides, unspecified site",
+     "zh": "未明示部位之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.09*",
+     "en": "Mycosis fungoides, extranodal and solid organ sites",
+     "zh": "結節外實體器官之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.40*",
+     "en": "Peripheral T-cell lymphoma, not classified, unspecified site",
+     "zh": "未明示部位之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.47*",
+     "en": "Peripheral T-cell lymphoma, not classified, spleen",
+     "zh": "脾臟之周邊Ｔ細胞淋巴瘤,未分類"
+    },
+    {
+     "code": "C84.49*",
+     "en": "Peripheral T-cell lymphoma, not classified, extranodal and solid organ sites",
+     "zh": "結節外實體器官之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.90*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, unspecified site",
+     "zh": "未明示部位之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.99*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, extranodal and solid organ sites",
+     "zh": "結節外實體器官之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A0*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, unspecified site",
+     "zh": "未明示部位之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A9*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, extranodal and solid organ sites",
+     "zh": "結節外實體器官之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z0*",
+     "en": "Other mature T/NK-cell lymphomas, unspecified site",
+     "zh": "未明示部位之其他成熟的T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z9*",
+     "en": "Other mature T/NK-cell lymphomas, extranodal and solid organ sites",
+     "zh": "結節外實體器官之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.01*",
+     "en": "Mycosis fungoides, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.41*",
+     "en": "Peripheral T-cell lymphoma, not classified, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.91*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A1*",
+     "en": "Cutaneous T-cell lymphoma, unspecified lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z1*",
+     "en": "Other mature T/NK-cell lymphomas, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C86.0*",
+     "en": "Extranodal NK/T-cell lymphoma, nasal type",
+     "zh": "淋巴結外鼻腔型NK/T–細胞淋巴瘤"
+    },
+    {
+     "code": "C84.02*",
+     "en": "Mycosis fungoides, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.42*",
+     "en": "Peripheral T-cell lymphoma, not classified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.92*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A2*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z2*",
+     "en": "Other mature T/NK-cell lymphomas, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.03*",
+     "en": "Mycosis fungoides, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.43*",
+     "en": "Peripheral T-cell lymphoma, not classified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.A3*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z3*",
+     "en": "Other mature T/NK-cell lymphomas, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C86.2*",
+     "en": "Enteropathy-type (intestinal) T-cell lymphoma",
+     "zh": "腸病變(腸)型Ｔ–細胞淋巴瘤"
+    },
+    {
+     "code": "C86.3*",
+     "en": "Subcutaneous panniculitis-like T-cell lymphoma",
+     "zh": "皮下似脂膜炎T細胞淋巴瘤"
+    },
+    {
+     "code": "C84.04*",
+     "en": "Mycosis fungoides, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.44*",
+     "en": "Peripheral T-cell lymphoma, not classified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.94*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A4*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z4*",
+     "en": "Other mature T/NK-cell lymphomas, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.05*",
+     "en": "Mycosis fungoides, lymph nodes of inguinal region and lower limb",
+     "zh": "鼠蹊及下肢淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.45*",
+     "en": "Peripheral T-cell lymphoma, not classified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.95*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A5*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z5*",
+     "en": "Other mature T/NK-cell lymphomas, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.06*",
+     "en": "Mycosis fungoides, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.46*",
+     "en": "Peripheral T-cell lymphoma, not classified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.96*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A6*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z6*",
+     "en": "Other mature T/NK-cell lymphomas, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.07*",
+     "en": "Mycosis fungoides, spleen",
+     "zh": "脾臟之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.97*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, spleen",
+     "zh": "脾臟之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A7*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, spleen",
+     "zh": "脾臟之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z7*",
+     "en": "Other mature T/NK-cell lymphomas, spleen",
+     "zh": "脾臟之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C86.1*",
+     "en": "Hepatosplenic T-cell lymphoma",
+     "zh": "肝脾T–細胞淋巴瘤"
+    },
+    {
+     "code": "C84.08*",
+     "en": "Mycosis fungoides, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之蕈狀肉芽腫"
+    },
+    {
+     "code": "C84.48*",
+     "en": "Peripheral T-cell lymphoma, not classified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之周邊Ｔ細胞淋巴瘤，未分類"
+    },
+    {
+     "code": "C84.98*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C84.A8*",
+     "en": "Cutaneous T-cell lymphoma, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之皮膚Ｔ細胞淋巴瘤"
+    },
+    {
+     "code": "C84.Z8*",
+     "en": "Other mature T/NK-cell lymphomas, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之其他成熟T/NK-細胞淋巴瘤"
+    },
+    {
+     "code": "C84.10*",
+     "en": "Sezary disease, unspecified site",
+     "zh": "未明示部位之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.19*",
+     "en": "Sezary disease, extranodal and solid organ sites",
+     "zh": "結節外實體器官之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.11*",
+     "en": "Sezary disease, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.12*",
+     "en": "Sezary disease, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.13*",
+     "en": "Sezary disease, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.14*",
+     "en": "Sezary disease, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.15*",
+     "en": "Sezary disease, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.16*",
+     "en": "Sezary disease, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.17*",
+     "en": "Sezary disease, spleen",
+     "zh": "脾臟之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C84.18*",
+     "en": "Sezary disease, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之Sezary(塞札瑞)病"
+    },
+    {
+     "code": "C96.A*",
+     "en": "Histiocytic sarcoma",
+     "zh": "組織球性肉瘤"
+    },
+    {
+     "code": "C91.40*",
+     "en": "Hairy cell leukemia not having achieved remission",
+     "zh": "毛(髮)狀細胞白血病，未達到緩解"
+    },
+    {
+     "code": "C91.41*",
+     "en": "Hairy cell leukemia, in remission",
+     "zh": "毛(髮)狀細胞白血病，緩解期"
+    },
+    {
+     "code": "C91.42*",
+     "en": "Hairy cell leukemia, in relapse",
+     "zh": "毛(髮)狀細胞白血病，復發"
+    },
+    {
+     "code": "C96.0*",
+     "en": "Multifocal and multisystemic (disseminated) Langerhans-cell histiocytosis",
+     "zh": "多病灶及多系統性（散佈性）蘭格漢氏-細胞組織球增生症"
+    },
+    {
+     "code": "C96.2*",
+     "en": "Malignant mast cell tumor",
+     "zh": "惡性肥大細胞瘤"
+    },
+    {
+     "code": "C83.10*",
+     "en": "Mantle cell lymphoma, unspecified site",
+     "zh": "未明示部位之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C83.19*",
+     "en": "Mantle cell lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.10*",
+     "en": "Unspecified B-cell lymphoma, unspecified site",
+     "zh": "未明示部位之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.19*",
+     "en": "Unspecified B-cell lymphoma, extranodal and solid organ sites",
+     "zh": "結節外實體器官之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.80*",
+     "en": "Other specified types of non-Hodgkin lymphoma, unspecified site",
+     "zh": "未明示部位之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.89*",
+     "en": "Other specified types of non-Hodgkin lymphoma, extranodal and solid organ sites",
+     "zh": "淋巴結外及實體器官之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.90*",
+     "en": "Non-Hodgkin lymphoma, unspecified, unspecified site",
+     "zh": "未明示部位之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.99*",
+     "en": "Non-Hodgkin lymphoma, unspecified, extranodal and solid organ sites",
+     "zh": "淋巴結外及實體器官之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C86.4*",
+     "en": "Blastic NK-cell lymphoma",
+     "zh": "芽球性NK-T細胞瘤"
+    },
+    {
+     "code": "C88.4*",
+     "en": "Extranodal marginal zone B-cell lymphoma of mucosa-associated lymphoid tissue [MALT-lymphoma]",
+     "zh": "淋巴腺外邊緣區黏膜相關淋巴組織之B細胞淋巴瘤[MALT淋巴瘤]"
+    },
+    {
+     "code": "C83.11*",
+     "en": "Mantle cell lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸部淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.11*",
+     "en": "Unspecified B-cell lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭，臉及頸淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.81*",
+     "en": "Other specified types of non-Hodgkin lymphoma, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.91*",
+     "en": "Non-Hodgkin lymphoma, unspecified, lymph nodes of head, face, and neck",
+     "zh": "頭、臉及頸部淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.12*",
+     "en": "Mantle cell lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.12*",
+     "en": "Unspecified B-cell lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.82*",
+     "en": "Other specified types of non-Hodgkin lymphoma, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.92*",
+     "en": "Non-Hodgkin lymphoma, unspecified, intrathoracic lymph nodes",
+     "zh": "胸腔內淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.13*",
+     "en": "Mantle cell lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C84.93*",
+     "en": "Mature T/NK-cell lymphomas, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之成熟T/NK細胞淋巴瘤"
+    },
+    {
+     "code": "C85.13*",
+     "en": "Unspecified B-cell lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.83*",
+     "en": "Other specified types of non-Hodgkin lymphoma, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.93*",
+     "en": "Non-Hodgkin lymphoma, unspecified, intra-abdominal lymph nodes",
+     "zh": "腹腔內淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.14*",
+     "en": "Mantle cell lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.14*",
+     "en": "Unspecified B-cell lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋窩及上肢淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.84*",
+     "en": "Other specified types of non-Hodgkin lymphoma, lymph nodes of axilla and upper limb",
+     "zh": "腋下及上肢淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.94*",
+     "en": "Non-Hodgkin lymphoma, unspecified, lymph nodes of axilla and upper limb",
+     "zh": "腋下及上肢淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.15*",
+     "en": "Mantle cell lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.15*",
+     "en": "Unspecified B-cell lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "腹股溝及下肢淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.85*",
+     "en": "Other specified types of non-Hodgkin lymphoma, lymph nodes of inguinal region and lower limb",
+     "zh": "鼠蹊部及下肢淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.95*",
+     "en": "Non-Hodgkin lymphoma, unspecified, lymph nodes of inguinal region and lower limb",
+     "zh": "鼠蹊部及下肢淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.16*",
+     "en": "Mantle cell lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.16*",
+     "en": "Unspecified B-cell lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆內淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.86*",
+     "en": "Other specified types of non-Hodgkin lymphoma, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.96*",
+     "en": "Non-Hodgkin lymphoma, unspecified, intrapelvic lymph nodes",
+     "zh": "骨盆腔內淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.17*",
+     "en": "Mantle cell lymphoma, spleen",
+     "zh": "脾臟之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.17*",
+     "en": "Unspecified B-cell lymphoma, spleen",
+     "zh": "脾臟之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.87*",
+     "en": "Other specified types of non-Hodgkin lymphoma, spleen",
+     "zh": "脾臟之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.97*",
+     "en": "Non-Hodgkin lymphoma, unspecified, spleen",
+     "zh": "脾臟之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C83.18*",
+     "en": "Mantle cell lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之被套細胞淋巴瘤"
+    },
+    {
+     "code": "C85.18*",
+     "en": "Unspecified B-cell lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之B細胞淋巴瘤"
+    },
+    {
+     "code": "C85.88*",
+     "en": "Other specified types of non-Hodgkin lymphoma, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之其他特定類型的非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C85.98*",
+     "en": "Non-Hodgkin lymphoma, unspecified, lymph nodes of multiple sites",
+     "zh": "多部位淋巴結之非何杰金(氏)淋巴瘤"
+    },
+    {
+     "code": "C96.9*",
+     "en": "Malignant neoplasm of lymphoid, hematopoietic and related tissue, unspecified",
+     "zh": "淋巴、造血及相關組織之惡性腫瘤"
+    },
+    {
+     "code": "C96.Z*",
+     "en": "Other specified malignant neoplasms of lymphoid, hematopoietic and related tissue",
+     "zh": "其他特定淋巴、造血及相關組織之惡性腫瘤"
+    },
+    {
+     "code": "C90.00*",
+     "en": "Multiple myeloma not having achieved remission",
+     "zh": "多發性骨髓瘤，未達到緩解"
+    },
+    {
+     "code": "C90.02*",
+     "en": "Multiple myeloma in relapse",
+     "zh": "多發性骨髓瘤，復發"
+    },
+    {
+     "code": "C90.01*",
+     "en": "Multiple myeloma in remission",
+     "zh": "多發性骨髓瘤，緩解期"
+    },
+    {
+     "code": "C90.10*",
+     "en": "Plasma cell leukemia not having achieved remission",
+     "zh": "漿細胞性白血病，未達到緩解"
+    },
+    {
+     "code": "C90.12*",
+     "en": "Plasma cell leukemia in relapse",
+     "zh": "漿細胞性白血病，復發"
+    },
+    {
+     "code": "C90.11*",
+     "en": "Plasma cell leukemia in remission",
+     "zh": "漿細胞性白血病，緩解期"
+    },
+    {
+     "code": "C88.2*",
+     "en": "Heavy chain disease",
+     "zh": "重鏈病"
+    },
+    {
+     "code": "C88.3*",
+     "en": "Immunoproliferative small intestinal disease",
+     "zh": "免疫細胞增生性小腸疾病"
+    },
+    {
+     "code": "C88.8*",
+     "en": "Other malignant immunoproliferative diseases",
+     "zh": "其他惡性免疫細胞增生性疾病"
+    },
+    {
+     "code": "C88.9*",
+     "en": "Malignant immunoproliferative disease, unspecified",
+     "zh": "惡性免疫細胞增生性疾病"
+    },
+    {
+     "code": "C90.20*",
+     "en": "Extramedullary plasmacytoma not having achieved remission",
+     "zh": "髓外漿細胞瘤，未達到緩解"
+    },
+    {
+     "code": "C90.22*",
+     "en": "Extramedullary plasmacytoma in relapse",
+     "zh": "髓外漿細胞瘤，復發"
+    },
+    {
+     "code": "C90.30*",
+     "en": "Solitary plasmacytoma not having achieved remission",
+     "zh": "孤立性漿細胞瘤，未達到緩解"
+    },
+    {
+     "code": "C90.32*",
+     "en": "Solitary plasmacytoma in relapse",
+     "zh": "孤立性漿細胞瘤，復發"
+    },
+    {
+     "code": "C90.21*",
+     "en": "Extramedullary plasmacytoma in remission",
+     "zh": "髓外漿細胞瘤，緩解期"
+    },
+    {
+     "code": "C90.31*",
+     "en": "Solitary plasmacytoma in remission",
+     "zh": "孤立性漿細胞瘤，緩解期"
+    },
+    {
+     "code": "C91.00*",
+     "en": "Acute lymphoblastic leukemia not having achieved remission",
+     "zh": "急性淋巴芽球性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.02*",
+     "en": "Acute lymphoblastic leukemia, in relapse",
+     "zh": "急性淋巴芽球性白血病，復發"
+    },
+    {
+     "code": "C91.01*",
+     "en": "Acute lymphoblastic leukemia, in remission",
+     "zh": "急性淋巴芽球性白血病，緩解期"
+    },
+    {
+     "code": "C91.10*",
+     "en": "Chronic lymphocytic leukemia of B-cell type not having achieved remission",
+     "zh": "慢性B細胞淋巴性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.12*",
+     "en": "Chronic lymphocytic leukemia of B-cell type in relapse",
+     "zh": "慢性B細胞淋巴性白血病，復發"
+    },
+    {
+     "code": "C91.11*",
+     "en": "Chronic lymphocytic leukemia of B-cell type in remission",
+     "zh": "慢性B細胞淋巴性白血病，緩解期"
+    },
+    {
+     "code": "C91.Z0*",
+     "en": "Other lymphoid leukemia not having achieved remission",
+     "zh": "其他淋巴性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.Z2*",
+     "en": "Other lymphoid leukemia, in relapse",
+     "zh": "其他淋巴性白血病，復發"
+    },
+    {
+     "code": "C91.Z1*",
+     "en": "Other lymphoid leukemia, in remission",
+     "zh": "其他淋巴性白血病，緩解期"
+    },
+    {
+     "code": "C91.30*",
+     "en": "Prolymphocytic leukemia of B-cell type not having achieved remission",
+     "zh": "前B細胞淋巴性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.32*",
+     "en": "Prolymphocytic leukemia of B-cell type, in relapse",
+     "zh": "B細胞前淋巴性白血病，復發"
+    },
+    {
+     "code": "C91.50*",
+     "en": "Adult T-cell lymphoma/leukemia (HTLV-1-associated) not having achieved remission",
+     "zh": "成年型Ｔ–細胞淋巴瘤/白血病(與HTLV-1-相關)，未達到緩解"
+    },
+    {
+     "code": "C91.52*",
+     "en": "Adult T-cell lymphoma/leukemia (HTLV-1-associated), in relapse",
+     "zh": "成年型Ｔ–細胞淋巴瘤/白血病(與HTLV-1-相關)，復發"
+    },
+    {
+     "code": "C91.60*",
+     "en": "Prolymphocytic leukemia of T-cell type not having achieved remission",
+     "zh": "前T細胞淋巴性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.62*",
+     "en": "Prolymphocytic leukemia of T-cell type, in relapse",
+     "zh": "T細胞前淋巴性白血病，復發"
+    },
+    {
+     "code": "C91.A0*",
+     "en": "Mature B-cell leukemia Burkitt-type not having achieved remission",
+     "zh": "成熟B細胞伯基特白血病，未達到緩解"
+    },
+    {
+     "code": "C91.A2*",
+     "en": "Mature B-cell leukemia Burkitt-type, in relapse",
+     "zh": "成熟B細胞伯基特白血病，復發"
+    },
+    {
+     "code": "C91.31*",
+     "en": "Prolymphocytic leukemia of B-cell type, in remission",
+     "zh": "B細胞前淋巴性白血病，緩解期"
+    },
+    {
+     "code": "C91.51*",
+     "en": "Adult T-cell lymphoma/leukemia (HTLV-1-associated), in remission",
+     "zh": "成年型Ｔ–細胞淋巴瘤/白血病(與HTLV-1-相關)，緩解期"
+    },
+    {
+     "code": "C91.61*",
+     "en": "Prolymphocytic leukemia of T-cell type, in remission",
+     "zh": "T細胞前淋巴性白血病，緩解期"
+    },
+    {
+     "code": "C91.A1*",
+     "en": "Mature B-cell leukemia Burkitt-type, in remission",
+     "zh": "成熟B細胞伯基特白血病，緩解期"
+    },
+    {
+     "code": "C91.90*",
+     "en": "Lymphoid leukemia, unspecified not having achieved remission",
+     "zh": "淋巴性白血病，未達到緩解"
+    },
+    {
+     "code": "C91.92*",
+     "en": "Lymphoid leukemia, unspecified, in relapse",
+     "zh": "淋巴性白血病，復發"
+    },
+    {
+     "code": "C91.91*",
+     "en": "Lymphoid leukemia, unspecified, in remission",
+     "zh": "淋巴性白血病，緩解期"
+    },
+    {
+     "code": "C92.00*",
+     "en": "Acute myeloblastic leukemia, not having achieved remission",
+     "zh": "急性髓母細胞性白血病，未達到緩解"
+    },
+    {
+     "code": "C92.02*",
+     "en": "Acute myeloblastic leukemia, in relapse",
+     "zh": "急性髓母細胞性白血病，復發"
+    },
+    {
+     "code": "C92.40*",
+     "en": "Acute promyelocytic leukemia, not having achieved remission",
+     "zh": "急性前骨髓性白血病，未達到緩解"
+    },
+    {
+     "code": "C92.42*",
+     "en": "Acute promyelocytic leukemia, in relapse",
+     "zh": "急性前骨髓性白血病，復發"
+    },
+    {
+     "code": "C92.50*",
+     "en": "Acute myelomonocytic leukemia, not having achieved remission",
+     "zh": "急性骨髓單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C92.52*",
+     "en": "Acute myelomonocytic leukemia, in relapse",
+     "zh": "急性骨髓單核球性白血病，復發"
+    },
+    {
+     "code": "C92.60*",
+     "en": "Acute myeloid leukemia with 11q23-abnormality not having achieved remission",
+     "zh": "急性骨髓性白血病伴有11q23-異常，未達到緩解"
+    },
+    {
+     "code": "C92.62*",
+     "en": "Acute myeloid leukemia with 11q23-abnormality in relapse",
+     "zh": "急性骨髓性白血病伴有11q23-異常，復發"
+    },
+    {
+     "code": "C92.A0*",
+     "en": "Acute myeloid leukemia with multilineage dysplasia, not having achieved remission",
+     "zh": "急性骨髓性白血病伴有多系發育不全，未達到緩解"
+    },
+    {
+     "code": "C92.A2*",
+     "en": "Acute myeloid leukemia with multilineage dysplasia, in relapse",
+     "zh": "急性骨髓性白血病伴有多系發育不全，復發"
+    },
+    {
+     "code": "C92.01*",
+     "en": "Acute myeloblastic leukemia, in remission",
+     "zh": "急性髓母細胞性白血病，緩解期"
+    },
+    {
+     "code": "C92.41*",
+     "en": "Acute promyelocytic leukemia, in remission",
+     "zh": "急性前骨髓性白血病，緩解期"
+    },
+    {
+     "code": "C92.51*",
+     "en": "Acute myelomonocytic leukemia, in remission",
+     "zh": "急性骨髓單核球性白血病，緩解期"
+    },
+    {
+     "code": "C92.61*",
+     "en": "Acute myeloid leukemia with 11q23-abnormality in remission",
+     "zh": "急性骨髓性白血病伴有11q23-異常，緩解期"
+    },
+    {
+     "code": "C92.A1*",
+     "en": "Acute myeloid leukemia with multilineage dysplasia, in remission",
+     "zh": "急性骨髓性白血病伴有多系發育不全，緩解期"
+    },
+    {
+     "code": "C92.10*",
+     "en": "Chronic myeloid leukemia, BCR/ABL-positive, not having achieved remission",
+     "zh": "慢性骨髓性白血病，BCR/ABL陽性，未達到緩解"
+    },
+    {
+     "code": "C92.12*",
+     "en": "Chronic myeloid leukemia, BCR/ABL-positive, in relapse",
+     "zh": "慢性骨髓性白血病，BCR/ABL陽性，復發"
+    },
+    {
+     "code": "C92.11*",
+     "en": "Chronic myeloid leukemia, BCR/ABL-positive, in remission",
+     "zh": "慢性骨髓性白血病，BCR/ABL陽性，緩解期"
+    },
+    {
+     "code": "C92.20*",
+     "en": "Atypical chronic myeloid leukemia, BCR/ABL-negative, not having achieved remission",
+     "zh": "非典型慢性骨髓性白血病，BCR/ABL陰性，未達到緩解"
+    },
+    {
+     "code": "C92.22*",
+     "en": "Atypical chronic myeloid leukemia, BCR/ABL-negative, in relapse",
+     "zh": "非典型慢性骨髓性白血病，BCR/ABL陰性，復發"
+    },
+    {
+     "code": "C92.21*",
+     "en": "Atypical chronic myeloid leukemia, BCR/ABL-negative, in remission",
+     "zh": "非典型慢性骨髓性白血病，BCR/ABL陰性，緩解期"
+    },
+    {
+     "code": "C92.30*",
+     "en": "Myeloid sarcoma, not having achieved remission",
+     "zh": "骨髓性肉瘤，，未達到緩解"
+    },
+    {
+     "code": "C92.32*",
+     "en": "Myeloid sarcoma, in relapse",
+     "zh": "骨髓性肉瘤，復發"
+    },
+    {
+     "code": "C92.31*",
+     "en": "Myeloid sarcoma, in remission",
+     "zh": "骨髓性肉瘤，緩解期"
+    },
+    {
+     "code": "C92.Z0*",
+     "en": "Other myeloid leukemia not having achieved remission",
+     "zh": "其他骨髓性白血病，未達到緩解"
+    },
+    {
+     "code": "C92.Z2*",
+     "en": "Other myeloid leukemia, in relapse",
+     "zh": "其他骨髓性白血病，復發"
+    },
+    {
+     "code": "C92.Z1*",
+     "en": "Other myeloid leukemia, in remission",
+     "zh": "其他骨髓性白血病，緩解期"
+    },
+    {
+     "code": "C92.90*",
+     "en": "Myeloid leukemia, unspecified, not having achieved remission",
+     "zh": "骨髓性白血病，未達到緩解"
+    },
+    {
+     "code": "C92.92*",
+     "en": "Myeloid leukemia, unspecified in relapse",
+     "zh": "骨髓性白血病，復發"
+    },
+    {
+     "code": "C93.30*",
+     "en": "Juvenile myelomonocytic leukemia, not having achieved remission",
+     "zh": "幼年型骨髓單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C93.32*",
+     "en": "Juvenile myelomonocytic leukemia, in relapse",
+     "zh": "幼年型骨髓單核球性白血病，復發"
+    },
+    {
+     "code": "C92.91*",
+     "en": "Myeloid leukemia, unspecified in remission",
+     "zh": "骨髓性白血病，緩解期"
+    },
+    {
+     "code": "C93.00*",
+     "en": "Acute monoblastic/monocytic leukemia, not having achieved remission",
+     "zh": "急性單核母細胞性/單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C93.02*",
+     "en": "Acute monoblastic/monocytic leukemia, in relapse",
+     "zh": "急性單核母細胞性/單核球性白血病，復發"
+    },
+    {
+     "code": "C93.01*",
+     "en": "Acute monoblastic/monocytic leukemia, in remission",
+     "zh": "急性單核母細胞性/單核球性白血病，緩解期"
+    },
+    {
+     "code": "C93.10*",
+     "en": "Chronic myelomonocytic leukemia not having achieved remission",
+     "zh": "慢性骨髓單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C93.12*",
+     "en": "Chronic myelomonocytic leukemia, in relapse",
+     "zh": "慢性骨髓單核球性白血病，復發"
+    },
+    {
+     "code": "C93.11*",
+     "en": "Chronic myelomonocytic leukemia, in remission",
+     "zh": "慢性骨髓單核球性白血病，緩解期"
+    },
+    {
+     "code": "C93.90*",
+     "en": "Monocytic leukemia, unspecified, not having achieved remission",
+     "zh": "單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C93.92*",
+     "en": "Monocytic leukemia, unspecified in relapse",
+     "zh": "單核球性白血病，復發"
+    },
+    {
+     "code": "C93.91*",
+     "en": "Monocytic leukemia, unspecified in remission",
+     "zh": "單核球性白血病，緩解期"
+    },
+    {
+     "code": "C93.Z0*",
+     "en": "Other monocytic leukemia, not having achieved remission",
+     "zh": "其他單核球性白血病，未達到緩解"
+    },
+    {
+     "code": "C93.Z2*",
+     "en": "Other monocytic leukemia, in relapse",
+     "zh": "其他單核球性白血病，復發"
+    },
+    {
+     "code": "C93.31*",
+     "en": "Juvenile myelomonocytic leukemia, in remission",
+     "zh": "幼年型骨髓單核球性白血病，緩解期"
+    },
+    {
+     "code": "C93.Z1*",
+     "en": "Other monocytic leukemia, in remission",
+     "zh": "其他單核球性白血病，緩解期"
+    },
+    {
+     "code": "C94.00*",
+     "en": "Acute erythroid leukemia, not having achieved remission",
+     "zh": "急性紅白血病，未達到緩解"
+    },
+    {
+     "code": "C94.02*",
+     "en": "Acute erythroid leukemia, in relapse",
+     "zh": "急性紅白血病，復發"
+    },
+    {
+     "code": "C94.01*",
+     "en": "Acute erythroid leukemia, in remission",
+     "zh": "急性紅白血病，緩解期"
+    },
+    {
+     "code": "C94.20*",
+     "en": "Acute megakaryoblastic leukemia not having achieved remission",
+     "zh": "急性巨核細胞性白血病，未達到緩解"
+    },
+    {
+     "code": "C94.22*",
+     "en": "Acute megakaryoblastic leukemia, in relapse",
+     "zh": "急性巨核細胞性白血病，復發"
+    },
+    {
+     "code": "C94.21*",
+     "en": "Acute megakaryoblastic leukemia, in remission",
+     "zh": "急性巨核細胞性白血病，緩解期"
+    },
+    {
+     "code": "C94.30*",
+     "en": "Mast cell leukemia not having achieved remission",
+     "zh": "肥大細胞白血病，未達到緩解"
+    },
+    {
+     "code": "C94.32*",
+     "en": "Mast cell leukemia, in relapse",
+     "zh": "肥大細胞白血病，復發"
+    },
+    {
+     "code": "C94.80*",
+     "en": "Other specified leukemias not having achieved remission",
+     "zh": "其他特定之白血病，未達到緩解"
+    },
+    {
+     "code": "C94.82*",
+     "en": "Other specified leukemias, in relapse",
+     "zh": "其他特定之白血病，復發"
+    },
+    {
+     "code": "C94.31*",
+     "en": "Mast cell leukemia, in remission",
+     "zh": "肥大細胞白血病，緩解期"
+    },
+    {
+     "code": "C94.81*",
+     "en": "Other specified leukemias, in remission",
+     "zh": "其他特定之白血病，緩解期"
+    },
+    {
+     "code": "C95.00*",
+     "en": "Acute leukemia of unspecified cell type not having achieved remission",
+     "zh": "未明示細胞類型之急性白血病，未達到緩解"
+    },
+    {
+     "code": "C95.02*",
+     "en": "Acute leukemia of unspecified cell type, in relapse",
+     "zh": "未明示細胞類型之急性白血病，復發"
+    },
+    {
+     "code": "C95.01*",
+     "en": "Acute leukemia of unspecified cell type, in remission",
+     "zh": "未明示細胞類型之急性白血病，緩解期"
+    },
+    {
+     "code": "C95.10*",
+     "en": "Chronic leukemia of unspecified cell type not having achieved remission",
+     "zh": "未明示細胞類型之慢性白血病，未達到緩解"
+    },
+    {
+     "code": "C95.12*",
+     "en": "Chronic leukemia of unspecified cell type, in relapse",
+     "zh": "未明示細胞類型之慢性白血病，復發"
+    },
+    {
+     "code": "C95.11*",
+     "en": "Chronic leukemia of unspecified cell type, in remission",
+     "zh": "未明示細胞類型之慢性白血病，緩解期"
+    },
+    {
+     "code": "C95.90*",
+     "en": "Leukemia, unspecified not having achieved remission",
+     "zh": "白血病，未達到緩解"
+    },
+    {
+     "code": "C95.92*",
+     "en": "Leukemia, unspecified, in relapse",
+     "zh": "白血病，復發"
+    },
+    {
+     "code": "C95.91*",
+     "en": "Leukemia, unspecified, in remission",
+     "zh": "白血病，緩解期"
+    }
+   ]
+  }
+ }
+}
