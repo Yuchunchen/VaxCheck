@@ -40,6 +40,9 @@ dosing:
     - { dose: 2, minIntervalDays: 28, requiresPrior: true }
 ```
 
+### `showWhen`(面板顯示條件,v0.4.28)
+疫苗層可設 `showWhen`(條件樹,不可含 `manual`):不成立時 `display.hidden = true`,面板不列這張卡片;判定照常計算,`Result` 與匯出診斷檔仍含。未知(例:缺生日)→ 照常顯示。例:幼童 PCV13 `showWhen: { age: { max: { years: 4 } } }`(滿 5 歲以上不顯示)。
+
 ### `mode: cases`(肺鏈這種「看接種史組合決定下一步」的規則)
 由上往下,第一個 `when` 命中的 case 決定結果;`criteria`(可省略)為該 case 的附加對象條件,未知時延後(見 EXECUTION.md)。
 

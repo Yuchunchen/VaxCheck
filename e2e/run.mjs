@@ -396,7 +396,7 @@ pc = await dCard(PC);
 check('F3 3 歲從未接種 →「可接種」,今日可打第 1 劑', where(lay, PC) === '可接種' && /今日可打第 1 劑/.test(pc.line), pc.line);
 await pick('A');
 lay = await dLayout();
-check('F4 68 歲成人:幼童 PCV13 在「不符合」,成人肺鏈卡片不受影響', where(lay, PC) === '不符合' && where(lay, 'PCV20/PCV21') !== '不符合' && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.items])));
+check('F4 68 歲成人:面板不列幼童 PCV13 卡片(showWhen 未滿 5 歲),成人肺鏈卡片不受影響', where(lay, PC) === undefined && where(lay, 'PCV20/PCV21') !== undefined && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.items])));
 await demo.close();
 
 await ctx.close();

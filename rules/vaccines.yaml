@@ -9,7 +9,7 @@
 #     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 國健署罕見疾病 ICD(115-07-23,推估;寬泛碼只顯示不預勾)+ 透析/CKD 旗標
 #   - COVID-19:115–116 年度正式轉譯(衛生福利部計畫全文 1151008 版;對象與劑次與 1150727 版相同);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
 #   - 幼童 PCV13(v0.4.28):5 歲以下幼童公費 13 價結合型肺炎鏈球菌疫苗接種原則(105 年 4 月修訂)+ Q&A(105 年 4 月版)+ 兒童接種時程(115.09 版);
-#     高危險群證據:幼童肺炎鏈球菌高危險群 ICD 參考表(scripts/build-pcv13-child-codelist.mjs 產生,偏離原表 5 處列在 JSON deviations,待 YC 核對)
+#     高危險群證據:幼童肺炎鏈球菌高危險群 ICD 參考表(scripts/build-pcv13-child-codelist.mjs 產生;偏離原表 5 處列在 JSON deviations,YC 2026-11-04 核准)
 # =====================================================================
 
 ruleSetVersion: 2026.11.04-v0428
@@ -483,6 +483,7 @@ vaccines:
     historyMatch: { vaccineCodes: [PCV13] }
     sourceIds: [SRC_CDC_PCV13_CHILD_PRINCIPLE_10504, SRC_CDC_PCV13_CHILD_QA_10504, SRC_CDC_CHILD_SCHEDULE_11509]
     notes: 年齡以出生年月日足月計;劑次依目前年齡、PCV13 已接種劑次與接種當時月齡判定。一般兒童常規 3 劑(2、4 個月,滿 12–15 個月追加 1 劑);高危險群依第 1 劑接種月齡增加劑次。
+    showWhen: { age: { max: { years: 4 } } }      # 滿 5 歲以上面板不顯示此卡片(YC 2026-11-04;判定照常、匯出仍含);未滿 2 個月仍顯示「不符合」
 
     eligibilityGroups:
       - groupId: PCV13_CHILD_UNDER5

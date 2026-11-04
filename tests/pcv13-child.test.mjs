@@ -6,6 +6,7 @@ import path from 'node:path';
 import { patient, run, V } from './helpers.mjs';
 import { ROOT } from '../scripts/lib/rules.mjs';
 import { generate, OUT } from '../scripts/build-pcv13-child-codelist.mjs';
+import { groupVaccines } from '../src/panel/order.js';
 
 const AT = '2026-11-04';
 const P = (p, at = AT) => V(run(patient(p), at), 'PCV13_CHILD');
@@ -29,6 +30,19 @@ test('對象:未滿 2 個月、滿 5 歲 → 不符合;成人不受影響', () =
   assert.equal(adult.verdict, 'ineligible');
   assert.equal(adult.display.bucket, 'ineligible');
   assert.deepEqual(adult.decisiveManual, []);
+});
+
+test('showWhen:滿 5 歲以上面板不列幼童 PCV13 卡片(判定照常、Result 仍含);未滿 2 個月、缺生日仍顯示', () => {
+  const res = run(patient({ birth: '1958-03-02', vacc: [] }), AT);
+  assert.equal(V(res, 'PCV13_CHILD').display.hidden, true);
+  assert.ok(res.vaccines.some((v) => v.vaccineId === 'PCV13_CHILD'), 'Result(匯出)仍含');
+  const shown = groupVaccines(res.vaccines).flatMap((g) => g.items.map((v) => v.vaccineId));
+  assert.ok(!shown.includes('PCV13_CHILD') && shown.includes('PNEUMO_PCV20_21'));
+  assert.equal(P({ birth: '2021-11-05', vacc: [] }).display.hidden, undefined);      // 4 歲 364 天:顯示
+  assert.equal(P({ birth: '2021-11-04', vacc: [] }).display.hidden, true);           // 滿 5 歲當天:不顯示
+  assert.equal(P({ birth: '2026-10-01', vacc: [] }).display.hidden, undefined);      // 未滿 2 個月:顯示「不符合」
+  assert.equal(P({ birth: undefined, vacc: [] }).display.hidden, undefined);         // 缺生日:顯示(未知不藏)
+  for (const id of ['PNEUMO_PCV20_21', 'FLU', 'COVID']) assert.equal(V(res, id).display.hidden, undefined, `${id} 無 showWhen`);
 });
 
 test('接種史未查 → 待查接種史;缺接種日期 → 人工(劑次依接種月齡)', () => {

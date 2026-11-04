@@ -45,6 +45,8 @@ function evaluateVaccine(vaccine, ctx) {
   const out = legacyVerdict(vaccine, vctx, groups);
   // v0.4.12:保底/升級 → 面板分組;decisiveManual 只留「確認後今日可打」的條件(docs/10 §3.1)
   out.display = computeDisplay(vaccine, vctx, groups, out);
+  // v0.4.28:showWhen 為 false(例:幼童 PCV13 對 5 歲以上)→ 面板不顯示此卡片;判定照常計算、匯出仍含。未知(缺生日)→ 顯示
+  if (vaccine.showWhen && evalCond(vaccine.showWhen, { ...vctx, inEvidence: true }).v === false) out.display.hidden = true;
   out.decisiveManual = decisiveKeys(out.display, out.decisiveManual);
   if (out.display.upgrade) out.display.upgrade.items = out.display.upgrade.requires.map((k) => (ctx.manualDefs[k]
     ? { key: k, type: 'manual', label: ctx.manualDefs[k].label || k, hint: ctx.manualDefs[k].hint, ...askEvidence(k, ctx) }

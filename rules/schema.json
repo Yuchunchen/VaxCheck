@@ -1076,6 +1076,10 @@
             ]
           }
         },
+        "showWhen": {
+          "$ref": "#/definitions/criteria",
+          "description": "v0.4.28:面板顯示條件(不可含 manual)。false → display.hidden,面板不列此卡片;判定照常計算,匯出仍含;未知 → 顯示"
+        },
         "explain": {
           "type": "object",
           "additionalProperties": false,
