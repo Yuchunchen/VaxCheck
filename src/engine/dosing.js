@@ -176,7 +176,11 @@ export function computeCases(dosing, vaccine, ctx) {
     }
     const res = caseResult(c, recs, ctx, flags);
     if (res.status === 'needs_review') return { ...res, ...layers(res), upgrade: null };
-    if (res.status === 'due') return { ...res, ...layers(res) };   // 今日已可打:不必等待定條件
+    if (res.status === 'due') {
+      // v0.4.28(預設不可):前面的待定 case 確認後要等(wait)→ 今天放行可能過早,回待定(需確認);其餘今日已可打,不必等待定條件
+      if (pending?.res.status === 'wait') return withPending(res);
+      return { ...res, ...layers(res) };
+    }
     return withPending(res);
   }
   if (pending) return { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: null, flags, ...layers(null) };

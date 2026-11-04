@@ -84,7 +84,7 @@ computeCases(dosing, 接種史):
       notFunded  → not_funded
       review     → needs_review
       give       → 算 earliestDate = max(今日, 最近一劑 + 間隔)
-                   due(今日可打)→ 直接回
+                   due(今日可打)→ 直接回;但待定 case 確認後是 wait(要等)→ 回待定 + alternative=due(v0.4.28,預設不可)
                    wait → 若有待定 case:回待定 + alternative=wait;否則 wait
   沒命中 → 待定 case 或 needs_review(組合未定義)
   另回 dosing.fallback(保底摘要)與 dosing.upgrade(待定 case 確認後的結果 + requires;只在比保底好時列出)
@@ -93,6 +93,7 @@ computeCases(dosing, 接種史):
 待定機制的用意:例如「IPD 高風險(醫師未勾)且僅打過 PCV13」,8 週路徑未知、但 1 年路徑已經到期 → 直接給「今日可打」,不必等醫師勾選。反之 1 年路徑還要等時,看 8 週路徑確認後今天能不能打:
 - 能(PCV13 已滿 8 週)→ 待確認:「若確認〔IPD 高風險…〕任一 → 今天可打;未確認前 YYYY-MM-DD 起可打」,列入決定性條件。
 - 不能(未滿 8 週)→ 尚未開打:「YYYY-MM-DD 起可打」,附選填提示「若確認…可提早至 PCV13 + 56 天」,不列入決定性條件。
+- 反向(v0.4.28):待定 case 確認後「要等」、後面的確定 case 卻今天可打 → 不放行,歸「待確認」並問該條件(「若無下列條件:今天可打」)。例:幼童第 1 劑於滿 7 個月以後,一般第 2 劑 4 週即可,高危險群要 8 週;4–8 週之間未確認高危險群時不可直接顯示可打。
 
 ## 保底與升級 → 面板分組(v0.4.12)
 

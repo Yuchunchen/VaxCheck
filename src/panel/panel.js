@@ -28,6 +28,7 @@ function head(v, fmtDate) {
 }
 function altText(alt, fmtDate) {
   if (!alt) return '';
+  if (alt.status === 'due') return '若無下列條件:今天可打';   // v0.4.28:待定條件確認後反而要等(例:高危險群幼童間隔較長)
   if (alt.status === 'completed') return '若無下列條件:已完成接種';
   if (alt.status === 'wait') return `若無下列條件:${fmtDate(alt.earliestDate)} 起可打`;
   if (alt.status === 'not_funded') return '若無下列條件:不再公費';

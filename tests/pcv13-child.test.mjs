@@ -64,8 +64,12 @@ test('1 歲以下:0 劑 → 今日第 1 劑;1 劑 → 與前劑 8 週;第 1 劑�
   assert.deepEqual([naive.verdict, caseOf(naive), naive.dosing.dose], ['eligible', 'PC_INF_NAIVE', 1]);
   const one = P({ birth: '2026-08-01', vacc: [['PCV13', '2026-10-01']] });
   assert.deepEqual([one.verdict, caseOf(one), one.dosing.dose, one.dosing.earliestDate], ['wait', 'PC_INF_1', 2, '2026-11-26']);
-  const late = P({ birth: '2026-01-01', vacc: [['PCV13', '2026-09-28']] });     // 第 1 劑於 8 個月 27 天
-  assert.deepEqual([late.verdict, caseOf(late), late.dosing.status], ['eligible', 'PC_INF_1_LATE', 'due']);   // 4 週 = 10/26 已過(8 週要到 11/23)
+  // 第 1 劑於 8 個月 27 天、今日 5 週後:一般 4 週已過(10/26),高危險群要 8 週(11/23)
+  const late = { birth: '2026-01-01', vacc: [['PCV13', '2026-09-28']] };
+  const lateNo = P({ ...late, manual: { pcvChildHighRisk: false } });
+  assert.deepEqual([lateNo.verdict, caseOf(lateNo), lateNo.dosing.status], ['eligible', 'PC_INF_1_LATE', 'due']);
+  const lateYes = P({ ...late, manual: { pcvChildHighRisk: true } });
+  assert.deepEqual([lateYes.verdict, caseOf(lateYes), lateYes.dosing.earliestDate], ['wait', 'PC_HR_INF_LATE_2ND', '2026-11-23']);
 });
 
 test('1 歲以下已接種 2 劑:追加劑等到滿 12 個月;是否高危險群決定今天能否打第 3 劑(待確認)', () => {
@@ -79,6 +83,17 @@ test('1 歲以下已接種 2 劑:追加劑等到滿 12 個月;是否高危險群
   assert.deepEqual([no.verdict, caseOf(no), no.dosing.dose, no.dosing.earliestDate], ['wait', 'PC_INF_BOOSTER', 3, '2027-03-01']);
   const yes = P({ ...base, manual: { pcvChildHighRisk: true } });
   assert.deepEqual([yes.verdict, caseOf(yes), yes.dosing.dose], ['eligible', 'PC_HR_INF_3RD_PRIMARY', 3]);
+});
+
+test('預設不可:高危險群確認後要等(8 週)而一般今天可打(4 週)→ 未確認時不放行,歸待確認並問高危險群', () => {
+  const v = P({ birth: '2026-01-01', vacc: [['PCV13', '2026-09-28']] });     // Codex 審查 PR #7 指出的情境
+  assert.equal(v.verdict, 'needs_input');
+  assert.equal(v.display.bucket, 'confirm');
+  assert.deepEqual(v.decisiveManual.map((m) => m.key), ['pcvChildHighRisk']);
+  assert.deepEqual([v.dosing.alternative.status, v.dosing.alternative.case.id], ['due', 'PC_INF_1_LATE']);
+  // 滿 8 週後兩條路徑都今天可打 → 不必問
+  const both = P({ birth: '2026-01-01', vacc: [['PCV13', '2026-09-01']] });
+  assert.deepEqual([both.verdict, both.dosing.status, both.decisiveManual.length], ['eligible', 'due', 0]);
 });
 
 // ---------------- 滿 1 歲–未滿 2 歲 ----------------
