@@ -212,8 +212,9 @@ test('回歸:§9 情境與示範病患的 Result 既有欄位與 v0.4.10 相同;
   for (const [name, c] of Object.entries(snap.cases)) {
     const r = run(c.facts, c.asOf);
     assert.deepEqual({ ruleSetVersion: r.ruleSetVersion, jurisdiction: r.jurisdiction, asOf: r.asOf }, c.top, name);
-    assert.deepEqual(r.vaccines.map((v) => v.vaccineId), Object.keys(c.vaccines), `${name}:疫苗順序維持規則原始順序`);
-    for (const v of r.vaccines) {
+    const known = r.vaccines.filter((v) => v.vaccineId in c.vaccines);   // v0.4.28 起新增的疫苗(幼童 PCV13)不在 v0.4.10 快照內,只比對既有疫苗
+    assert.deepEqual(known.map((v) => v.vaccineId), Object.keys(c.vaccines), `${name}:疫苗順序維持規則原始順序`);
+    for (const v of known) {
       const old = c.vaccines[v.vaccineId];
       const now = summary(v);
       assert.equal(legacyHash(v), old.hash, `${name} ${v.vaccineId}:既有欄位與 v0.4.10 不同(現 ${JSON.stringify(now)};舊 ${JSON.stringify(old)})`);

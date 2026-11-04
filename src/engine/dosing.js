@@ -61,11 +61,35 @@ export function computeSeries(dosing, vaccine, ctx) {
 
 // ---------- cases ----------
 function hasCodes(p) { return Array.isArray(p) ? p : p.codes; }
-function evalHist(p, recs) {
+// 接種月齡(v0.4.28,幼童 PCV13):min 含當日(生日 + min);max 與 age 葉相同語意(≤ max = 未滿 max + 1 單位)
+function ageEdge(birth, a, plusOne) {
+  const iv = { years: a.years || 0, months: a.months || 0, days: a.days || 0 };
+  if (plusOne) { if (a.days != null) iv.days += 1; else if (a.months != null) iv.months += 1; else iv.years += 1; }
+  return addInterval(birth, iv);
+}
+function inAgeBand(birth, date, band) {
+  if (!band) return true;
+  if (!birth || !date) return false;
+  if (band.min && date < ageEdge(birth, band.min, false)) return false;
+  if (band.max && date >= ageEdge(birth, band.max, true)) return false;
+  return true;
+}
+// hx = { birth };doses / firstDose 依接種當時月齡分段計數(需生日與接種日;缺者由 requireDoseDates 先擋)
+function evalHist(p, recs, hx = {}) {
   const [k] = Object.keys(p);
-  if (k === 'all') return p.all.every((c) => evalHist(c, recs));
-  if (k === 'any') return p.any.some((c) => evalHist(c, recs));
-  if (k === 'not') return !evalHist(p.not, recs);
+  if (k === 'all') return p.all.every((c) => evalHist(c, recs, hx));
+  if (k === 'any') return p.any.some((c) => evalHist(c, recs, hx));
+  if (k === 'not') return !evalHist(p.not, recs, hx);
+  if (k === 'doses') {
+    const d = p.doses;
+    const n = recs.filter((r) => d.codes.includes(r.code) && (!d.ageAtDose || inAgeBand(hx.birth, r.date, d.ageAtDose))).length;
+    return (d.min == null || n >= d.min) && (d.max == null || n <= d.max);
+  }
+  if (k === 'firstDose') {
+    const d = p.firstDose;
+    const first = recs.filter((r) => d.codes.includes(r.code) && r.date).map((r) => r.date).sort()[0];
+    return !!first && inAgeBand(hx.birth, first, d.ageAtDose);
+  }
   if (k === 'none') return !recs.some((r) => p.none.includes(r.code));
   if (k === 'has') {
     const h = p.has;
@@ -78,6 +102,7 @@ function evalHist(p, recs) {
 function codesInHas(p, out = new Set()) {
   const [k] = Object.keys(p);
   if (k === 'has') hasCodes(p.has).forEach((c) => out.add(c));
+  else if (k === 'doses' || k === 'firstDose') p[k].codes.forEach((c) => out.add(c));
   else if (k === 'all' || k === 'any') p[k].forEach((c) => codesInHas(c, out));
   else if (k === 'not') codesInHas(p.not, out);
   return out;
@@ -99,7 +124,10 @@ function caseResult(c, recs, ctx, flags) {
   let earliest = ctx.asOf;
   if (last && c.then.minInterval) earliest = maxDate(earliest, addInterval(last, c.then.minInterval));
   if (last && c.then.minIntervalDays != null) earliest = maxDate(earliest, addDays(last, c.then.minIntervalDays));
-  return { status: earliest <= ctx.asOf ? 'due' : 'wait', case: info, dose: c.then.dose || 1, earliestDate: earliest, lastDate: last, flags };
+  const birth = ctx.facts.patient?.birthDate;
+  if (c.then.minAge && birth) earliest = maxDate(earliest, addInterval(birth, c.then.minAge));   // v0.4.28:最小接種月齡(例:追加劑滿 12 個月)
+  const dose = c.then.nextDose ? prior.length + 1 : (c.then.dose || 1);                          // v0.4.28:第幾劑 = 已接種劑數 + 1
+  return { status: earliest <= ctx.asOf ? 'due' : 'wait', case: info, dose, earliestDate: earliest, lastDate: last, flags };
 }
 
 /** 劑次層摘要(dosing.fallback / dosing.upgrade 共用) */
@@ -124,6 +152,13 @@ export function computeCases(dosing, vaccine, ctx) {
     const res = { status: 'needs_review', flags: ['NEED_HISTORY_CONFIRMATION'], note: '接種史有型別不明的肺鏈紀錄,請人工確認' };
     return { ...res, fallback: brief(res), upgrade: null };
   }
+  // v0.4.28:劑次依接種當時月齡判定(幼童 PCV13)→ 缺生日或接種日期不明時不猜,交人工
+  const hx = { birth: facts.patient?.birthDate || null };
+  if (dosing.requireDoseDates) {
+    const codes = vaccine.historyMatch?.vaccineCodes || [];
+    const why = !hx.birth ? '缺生日,無法依接種月齡判定劑次' : recs.some((r) => codes.includes(r.code) && !r.date) ? '有接種日期不明的紀錄,無法依接種月齡判定劑次' : null;
+    if (why) { const res = { status: 'needs_review', flags: ['NEED_DATE_CONFIRMATION'], note: why }; return { ...res, fallback: brief(res), upgrade: null }; }
+  }
   let pending = null;
   // §4 劑次層:fallback = 第一個確定 case 的結果;upgrade = 其前第一個待定 case 確認後的結果(較好時才列)
   const layers = (res) => ({
@@ -133,7 +168,7 @@ export function computeCases(dosing, vaccine, ctx) {
   const withPending = (res) => (pending ? { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: res, flags, ...layers(res) } : { ...res, ...layers(res) });
 
   for (const c of dosing.cases) {
-    if (!evalHist(c.when, recs)) continue;
+    if (!evalHist(c.when, recs, hx)) continue;
     if (c.criteria) {
       const t = evalCond(c.criteria, ctx);
       if (t.v === false) continue;
@@ -141,7 +176,11 @@ export function computeCases(dosing, vaccine, ctx) {
     }
     const res = caseResult(c, recs, ctx, flags);
     if (res.status === 'needs_review') return { ...res, ...layers(res), upgrade: null };
-    if (res.status === 'due') return { ...res, ...layers(res) };   // 今日已可打:不必等待定條件
+    if (res.status === 'due') {
+      // v0.4.28(預設不可):前面的待定 case 確認後要等(wait)→ 今天放行可能過早,回待定(需確認);其餘今日已可打,不必等待定條件
+      if (pending?.res.status === 'wait') return withPending(res);
+      return { ...res, ...layers(res) };
+    }
     return withPending(res);
   }
   if (pending) return { status: 'pending_case', case: pending.info, pendingManual: pending.manual, pendingSources: pending.sources, alternative: null, flags, ...layers(null) };

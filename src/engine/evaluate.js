@@ -5,7 +5,7 @@ import { computeDosing } from './dosing.js';
 import { ageYears, todayISO } from './dates.js';
 import { computeDisplay, decisiveKeys } from './display.js';
 
-export const ENGINE_VERSION = '0.4.27';   // 0.4.27:reportCodes.note(COVID-19 計畫對象類別附註「上傳 NIIS 不需填對象別」);舊引擎讀到新規則會把第1–10類顯示成填報代碼而無附註,故 minEngine 隨之升高。0.4.26:season.historyEnd(接種史的季)+ 分組新增「已接種」(display.bucket = done);舊引擎讀到新規則會在 7/1 後把已接種者顯示成非公費期間,故 minEngine 隨之升高。0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
+export const ENGINE_VERSION = '0.4.28';   // 0.4.28:cases 接種史述詞 doses / firstDose(依接種當時月齡計數)、then.minAge / nextDose、dosing.requireDoseDates(幼童 PCV13);舊引擎讀到新規則會丟「未知接種史述詞」,故 minEngine 隨之升高。0.4.27:reportCodes.note(COVID-19 計畫對象類別附註「上傳 NIIS 不需填對象別」);舊引擎讀到新規則會把第1–10類顯示成填報代碼而無附註,故 minEngine 隨之升高。0.4.26:season.historyEnd(接種史的季)+ 分組新增「已接種」(display.bucket = done);舊引擎讀到新規則會在 7/1 後把已接種者顯示成非公費期間,故 minEngine 隨之升高。0.4.24:codeList.broadEvidence / meta(寬泛碼只顯示不預勾);舊引擎讀到新規則會把寬泛碼一併預勾,故 minEngine 隨之升高
 
 const uniq = (a) => [...new Set(a)];
 function windowOf(g, vaccine) {
@@ -45,6 +45,8 @@ function evaluateVaccine(vaccine, ctx) {
   const out = legacyVerdict(vaccine, vctx, groups);
   // v0.4.12:保底/升級 → 面板分組;decisiveManual 只留「確認後今日可打」的條件(docs/10 §3.1)
   out.display = computeDisplay(vaccine, vctx, groups, out);
+  // v0.4.28:showWhen 為 false(例:幼童 PCV13 對 5 歲以上)→ 面板不顯示此卡片;判定照常計算、匯出仍含。未知(缺生日)→ 顯示
+  if (vaccine.showWhen && evalCond(vaccine.showWhen, { ...vctx, inEvidence: true }).v === false) out.display.hidden = true;
   out.decisiveManual = decisiveKeys(out.display, out.decisiveManual);
   if (out.display.upgrade) out.display.upgrade.items = out.display.upgrade.requires.map((k) => (ctx.manualDefs[k]
     ? { key: k, type: 'manual', label: ctx.manualDefs[k].label || k, hint: ctx.manualDefs[k].hint, ...askEvidence(k, ctx) }

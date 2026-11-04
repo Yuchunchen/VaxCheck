@@ -8,9 +8,11 @@
 #   - 流感:115 年度正式轉譯(疾管署 2026-08-25 新聞稿、115 年度流感疫苗接種計畫網頁、幼兒篇 Q&A)
 #     潛在疾病證據:附件1 高風險慢性病 ICD(63 項,含英文欄 I5A、P91 全類目)+ 健保重大傷病項目 ICD(114-01-01 起,推估)+ 國健署罕見疾病 ICD(115-07-23,推估;寬泛碼只顯示不預勾)+ 透析/CKD 旗標
 #   - COVID-19:115–116 年度正式轉譯(衛生福利部計畫全文 1151008 版;對象與劑次與 1150727 版相同);其他風險與免疫低下之 ICD/ATC 證據為 Claude 轉錄,YC 2026-09-28 核准
+#   - 幼童 PCV13(v0.4.28):5 歲以下幼童公費 13 價結合型肺炎鏈球菌疫苗接種原則(105 年 4 月修訂)+ Q&A(105 年 4 月版)+ 兒童接種時程(115.09 版);
+#     高危險群證據:幼童肺炎鏈球菌高危險群 ICD 參考表(scripts/build-pcv13-child-codelist.mjs 產生;偏離原表 5 處列在 JSON deviations,YC 2026-11-04 核准)
 # =====================================================================
 
-ruleSetVersion: 2026.10.15-v0427
+ruleSetVersion: 2026.11.04-v0428
 effectiveFrom: "2026-08-10"
 effectiveTo: "2027-09-30"
 jurisdiction: { code: TW, level: central, name: 中央(疾管署) }
@@ -111,6 +113,32 @@ sources:
     watch: true
     kind: plan
 
+  # --- 幼童 PCV13(5 歲以下)---
+  - id: SRC_CDC_PCV13_CHILD_PRINCIPLE_10504
+    title: 5歲以下幼童公費13價結合型肺炎鏈球菌疫苗(PCV13)接種原則(105年4月修訂;依目前年齡與已接種劑次之公費劑次與時程、備註3 高危險群;YC 提供 PDF)
+    issuer: 衛生福利部疾病管制署
+    date: "2016-04-18"
+    watch: true
+    kind: other
+  - id: SRC_CDC_PCV13_CHILD_QA_10504
+    title: 105年公費13價結合型肺炎鏈球菌疫苗(PCV13)接種Q&A(105年4月版;Q1 對象、Q4 最早 6 週、Q5 最短間隔、Q6 高危險群、Q7 高危險群接補種;YC 提供 PDF)
+    issuer: 衛生福利部疾病管制署
+    date: "2016-04-18"
+    watch: true
+    kind: qa
+  - id: SRC_CDC_PCV13_CHILD_HIGHRISK_ICD
+    title: 幼童肺炎鏈球菌高危險群之ICD code參考表(含惡性腫瘤分表;YC 提供試算表,最後修改 2025-03-10)
+    issuer: 衛生福利部疾病管制署
+    date: "2025-03-10"
+    watch: true
+    kind: other
+  - id: SRC_CDC_CHILD_SCHEDULE_11509
+    title: 我國現行兒童預防接種時程(自115年10月1日起實施;115.09版;PCV13 2、4、12–15 個月;YC 提供 PDF)
+    issuer: 衛生福利部疾病管制署
+    date: "2026-10-01"
+    watch: true
+    kind: other
+
 codeLists:
   # --- 疾管署官方 IPD 高風險 ICD 參考表(逐碼,ICD-10-CM 2023)---
   IPD_SPLEEN_DX:     { label: 脾臟功能缺損, system: ICD-10-CM, file: codelists/ipd-highrisk.cdc-1140310.json#spleen }
@@ -178,6 +206,14 @@ codeLists:
   # --- 國健署公告罕見疾病(115-07-23;v0.4.24 起由 scripts/build-rare-disease.mjs 自 PDF 產生)— 診斷碼推估,以健保卡註記或證明為準 ---
   # broadEvidence: display-only:JSON 頂層 broadCodes(34 碼,YC 核可)命中時只顯示證據、不預勾,證據列標「寬泛碼,需核對」;組合碼成分 E74.31 不納入(見 JSON excluded)
   RARE_DISEASE_DX:   { label: "罕見疾病(國健署公告名單,推估)", system: ICD-10-CM, file: codelists/rare-disease.hpa-1150723.json#rare, category: rare, evidenceNote: "診斷碼推估,以證明為準", broadEvidence: display-only }
+  # --- 幼童肺炎鏈球菌高危險群(v0.4.28;codelists/pcv13-child-highrisk.cdc.json 由 scripts/build-pcv13-child-codelist.mjs 自原表產生)---
+  # 原表多為 3 碼類目(ICD-10-CM 2015)→ threeCharAsCategory 展開為其下所有細碼;人工耳植入原表只有處置碼 → 證據沿用成人 IPD_COCHLEAR_DX
+  PCV_CHILD_SPLEEN_DX:     { label: 脾臟功能缺損(幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#spleen, threeCharAsCategory: true }
+  PCV_CHILD_IMMUNE_DX:     { label: 先天或後天免疫功能不全(幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#immune, threeCharAsCategory: true }
+  PCV_CHILD_CHRONIC_DX:    { label: 慢性疾病(慢性腎病變、先天發紺性心臟病、慢性肺臟病、糖尿病;幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#chronic, threeCharAsCategory: true }
+  PCV_CHILD_CSF_LEAK_DX:   { label: 腦脊髓液滲漏(幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#csf_leak, threeCharAsCategory: true }
+  PCV_CHILD_MALIGNANCY_DX: { label: 惡性腫瘤(重大傷病類別 01;幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#malignancy, threeCharAsCategory: true }
+  PCV_CHILD_TRANSPLANT_DX: { label: 器官移植(幼童肺鏈高危險群), system: ICD-10-CM, file: codelists/pcv13-child-highrisk.cdc.json#transplant, threeCharAsCategory: true }
   # --- 透析(肺鏈 C 案、流感潛在疾病證據共用)---
   DIALYSIS_DX:
     label: 透析相關診斷
@@ -269,6 +305,21 @@ manualConditions:
             - diagnosis: { $list: IPD_MALIGNANCY_DX }
             - medication: { $list: ANTINEOPLASTIC_ATC, withinDays: 365 }
         - diagnosis: { $list: IPD_TRANSPLANT_DX } # 官方表列 Z94 全章,含皮膚/骨/角膜(YC 2026-09-28 決定不排除)
+  - key: pcvChildHighRisk
+    label: 肺炎鏈球菌高危險群幼童
+    hint: 接種原則備註3、Q&A Q6 六大類:脾臟功能缺損;先天或後天免疫功能不全(含愛滋病毒感染者);人工耳植入;慢性疾病(慢性腎病變含腎病症候群、先天發紺性心臟病含心臟衰竭、慢性肺臟病〔氣喘除外〕、糖尿病);腦脊髓液滲漏;接受免疫抑制劑或放射治療的惡性腫瘤及器官移植。請家長出具診斷書等證明(Q&A Q9);病歷診斷碼僅推估預勾
+    askWhen: { age: { max: { years: 4 } } }
+    evidence:
+      any:
+        - diagnosis: { $list: PCV_CHILD_SPLEEN_DX }
+        - diagnosis: { $list: PCV_CHILD_IMMUNE_DX }
+        - diagnosis: { $list: IPD_COCHLEAR_DX }                   # 幼童表只列處置碼;沿用成人 IPD 表人工耳診斷碼
+        - diagnosis: { $list: PCV_CHILD_CHRONIC_DX }
+        - diagnosis: { $list: PCV_CHILD_CSF_LEAK_DX }
+        - all:                                                     # 惡性腫瘤:ICD + 一年內抗癌藥(放射治療雲端看不到 → 靠醫師;同成人 IPD)
+            - diagnosis: { $list: PCV_CHILD_MALIGNANCY_DX }
+            - medication: { $list: ANTINEOPLASTIC_ATC, withinDays: 365 }
+        - diagnosis: { $list: PCV_CHILD_TRANSPLANT_DX }
   - key: dialysis
     label: 洗腎患者
     evidence:
@@ -415,6 +466,247 @@ vaccines:
       completed: "{caseLabel}:{caseReason}"
       not_funded: "{caseLabel}:{caseReason}"
       needs_review: "{caseLabel}:{caseReason}"
+
+
+  # =====================================================================
+  # 幼童 13 價結合型肺炎鏈球菌疫苗 PCV13(5 歲以下公費)— v0.4.28 轉譯
+  # 依據:5歲以下幼童公費PCV13接種原則(105年4月修訂)、Q&A(105年4月版)、兒童接種時程(115.09版,仍為 2、4、12–15 個月)
+  # 對象(Q&A Q1、原則備註1):出生滿 2 個月至未滿 5 歲(60 個月),未曾接種或尚未完成 PCV13。年齡以出生年月日足月計(age)
+  # 劑次:依「目前年齡」(1 歲以下 / 1–2 歲 / 2–5 歲)與「PCV13 已接種劑次及接種當時月齡」逐案判定(接種原則表);
+  #   最短間隔(Q&A Q5):1 歲前基礎劑 8 週,第 1 劑於滿 7 個月才開始者與第 2 劑可縮短為 4 週;1 歲後追加劑滿 12 個月以後且與前劑 8 週
+  # 高危險群(原則備註3、Q&A Q7):依第 1 劑接種月齡;放在一般原則之前 → 未確認時成為「待確認」升級(只在會改變結果時問)
+  # 表未列的組合一律交人工(needs_review),不推估。Q4「特殊狀況最早出生滿 6 週」不自動判定(對象群下限維持 2 個月)
+  # 接種原則只依 PCV13 劑次:曾接種 PCV7/10/15/20/21 → 交人工
+  # =====================================================================
+  - vaccineId: PCV13_CHILD
+    name: { zh: 13 價結合型肺炎鏈球菌疫苗 PCV13(5 歲以下幼童公費), en: "Pneumococcal conjugate vaccine PCV13 (publicly funded, children under 5)" }
+    historyMatch: { vaccineCodes: [PCV13] }
+    sourceIds: [SRC_CDC_PCV13_CHILD_PRINCIPLE_10504, SRC_CDC_PCV13_CHILD_QA_10504, SRC_CDC_CHILD_SCHEDULE_11509]
+    notes: 年齡以出生年月日足月計;劑次依目前年齡、PCV13 已接種劑次與接種當時月齡判定。一般兒童常規 3 劑(2、4 個月,滿 12–15 個月追加 1 劑);高危險群依第 1 劑接種月齡增加劑次。
+    showWhen: { age: { max: { years: 4 } } }      # 滿 5 歲以上面板不顯示此卡片(YC 2026-11-04;判定照常、匯出仍含);未滿 2 個月仍顯示「不符合」
+
+    eligibilityGroups:
+      - groupId: PCV13_CHILD_UNDER5
+        label: 出生滿 2 個月至未滿 5 歲幼童
+        criteria: { age: { min: { months: 2 }, max: { years: 4 } } }   # 足月計;max years 4 = 未滿 5 歲(60 個月)
+
+    dosing:
+      mode: cases
+      requireDoseDates: true                     # 劑次依接種當時月齡 → 缺生日或接種日期不明 → 人工
+      unknownTypeCodes: [PNEUMO_UNKNOWN, PCV]
+      cases:
+        # ---------- 其他結合型疫苗 ----------
+        - id: PC_OTHER_PCV
+          label: 曾接種 PCV13 以外之結合型肺鏈疫苗
+          sourceRef: 接種原則(105.04)只依 PCV13 接種史
+          when: { has: [PCV7, PCV10, PCV15, PCV20, PCV21] }
+          then: { action: review, note: "接種史有 PCV7/10/15/20/21;5 歲以下幼童 PCV13 接種原則只依 PCV13 劑次,請醫師評估" }
+
+        # ---------- 高危險群(原則備註3、Q&A Q7)----------
+        - id: PC_HR_INF_3RD_PRIMARY
+          label: 高危險群(第 1 劑於未滿 7 個月):第 3 劑基礎劑
+          sourceRef: 接種原則備註3(1);Q&A Q7(1)
+          when:
+            all:
+              - firstDose: { codes: [PCV13], ageAtDose: { max: { months: 6 } } }
+              - doses: { codes: [PCV13], min: 2, max: 2 }
+          criteria:
+            all:
+              - age: { max: { months: 11 } }
+              - manual: pcvChildHighRisk
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "高危險群:出生滿 2、4、6 個月各 1 劑共 3 劑(與前 1 劑間隔至少 8 週),滿 12–15 個月再追加 1 劑" }
+        - id: PC_HR_INF_LATE_2ND
+          label: 高危險群(第 1 劑於滿 7 個月至未滿 12 個月):第 2 劑
+          sourceRef: 接種原則備註3(2);Q&A Q7(2)
+          when:
+            all:
+              - firstDose: { codes: [PCV13], ageAtDose: { min: { months: 7 }, max: { months: 11 } } }
+              - doses: { codes: [PCV13], min: 1, max: 1 }
+          criteria:
+            all:
+              - age: { max: { months: 11 } }
+              - manual: pcvChildHighRisk
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "高危險群:接種 2 劑,兩劑間隔至少 8 週;滿 12–15 個月再追加 1 劑(與前 1 劑間隔至少 8 週)" }
+        - id: PC_HR_MISSED_PRIMARY
+          label: 高危險群(第 1 劑於未滿 7 個月):1 歲前基礎劑未滿 3 劑
+          sourceRef: 接種原則備註3(1)
+          when:
+            all:
+              - firstDose: { codes: [PCV13], ageAtDose: { max: { months: 6 } } }
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 1, max: 2 }
+              - doses: { codes: [PCV13], max: 3 }
+          criteria:
+            all:
+              - age: { min: { months: 12 } }
+              - manual: pcvChildHighRisk
+          then: { action: review, note: "高危險群第 1 劑於未滿 7 個月者,應於出生滿 2、4、6 個月接種 3 劑並於滿 12–15 個月追加 1 劑(共 4 劑);1 歲前基礎劑未滿 3 劑者如何補種,接種原則未明示,請醫師判定" }
+        - id: PC_HR_LATE_START_2ND
+          label: 高危險群(第 1 劑於滿 12 個月以後):第 2 劑
+          sourceRef: 接種原則備註3(3);Q&A Q7(3)
+          when:
+            all:
+              - firstDose: { codes: [PCV13], ageAtDose: { min: { months: 12 } } }
+              - doses: { codes: [PCV13], min: 1, max: 1 }
+          criteria:
+            all:
+              - age: { min: { months: 24 } }           # 1–2 歲一般原則同為 2 劑;只在 2–5 歲會改變結果
+              - manual: pcvChildHighRisk
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "高危險群(第 1 劑於滿 12 個月以後):應接種 2 劑,2 劑間隔至少 8 週" }
+        - id: PC_HR_NAIVE_2Y
+          label: 高危險群,滿 2 歲以後從未接種
+          sourceRef: 接種原則備註3(3);Q&A Q7(3)
+          when: { none: [PCV13] }
+          criteria:
+            all:
+              - age: { min: { months: 24 } }           # 2–5 歲一般原則 1 劑,高危險群 2 劑(今日同為第 1 劑,只差說明)
+              - manual: pcvChildHighRisk
+          then: { action: give, nextDose: true, intervalFrom: [PCV13], note: "高危險群:應接種 2 劑,2 劑間隔至少 8 週" }
+
+        # ---------- 一般幼童:接種原則表,1 歲以下(滿 2 個月–未滿 12 個月)----------
+        - id: PC_INF_NAIVE
+          label: 1 歲以下,從未接種
+          sourceRef: 接種原則 1歲以下/0劑
+          when: { none: [PCV13] }
+          criteria: { age: { max: { months: 11 } } }
+          then: { action: give, nextDose: true, intervalFrom: [PCV13], note: "公費 3 劑:滿 2 個月後接種第 1 劑,間隔 8 週接種第 2 劑,滿 12–15 個月接種第 3 劑(與前 1 劑至少間隔 8 週)" }
+        - id: PC_INF_1_LATE
+          label: 1 歲以下,已接種 1 劑(第 1 劑於滿 7 個月以後)
+          sourceRef: 接種原則 1歲以下/1劑;Q&A Q5(1)
+          when:
+            all:
+              - doses: { codes: [PCV13], min: 1, max: 1 }
+              - firstDose: { codes: [PCV13], ageAtDose: { min: { months: 7 } } }
+          criteria: { age: { max: { months: 11 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 28, intervalFrom: [PCV13], note: "第 1 劑於出生滿 7 個月才開始:與第 2 劑間隔可縮短為 4 週;滿 12–15 個月再接種 1 劑(與前 1 劑至少間隔 8 週)" }
+        - id: PC_INF_1
+          label: 1 歲以下,已接種 1 劑
+          sourceRef: 接種原則 1歲以下/1劑
+          when: { doses: { codes: [PCV13], min: 1, max: 1 } }
+          criteria: { age: { max: { months: 11 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 2 劑:接種 1 劑(與前 1 劑至少間隔 8 週),滿 12–15 個月再接種 1 劑(與前 1 劑至少間隔 8 週)" }
+        - id: PC_INF_BOOSTER
+          label: 1 歲以下,已接種 2–3 劑
+          sourceRef: 接種原則 1歲以下/2-3劑
+          when: { doses: { codes: [PCV13], min: 2, max: 3 } }
+          criteria: { age: { max: { months: 11 } } }
+          then: { action: give, nextDose: true, minAge: { months: 12 }, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 1 劑:滿 12–15 個月接種(與前 1 劑至少間隔 8 週)" }
+
+        # ---------- 一般幼童:滿 1 歲–未滿 2 歲 ----------
+        - id: PC_TOD_NAIVE
+          label: 1–2 歲,從未接種
+          sourceRef: 接種原則 滿1歲-未滿2歲/0劑
+          when: { none: [PCV13] }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: give, nextDose: true, intervalFrom: [PCV13], note: "公費 2 劑:接種 1 劑,間隔 8 週接種第 2 劑" }
+        - id: PC_TOD_B1
+          label: 1–2 歲,1 歲前已接種 1 劑
+          sourceRef: 接種原則 滿1歲-未滿2歲/1歲前已接種1劑
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 1, max: 1 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, max: 0 }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 2 劑:接種 1 劑(與前 1 劑至少間隔 8 週),間隔 8 週接種第 2 劑" }
+        - id: PC_TOD_B1_M1
+          label: 1–2 歲,1 歲前 1 劑、滿 1 歲後 1 劑
+          sourceRef: 接種原則 滿1歲-未滿2歲/1歲前已接種1劑(公費 2 劑之第 2 劑)
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 1, max: 1 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, min: 1, max: 1 }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "1 歲前已接種 1 劑者滿 1 歲後公費 2 劑之第 2 劑:與前 1 劑至少間隔 8 週" }
+        - id: PC_TOD_B0_M1
+          label: 1–2 歲,1 歲前未接種、滿 1 歲後已接種 1 劑
+          sourceRef: 接種原則 滿1歲-未滿2歲/1歲前未接種,滿1歲後已接種1劑
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, max: 0 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, min: 1, max: 1 }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 1 劑:與前 1 劑至少間隔 8 週" }
+        - id: PC_TOD_B2
+          label: 1–2 歲,1 歲前已接種 2–3 劑
+          sourceRef: 接種原則 滿1歲-未滿2歲/1歲前已接種2-3劑
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 2, max: 3 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, max: 0 }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 1 劑:與前 1 劑至少間隔 8 週" }
+        - id: PC_TOD_DONE
+          label: 1–2 歲,已依接種原則完成
+          sourceRef: 接種原則 滿1歲-未滿2歲(各列公費劑次已接種完畢)
+          when:
+            any:
+              - all:
+                  - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, max: 1 }
+                  - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, min: 2 }
+              - all:
+                  - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 2, max: 3 }
+                  - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, min: 1 }
+          criteria: { age: { min: { months: 12 }, max: { months: 23 } } }
+          then: { action: complete, note: "已依接種原則完成,無需再接種" }
+
+        # ---------- 一般幼童:滿 2 歲–未滿 5 歲 ----------
+        - id: PC_PRE_AFTER2
+          label: 2–5 歲,2 歲以後已接種 1 劑
+          sourceRef: 接種原則 滿2歲-未滿5歲/2歲以後接種1劑
+          when: { doses: { codes: [PCV13], ageAtDose: { min: { months: 24 } }, min: 1 } }
+          criteria: { age: { min: { months: 24 } } }
+          then: { action: complete, note: "2 歲以後已接種 1 劑,無需再接種" }
+        - id: PC_PRE_NONE_AFTER1
+          label: 2–5 歲,1 歲以後未曾接種
+          sourceRef: 接種原則 滿2歲-未滿5歲/1歲以後未曾接種(0–3 劑)
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 } }, max: 0 }
+              - doses: { codes: [PCV13], max: 3 }
+          criteria: { age: { min: { months: 24 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 1 劑(曾接種者與前 1 劑至少間隔 8 週)" }
+        - id: PC_PRE_B1_M1
+          label: 2–5 歲,1 歲前僅 1 劑且 1–2 歲亦只 1 劑
+          sourceRef: 接種原則 滿2歲-未滿5歲/1歲前僅接種1劑且1-2歲亦只接種1劑
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 1, max: 1 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 }, max: { months: 23 } }, min: 1, max: 1 }
+          criteria: { age: { min: { months: 24 } } }
+          then: { action: give, nextDose: true, minIntervalDays: 56, intervalFrom: [PCV13], note: "公費 1 劑:與前 1 劑至少間隔 8 週" }
+        - id: PC_PRE_DONE
+          label: 2–5 歲,1–2 歲間已依接種原則完成
+          sourceRef: 接種原則 滿1歲-未滿2歲(該年齡層公費劑次已接種完畢)
+          when:
+            any:
+              - all:
+                  - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, max: 1 }
+                  - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 }, max: { months: 23 } }, min: 2 }
+              - all:
+                  - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, min: 2, max: 3 }
+                  - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 }, max: { months: 23 } }, min: 1 }
+          criteria: { age: { min: { months: 24 } } }
+          then: { action: complete, note: "1–2 歲間已依接種原則完成,無需再接種" }
+        - id: PC_PRE_B0_M1
+          label: 2–5 歲,1 歲前未接種、1–2 歲間僅 1 劑
+          sourceRef: 接種原則 滿2歲-未滿5歲(表未列)
+          when:
+            all:
+              - doses: { codes: [PCV13], ageAtDose: { max: { months: 11 } }, max: 0 }
+              - doses: { codes: [PCV13], ageAtDose: { min: { months: 12 }, max: { months: 23 } }, min: 1, max: 1 }
+          criteria: { age: { min: { months: 24 } } }
+          then: { action: review, note: "接種原則表未列此情形(1 歲前未接種、1–2 歲間僅接種 1 劑,現已滿 2 歲),請醫師判定" }
+        # 其餘組合(例如 1 歲前 4 劑以上)→ 引擎預設「接種史組合未定義,請人工判定」
+
+    contraindications:
+      - { id: PCV13_CHILD_C_ALLERGY, label: 曾對本疫苗或其成分嚴重過敏, severity: absolute, manual: severeAllergyToVaccine }
+      - { id: PCV13_CHILD_C_FEVER, label: "急性中重度疾病或發燒,建議延後", severity: precaution, manual: acuteFebrileIllness }
+
+    explain:
+      eligible: "{groupLabels};{caseLabel}:{caseReason}"
+      eligiblePending: "{groupLabels};接種史未查,劑次依已接種 PCV13 劑數與接種月齡決定"
+      ineligible: "{age},不在出生滿 2 個月至未滿 5 歲之幼童公費 PCV13 對象內"
+      completed: "{caseLabel}:{caseReason}"
+      needs_review: "{caseReason}"
 
 
   # =====================================================================

@@ -123,6 +123,7 @@ export function semanticCheck(rs, niisCodes, errors) {
     const okCode = (c) => canon.has(c) || unk.has(c);
     (v.historyMatch?.vaccineCodes || []).forEach((c) => okCode(c) || errors.push(`${v.vaccineId}:historyMatch 代碼不在對照表 ${c}`));
     if (v.season?.historyEnd && v.season.historyEnd < v.season.end) errors.push(`${v.vaccineId}:season.historyEnd 不可早於 season.end`);
+    if (v.showWhen) checkTree(v.showWhen, `${v.vaccineId}.showWhen`, { allowManual: false });
     for (const g of v.eligibilityGroups) {
       if (gids.has(g.groupId)) errors.push(`groupId 重複 ${g.groupId}`); gids.add(g.groupId);
       (g.sourceIds || []).forEach((s) => sources.has(s) || errors.push(`${g.groupId}:來源不存在 ${s}`));
@@ -150,7 +151,7 @@ export function semanticCheck(rs, niisCodes, errors) {
     for (const c of v.dosing?.cases || []) {
       if (c.criteria) checkTree(c.criteria, `${v.vaccineId}.${c.id}`);
       walk(c.when, (n) => {
-        const arr = n.none || (Array.isArray(n.has) ? n.has : n.has?.codes);
+        const arr = n.none || (Array.isArray(n.has) ? n.has : n.has?.codes) || n.doses?.codes || n.firstDose?.codes;
         (arr || []).forEach((x) => okCode(x) || errors.push(`${v.vaccineId}.${c.id}:疫苗代碼不在對照表 ${x}`));
       });
       (c.then.intervalFrom || []).forEach((x) => okCode(x) || errors.push(`${v.vaccineId}.${c.id}:intervalFrom 代碼不在對照表 ${x}`));

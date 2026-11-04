@@ -1,0 +1,65 @@
+#### SHEET IPD高危險群
+幼童肺炎鏈球菌高危險群之ICD code參考表
+中文疾病名稱	英文疾病名稱	ICD-9-CM碼	ICD-10-CM碼
+		2001年版	2015年版
+一、脾臟功能缺損
+（一）脾臟異常	Anomalies of spleen	759.0	Q89
+（二）鐮刀狀紅血球貧血	Sickle-cell anemia	282.6	D57
+（三）地中海型貧血	Thalassemias	282.4	D56
+二、先天或後天免疫功能不全(包括愛滋病毒感染者)
+（一）先天性免疫缺陷	Congenital immune deficiency
+1.體液免疫缺乏症	Deficiency of humoral immunity	279.0	D80
+2.細胞性免疫缺乏症	Deficiency of cell-mediated immunity	279.1	D83-82
+3.複合性免疫力缺乏症	Combined immunity deficiency	279.2	D81
+4.未明示之免疫疾病	Unspecified disorder of immune mechanism	279.9	D89
+（二）人類免疫缺陷病毒（ HIV ） / 感染疾病
+1.人類免疫不全病毒感染疾病	Human immunodeficiency virus（HIV）infection disease	042	B20
+2.特定情況之第二型人類免疫不全病毒感染	Human immunodeficiency virus, type 2 [HIV-2] infections in conditions classified elsewhere and of unspecified site	79.53	B97.35
+（三）再生不良性貧血	Aplastic anemia	284	D60-61,D46
+三、人工耳植入者		Procedure code
+（一）人工耳設備植入	Implantation of electromagnetic hearing device	20.95	09HD04Z,09HD34Z / O9HD04Z,09HE04Z / 09HE34Z,09HE44Z
+（二）人工耳設備植入	Implantation or replacement of cochlear prosthetic device, not otherwise specified	20.96	09HD0SZ,09HD3SZ / O9HD4SZ,09HE0SZ / 09HE3SZ,09HE4SZ / 09PD0SE,09PD7SZ / 09PD8SZ,09PE0SZ09PE7SZ,09PE8SZ /
+（三）單頻人工耳設備植入或更換	Implantation or replacement of cochlear prosthetic device, single channel	20.97	09HD05Z,09HD35Z / O9HD45Z,09PD0SZ / 09PD7SZ,09PD8SZ / 09HE05Z,09HE35Z / 09HE35Z,09HE45Z09PE0SZ,09PE7SZ
+（四）多頻人工耳設備植入或更換	Implantation or replacement of cochlear prosthetic device, multiple channel	20.98	09HD06Z,09HD36Z / O9HD46Z,09HE06Z / 09HE36Z,09HE46Z / 09PD0SZ,09PD7SZ / 09PD8SZ,09HE05Z09HE35Z,09HE45Z /
+四、慢性疾病〔慢性腎病變（包含腎病症候群）、先天發紺性心臟病（包含心臟衰竭）、慢性肺臟病（氣喘除外）、糖尿病〕
+（一）慢性腎功能不全	Chronic renal insufficiency
+1.腎徵候群	Nephrotic syndrome	581	N04
+2.慢性絲球腎炎	Chronic glomerulonephritis	582	N03,N08
+3.慢性腎衰竭	Chronic renal failure	585	N18
+4.腎衰竭，未明示者	Renal failure, unspecified	586	N19
+5.高血壓性腎臟病	Hypertensive renal disease	403	I12
+6.高血壓性心臟及腎臟病	Hypertensive heart and renal disease	404	I13
+7.惡性高血壓性心臟及腎臟病	Malignant hypertensive heart and renal disease	404	I13
+8.良性高血壓性心臟及腎臟病	Benign hypertensive heart and renal disease	404.1	I13
+9.高血壓心臟及腎臟病，未明示為惡性或良性	Hypertensive heart and renal disease, unspecified	404.9	I13
+（二）慢性心臟病	Chronic heart disease
+1.共同動脈幹	Common truncus	745.0	Q20
+2.大血管轉位	Transposition of great vessels	745.1	Q20
+3.法洛氏四合症	Tetralogy of fallot	745.2	Q21.3
+4.共同單一心室	Common ventricle	745.3	Q20
+5.心內膜墊缺陷	Endocardial cushion defects	745.6	Q21.2
+6.兩腔心	Cor biloculare	745.7	Q20
+7.主動脈縮窄	Coarctation of aorta	747.1	Q25.1
+8.其他之主動脈畸形	Other anomalies of aorta	747.2	Q25
+9.主動脈弓畸形	Anomalies of aortic arch	747.21	Q25.2
+10.主動脈閉鎖及狹窄	Atresia and stenosis of aorta	747.22	Q25.4
+11.其他主動脈畸形	Other anomalies of aorta	747.29	Q25
+12.肺動脈畸形	Anomalies of pulmonary artery	747.3	Q25.5-25.7
+13.大靜脈畸形	Anomalies of great veins	747.4	Q26.9
+14.心臟衰竭	Heart failure	428	I50
+（三）慢性肺疾病	Chronic pulmonary diseases
+1.周產期引起之慢性呼吸性疾病	Chronic respiratory disease arising in the perinatal period	770.7	P27
+2.支氣管擴張症	Bronchiectasis	494	J47
+（四）糖尿病	Diabetes mellitus	250	E08-E11,E13
+五、腦脊髓液滲漏		無對應碼	G96.0
+六、接受免疫抑制劑或放射治療的惡性腫瘤及器官移植者
+（一）惡性腫瘤	Malignancy	140-208	參照重大傷病對照表(類別1：惡性腫瘤)
+（二）移植	Transplant	V42
+1.器官或組織之移植術後	Organ or tissue replaced by transplant	V42.0	Z94
+2.腎臟移植術後	Kidney replaced by transplant	V42.1	Z94.0
+3.心臟移植術後	Heart replaced by transplant	V42.2	Z94.1
+4.心臟瓣膜移植術後	Heart valve replaced by transplant	V42.6	Z95
+5.肺臟移植術後	Lung replaced by transplant	V42.7	Z94.2
+6.肝臟移植術後	Liver replaced by transplant	V42.8	Z94.4
+7.其他不特定器官或組織移植術後	Other specified organ or tissue replaced by transplant		Z94.89
+8.未明示之器官或組織之移植術後	Unspecified organ or tissue replaced by transplant	V42.9	Z94.9

@@ -23,7 +23,8 @@ test('來源封存:manifest 每筆的 PDF 存在且 sha256、大小相符', () =
     const buf = fs.readFileSync(pdf);
     assert.equal(crypto.createHash('sha256').update(buf).digest('hex'), f.sha256, `sha256 不符:${f.file}`);
     assert.equal(buf.length, f.bytes, `大小不符:${f.file}`);
-    assert.ok(buf.subarray(0, 5).toString() === '%PDF-', `不是 PDF:${f.file}`);
+    if (/\.ods$/i.test(f.file)) assert.ok(buf.subarray(0, 4).equals(Buffer.from('PK\x03\x04', 'latin1')), `不是 ODS(zip):${f.file}`);   // v0.4.28:疾管署試算表原檔(幼童肺鏈 ICD 參考表)
+    else assert.ok(buf.subarray(0, 5).toString() === '%PDF-', `不是 PDF:${f.file}`);
     assert.ok(/^\d{4}-\d{2}_/.test(path.basename(f.file)), `檔名需 YYYY-MM_ 開頭:${f.file}`);
   }
 });
@@ -37,8 +38,8 @@ test('來源封存:文字檔存在;沒有未登錄的檔案', () => {
     if (f.rawTextFile) { assert.ok(fs.existsSync(path.join(dir, f.rawTextFile)), `缺文字檔:${f.rawTextFile}`); listed.add(f.rawTextFile); }   // pdftotext -raw(供腳本解析)
   }
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.relative(dir, path.join(d, e.name)).split(path.sep).join('/')]));
-  const extra = walk(dir).filter((p) => /\.(pdf|txt)$/i.test(p) && !listed.has(p));
-  assert.deepEqual(extra, [], '有 PDF/文字檔未登錄在 manifest.yaml');
+  const extra = walk(dir).filter((p) => /\.(pdf|txt|ods|tsv)$/i.test(p) && !listed.has(p));
+  assert.deepEqual(extra, [], '有 PDF/ODS/文字檔未登錄在 manifest.yaml');
 });
 
 test('來源封存:ruleSourceIds 存在於規則檔、codelist 存在且雜湊相符', () => {

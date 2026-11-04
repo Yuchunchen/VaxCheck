@@ -40,6 +40,9 @@ dosing:
     - { dose: 2, minIntervalDays: 28, requiresPrior: true }
 ```
 
+### `showWhen`(面板顯示條件,v0.4.28)
+疫苗層可設 `showWhen`(條件樹,不可含 `manual`):不成立時 `display.hidden = true`,面板不列這張卡片;判定照常計算,`Result` 與匯出診斷檔仍含。未知(例:缺生日)→ 照常顯示。例:幼童 PCV13 `showWhen: { age: { max: { years: 4 } } }`(滿 5 歲以上不顯示)。
+
 ### `mode: cases`(肺鏈這種「看接種史組合決定下一步」的規則)
 由上往下,第一個 `when` 命中的 case 決定結果;`criteria`(可省略)為該 case 的附加對象條件,未知時延後(見 EXECUTION.md)。
 
@@ -59,10 +62,13 @@ dosing:
 ```
 
 - `when` 述詞:`has`(陣列或 `{codes, funding, minDoses}`)、`none`、`all`、`any`、`not`。
+- 依接種當時月齡(v0.4.28,幼童 PCV13):`doses: { codes, ageAtDose: { min, max }, min, max }` = 接種當時月齡落在區間內的劑數介於 min–max;`firstDose: { codes, ageAtDose }` = 第 1 劑接種當時月齡落在區間內。`ageAtDose.min` 含當天(生日 + min),`max` 與 `age` 葉相同(`max: { months: 11 }` = 未滿 12 個月)。用到時在 `dosing` 設 `requireDoseDates: true`:缺生日或有接種日期不明的紀錄 → 直接 `needs_review`(不猜月齡)。
 - `then.action`:`give`(→ 可打/等待)、`complete`(→ 已完成)、`notFunded`(→ 不再公費)、`review`(→ 醫師評估)。
+- `give` 另可設 `minAge`(最小接種月齡,例:追加劑 `{ months: 12 }`)、`nextDose: true`(劑次 = `intervalFrom` 已接種劑數 + 1;否則用 `dose`,預設 1)。
 - 間隔:`minInterval: { years, months, days }` 走曆法(同月同日,閏年 2/29 起算則落到 3/1,取保守的較晚日),`minIntervalDays` 走天數;`intervalFrom` 指定從哪些疫苗的最近一劑起算。
 - 沒有任何 case 命中 → 引擎回 `needs_review`(接種史組合未定義),不會靜默放行。
-- 接種紀錄沒有日期 → 掛 `NEED_DATE_CONFIRMATION`,並以「今日可打」保守輸出。
+- 接種紀錄沒有日期 → 掛 `NEED_DATE_CONFIRMATION`,並以「今日可打」保守輸出(`requireDoseDates` 的疫苗例外:直接 `needs_review`)。
+- 高危險群等「確認後劑次不同」的 case 放在一般 case 之前、`criteria` 加人工條件:未確認時成為待定 case,只有確認後結果較好(今天可打、或保底為已完成)才進「待確認」;確認後較差(例:間隔較長)者只在醫師勾「是」或病歷預勾時生效。
 
 ## 接種對象別代碼(reportCodes,只供填報顯示)
 

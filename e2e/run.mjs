@@ -375,6 +375,28 @@ const dxM = await askDx('流感');
 check('E2 非寬泛碼 Q87.11:流感「可接種」,判定依據列罕見疾病證據,不標寬泛碼',
   dxM.grp === '可接種' && dxM.whyRows.length === 1 && /Q8711/.test(dxM.whyRows[0]) && /罕見疾病/.test(dxM.whyRows[0]) && !/寬泛碼/.test(dxM.whyRows[0]) && /以證明為準/.test(dxM.whyRows[0]),
   `${dxM.grp}|${dxM.whyRows.join('|')}`);
+
+// ───────── F. 幼童 PCV13(v0.4.28):依目前年齡、已接種劑次與接種月齡;高危險群只在會改變結果時問 ─────────
+const PC = 'PCV13(5 歲以下';
+await setAsOf('2026-11-04');
+await pick('O');
+lay = await dLayout();
+let pc = await dCard(PC);
+check('F1 8 個月、2/4 個月已打 2 劑:幼童 PCV13 在「待確認」,保底滿 12 個月(116/03/01)追加,問高危險群',
+  where(lay, PC) === '待確認' && /116\/03\/01 起可打/.test(pc.line) && pc.asks.some((a) => a.startsWith('肺炎鏈球菌高危險群幼童')) && orderOk(lay), `${pc.line}|${pc.asks.join('、')}`);
+await demo.screenshot({ path: path.join(SHOTS, '17-demo-pcv13-child-3a.png'), fullPage: true });
+await dClick(PC, '肺炎鏈球菌高危險群幼童');
+await sleep(150);
+lay = await dLayout();
+pc = await dCard(PC);
+check('F2 勾高危險群「是」→「可接種」,今日可打第 3 劑(2、4、6 個月基礎劑)', where(lay, PC) === '可接種' && /今日可打第 3 劑/.test(pc.line) && orderOk(lay), pc.line);
+await pick('P');
+lay = await dLayout();
+pc = await dCard(PC);
+check('F3 3 歲從未接種 →「可接種」,今日可打第 1 劑', where(lay, PC) === '可接種' && /今日可打第 1 劑/.test(pc.line), pc.line);
+await pick('A');
+lay = await dLayout();
+check('F4 68 歲成人:面板不列幼童 PCV13 卡片(showWhen 未滿 5 歲),成人肺鏈卡片不受影響', where(lay, PC) === undefined && where(lay, 'PCV20/PCV21') !== undefined && orderOk(lay), JSON.stringify(lay.map((g) => [g.t, g.items])));
 await demo.close();
 
 await ctx.close();

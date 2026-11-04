@@ -16,10 +16,10 @@ export function groupOf(v) {
   return KEYS.has(b) ? b : 'confirm';
 }
 
-/** 回 [{ key, label, items }],空組不列;組內維持規則原始順序 */
+/** 回 [{ key, label, items }],空組不列;組內維持規則原始順序;display.hidden(規則 showWhen 不成立)不列 */
 export function groupVaccines(vaccines) {
   const by = Object.fromEntries(GROUPS.map((g) => [g.key, []]));
-  for (const v of vaccines || []) by[groupOf(v)].push(v);
+  for (const v of vaccines || []) if (!v.display?.hidden) by[groupOf(v)].push(v);
   return GROUPS.map((g) => ({ ...g, items: by[g.key] })).filter((g) => g.items.length);
 }
 
