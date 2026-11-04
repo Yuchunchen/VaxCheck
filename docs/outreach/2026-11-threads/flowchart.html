@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>VaxCheck 架構（Threads 用）</title>
+<!-- 輸出:node render.mjs → flowchart.png(1080×1350,4:5,2 倍解析度)。字型由 render.mjs 注入 Noto Sans TC。 -->
+<style>
+  :root {
+    --navy: #003FAC; --navy-d: #0B2A5B; --green: #02853E; --gold: #ECB201;
+    --ink: #1F2937; --muted: #5B6472; --line: #9AA6B8;
+    --dev-bg: #FFF8E6; --dev-bd: #E8C766; --clinic-bg: #EEF4FF; --clinic-bd: #9DB7E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: #FFFFFF; }
+  body { position: relative; font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; color: var(--ink); overflow: hidden; }
+  .abs { position: absolute; }
+  /* header */
+  .logo { left: 48px; top: 44px; width: 104px; height: 104px; }
+  .title { left: 172px; top: 46px; font-size: 50px; font-weight: 900; color: var(--navy-d); letter-spacing: 1px; line-height: 1.15; }
+  .subtitle { left: 174px; top: 116px; font-size: 24px; font-weight: 500; color: var(--muted); }
+  .subtitle b { color: var(--navy); font-weight: 700; }
+  /* before / after */
+  .ba { left: 48px; top: 176px; width: 984px; height: 92px; border-radius: 14px; background: #F4F6F9; padding: 12px 22px; display: grid; grid-template-columns: 68px 1fr; row-gap: 6px; align-items: center; font-size: 21px; }
+  .ba .k { font-weight: 900; font-size: 20px; border-radius: 8px; text-align: center; padding: 2px 0; color: #fff; }
+  .ba .k.before { background: #8A94A6; }
+  .ba .k.after { background: var(--green); }
+  .ba .v { padding-left: 14px; color: var(--muted); }
+  .ba .v.after { color: var(--ink); font-weight: 700; }
+  .ba .arr { color: var(--line); padding: 0 6px; }
+  /* lanes */
+  .lane { top: 292px; height: 878px; border-radius: 18px; border: 2px solid; }
+  .lane.dev { left: 48px; width: 380px; background: var(--dev-bg); border-color: var(--dev-bd); }
+  .lane.clinic { left: 460px; width: 572px; background: var(--clinic-bg); border-color: var(--clinic-bd); }
+  .lane-h { top: 306px; font-size: 25px; font-weight: 900; }
+  .lane-h small { display: block; font-size: 17px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+  .lane-h.dev { left: 70px; color: #8A5A00; }
+  .lane-h.clinic { left: 482px; color: var(--navy); }
+  .box { background: #fff; border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; text-align: center; }
+  .box h3 { font-size: 22px; font-weight: 900; color: var(--navy-d); line-height: 1.25; }
+  .box p { font-size: 17px; color: var(--muted); line-height: 1.4; margin-top: 3px; }
+  .box.ai { border-color: var(--gold); border-width: 3px; }
+  .box.ai h3 { color: #8A5A00; }
+  .box.ext { border-style: dashed; }
+  .box.engine { background: var(--navy); border-color: var(--navy); }
+  .box.engine h3 { color: #fff; font-size: 24px; }
+  .box.engine p { color: #DCE6FA; }
+  /* rule file */
+  .rules { text-align: left; padding: 14px 16px; border-color: var(--gold); border-width: 3px; }
+  .rules h3 { color: #8A5A00; }
+  .rules .sub { font-size: 16px; color: var(--muted); margin-top: 0; }
+  .rules ul { list-style: none; margin-top: 10px; }
+  .rules li { font-size: 17px; line-height: 1.4; padding: 6px 0 6px 0; border-top: 1px solid #F0E4C2; }
+  .rules li b { display: block; font-size: 18px; color: var(--ink); }
+  .rules li span { color: var(--muted); }
+  .rules .upd { font-size: 15px; color: var(--muted); margin-top: 8px; }
+  /* panel */
+  .panel { text-align: left; padding: 14px 18px; border-color: var(--navy); }
+  .panel h3 { display: flex; justify-content: space-between; align-items: baseline; }
+  .panel h3 em { font-style: normal; font-size: 15px; font-weight: 500; color: var(--muted); }
+  .row { display: grid; grid-template-columns: 176px 104px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #E3E8F0; font-size: 18px; }
+  .row:first-of-type { margin-top: 8px; }
+  .row .vx { font-weight: 700; color: var(--ink); }
+  .chip { display: inline-block; text-align: center; font-size: 16px; font-weight: 700; border-radius: 6px; padding: 2px 0; width: 88px; }
+  .c-ok { background: #E3F4EA; color: #016B32; border: 1.5px solid #02853E; }
+  .c-ask { background: #FFF1DD; color: #A35A00; border: 1.5px solid #E08A00; }
+  .c-wait { background: #E6EEFB; color: #003FAC; border: 1.5px solid #5B83CF; }
+  .row .why { color: var(--muted); font-size: 16px; }
+  .groups { margin-top: 12px; font-size: 15px; color: var(--muted); }
+  .groups .chip { width: auto; padding: 1px 7px; font-size: 14px; margin-right: 2px; }
+  .c-done { background: #EEF0F3; color: #374151; border: 1.5px solid #9AA6B8; }
+  .c-no { background: #fff; color: #8A94A6; border: 1.5px solid #C9D0DA; }
+  .legend { margin-top: 10px; font-size: 15px; color: var(--muted); line-height: 1.5; }
+  /* footer */
+  .foot { left: 48px; top: 1192px; width: 984px; height: 112px; border-radius: 16px; background: var(--navy-d); color: #fff; padding: 16px 26px; }
+  .foot .l1 { font-size: 25px; font-weight: 900; }
+  .foot .l1 span { color: var(--gold); }
+  .foot .l2 { font-size: 18px; color: #C9D6EE; margin-top: 8px; }
+  .credit { left: 48px; top: 1316px; width: 984px; font-size: 15px; color: var(--muted); display: flex; justify-content: space-between; }
+  svg.wires { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; pointer-events: none; }
+</style>
+</head>
+<body>
+  <img class="abs logo" src="../../../assets/brand/vaxcheck-mark.png" alt="">
+  <div class="abs title">AI 改變的，是醫師操作電腦的方式</div>
+  <div class="abs subtitle"><b>VaxCheck</b>｜插卡、按一下，這位病患今天能公費打哪些疫苗</div>
+
+  <div class="abs ba">
+    <div class="k before">以前</div>
+    <div class="v">翻疾管署計畫<span class="arr">→</span>健保雲端查病歷<span class="arr">→</span>切到 NIIS 查接種史<span class="arr">→</span>自己算間隔</div>
+    <div class="k after">現在</div>
+    <div class="v after">插卡<span class="arr">→</span>按一下<span class="arr">→</span>肺炎鏈球菌、流感、COVID-19 能不能打，一次看完</div>
+  </div>
+
+  <!-- ① 開發端 -->
+  <div class="abs lane dev"></div>
+  <div class="abs lane-h dev">① 規則從哪來<small>開發端・AI 用在這裡</small></div>
+
+  <div class="abs box ext" style="left:68px; top:378px; width:340px; height:96px;">
+    <h3>疾病管制署公告</h3>
+    <p>接種計畫・工作手冊・Q&amp;A<br>致醫界通函・診斷碼參考表</p>
+  </div>
+  <div class="abs box ai" style="left:68px; top:508px; width:340px; height:96px;">
+    <h3>Claude 轉譯</h3>
+    <p>讀官方文件，整理成規則檔<br>每一條都附官方出處</p>
+  </div>
+  <div class="abs box" style="left:68px; top:638px; width:340px; height:88px;">
+    <h3>自動測試＋醫師核准</h3>
+    <p>臨床情境測試全過、醫師審核才發行</p>
+  </div>
+  <div class="abs box rules" style="left:68px; top:760px; width:340px; height:390px;">
+    <h3>疫苗規則檔</h3>
+    <p class="sub">規則即程式碼（Rules as Code）</p>
+    <ul>
+      <li><b>誰是公費對象</b><span>年齡、原住民、高風險疾病、重大傷病</span></li>
+      <li><b>過去打過什麼</b><span>肺鏈 PCV13／15、PPV23、PCV20／21 共 11 種情境</span></li>
+      <li><b>要隔多久</b><span>8 週／1 年／5 年；COVID-19 12 週</span></li>
+      <li><b>何時開打、打幾劑</b><span>流感與 COVID-19 分兩階段開打</span></li>
+    </ul>
+    <p class="upd">公告更新時只改規則，外掛每天自動檢查</p>
+  </div>
+
+  <!-- ② 門診端 -->
+  <div class="abs lane clinic"></div>
+  <div class="abs lane-h clinic">② 門診現場<small>每一位病患・插卡、按一下</small></div>
+
+  <div class="abs box" style="left:480px; top:378px; width:240px; height:84px;">
+    <h3>插卡</h3>
+    <p>醫事人員卡＋病患健保卡</p>
+  </div>
+  <div class="abs box" style="left:772px; top:378px; width:240px; height:84px; border-color: var(--navy);">
+    <h3>按 VaxCheck</h3>
+    <p>Chrome 外掛</p>
+  </div>
+  <div class="abs box ext" style="left:480px; top:506px; width:256px; height:142px;">
+    <h3>健保雲端</h3>
+    <p>診斷碼・用藥・檢驗<br>特殊給付<br>洗腎／長照等摘要</p>
+  </div>
+  <div class="abs box ext" style="left:756px; top:506px; width:256px; height:142px;">
+    <h3>NIIS</h3>
+    <p>疫苗接種史<br>疫苗別・接種日期<br>公費／自費</p>
+  </div>
+  <div class="abs box engine" style="left:480px; top:692px; width:532px; height:112px;">
+    <h3>推論引擎</h3>
+    <p>疫苗規則 × 病患資料，逐條推導<br>同樣的資料＋同樣的規則，結果一定相同</p>
+  </div>
+  <div class="abs box panel" style="left:480px; top:848px; width:532px; height:302px;">
+    <h3>建議面板 <em>示意畫面</em></h3>
+    <div class="row"><span class="vx">肺炎鏈球菌</span><span class="chip c-ok">可接種</span><span class="why">今天可打 PCV20／21</span></div>
+    <div class="row"><span class="vx">流感</span><span class="chip c-ask">待確認</span><span class="why">確認 1 個條件就能打</span></div>
+    <div class="row"><span class="vx">COVID-19</span><span class="chip c-wait">尚未開打</span><span class="why">顯示哪一天起可打</span></div>
+    <p class="legend">每張卡片寫出判定依據；病歷有證據的條件先幫你勾好，<br>只問會改變結果的那一題。</p>
+    <p class="groups">面板五組：<span class="chip c-ok">可接種</span> <span class="chip c-ask">待確認</span> <span class="chip c-wait">尚未開打</span> <span class="chip c-done">已接種</span> <span class="chip c-no">不符合</span></p>
+  </div>
+
+  <svg class="wires" viewBox="0 0 1080 1350">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#5B6472"/>
+      </marker>
+      <marker id="ahg" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#C99700"/>
+      </marker>
+    </defs>
+    <g fill="none" stroke="#5B6472" stroke-width="2.5">
+      <!-- 左欄 -->
+      <path d="M238 474 V505" marker-end="url(#ah)"/>
+      <path d="M238 604 V635" marker-end="url(#ah)"/>
+      <path d="M238 726 V757" marker-end="url(#ah)"/>
+      <!-- 右欄 -->
+      <path d="M720 420 H769" marker-end="url(#ah)"/>
+      <path d="M892 462 V480 H608 V503" marker-end="url(#ah)"/>
+      <path d="M892 480 H884 V503" marker-end="url(#ah)"/>
+      <path d="M608 648 V668 H746 V689" />
+      <path d="M884 648 V668 H746" />
+      <path d="M746 668 V689" marker-end="url(#ah)"/>
+      <path d="M746 804 V845" marker-end="url(#ah)"/>
+    </g>
+    <!-- 規則 → 引擎 -->
+    <path d="M408 780 H477" fill="none" stroke="#C99700" stroke-width="4" marker-end="url(#ahg)"/>
+  </svg>
+
+  <div class="abs foot">
+    <div class="l1">AI 用在<span>「把規則寫好」</span>；診間跑的是固定的規則引擎</div>
+    <div class="l2">病患資料不上傳、不送給 AI，只留在這台電腦的瀏覽器｜是提醒，最後由醫師決定</div>
+  </div>
+  <div class="abs credit"><span>VaxCheck 開放原始碼（Apache-2.0），其他醫院也能用</span><span>github.com/Yuchunchen/VaxCheck</span></div>
+</body>
+</html>
