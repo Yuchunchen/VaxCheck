@@ -163,3 +163,18 @@ files:
     ruleSourceIds: [SRC_HPA_RARE_1150723]
     codelists: [rules/codelists/rare-disease.hpa-1150723.json]
     note: "rules/codelists/rare-disease.hpa-1150723.json 由 scripts/build-rare-disease.mjs 自本檔產生。textFile 為 pdftotext -layout(供人讀);rawTextFile 為 pdftotext -raw(內容串流順序,每頁第一行是頁碼,腳本解析用)。備註內的舊碼(G40.311、G37.8、E25.0、G12.9、M31.1、G12.2、E72.8、E74.8、F78、Q87.1 等)一律不用。"
+  - id: CDC_ADMIN_FEE_SUBSIDY_PLAN_11504
+    vaccine: COMMON
+    kind: plan
+    title: "兒童常規疫苗、成人肺炎鏈球菌疫苗、新冠疫苗及流感疫苗接種處置費補助作業計畫(115 年 4 月更新)"
+    issuer: "衛生福利部疾病管制署"
+    published: "2026-04"
+    file: common/2026-04_cdc-vaccine-admin-fee-subsidy-plan.pdf
+    textFile: common/2026-04_cdc-vaccine-admin-fee-subsidy-plan.txt
+    sha256: da647f94621dd4add616a515a59c59e59b2ec0829f139b6e1369f4ed161e9192
+    bytes: 854323
+    pages: 33
+    originalName: "衛生福利部疾病管制署「兒童常規疫苗」、「成人肺炎鏈球菌疫苗」、「新冠疫苗」及「流感疫苗」接種處置費補助作業計畫(115.04更新版).pdf"
+    receivedFrom: "YC 提供(Dropbox 3.Project.YuLi/20260916.疫苗施打檢核/115年疫苗接種須知;2026-11-04 上傳)"
+    archivedAt: "2026-11-04"
+    note: "封面「115年4月更新」;PDF 建立 2026-04-28(PDF 中繼資料標題沿用舊範本「96年安養養護…肺炎鏈球菌疫苗接種計畫摘要」,非內容)。主旨為接種處置費核付,非資格計畫。與規則相關:附表1 兒童常規時程(13價結合型肺炎鏈球菌疫苗 2個月第1劑、4個月第2劑、12~15個月第3劑/第4劑「依幼兒實際接種之劑次」);附表2 兒童公費疫苗藥品代碼(114.12版,13PCV = K000906206 Prevenar 13);肆一(二)兒童常規處置費限 13 歲以下。未含兒童 PCV 補接種原則、劑間最短間隔、高風險兒童規定。成人肺鏈段落(115-01-15 起 PCV20 或 PPV23)已被 115-08-10 起適用之成人計畫(PCV20/21)取代;附件3 為 114 年度流感,不適用 115 年度。目前尚無規則引用(ruleSourceIds 待兒童肺鏈規則建立時補)。"
