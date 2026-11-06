@@ -7,6 +7,7 @@ import { mountPanel, renderPanel } from '../panel/panel.js';
 import { POLL_MS, findSwitchLink, isLoginUrl, switchCard } from '../workspace/switch.js';
 import { LOGIN_INCOMPLETE, findLoginButton, loginStep } from '../workspace/login.js';
 import { AUTORUN_TIMEOUT_MS } from '../workspace/workspace.js';
+import { makeSend } from './alive.js';
 
 const API = 'https://medcloud2.nhi.gov.tw/imu/api/';
 const ENDPOINTS = {
@@ -17,8 +18,8 @@ const ENDPOINTS = {
   summary: 'imue2000/imue2000s01/get-summary',
 };
 const log = (...a) => console.info('[疫苗檢核]', ...a);
-const send = (msg) => chrome.runtime.sendMessage(msg);
 const APP_VERSION = chrome.runtime.getManifest().version;
+const send = makeSend(onExtensionGone);   // v0.4.29:外掛重新載入後不丟「Extension context invalidated」,改提示重新整理
 
 let session = null;         // { token, user, idHash }
 let raw = null;             // 雲端回傳原始資料(僅記憶體)
@@ -29,6 +30,19 @@ let computed = null;        // 最近一次判定(只換提示時重畫,不重�
 let niisNoIdentity = false; // NIIS 未讀到健保卡(只在記憶體)
 let autorunOp = null;       // 進行中的工作區操作 id
 const NOTICE_NO_ID = { tone: 'wait', text: 'NIIS 未讀到健保卡,接種史未更新' };
+const RELOAD_TEXT = '疫苗檢核已更新,請按此重新整理';
+let extensionGone = false;  // 外掛已更新/重新載入,本頁是舊版:停止輪詢,只提示重新整理
+let pollTimer = null;
+
+function onExtensionGone() {
+  if (extensionGone) return;
+  extensionGone = true;
+  clearInterval(pollTimer);
+  log('外掛已更新或重新載入,此頁的舊版已停止;請重新整理此頁(F5)');
+  document.getElementById('vaxcheck-fab')?.remove();
+  addButton();                                                     // 換成「請按此重新整理」
+  if (panel?.host.isConnected) renderPanel(panel.wrap, { user: { name: '疫苗檢核' }, error: '外掛已更新,請重新整理此頁(F5)後再使用', appVersion: APP_VERSION }, { close: closePanel });
+}
 
 function apiUrl(path) {
   const t = encodeURIComponent(new Date().toISOString().slice(0, 19));
@@ -43,6 +57,7 @@ async function getJson(path, token) {
 }
 
 async function checkSession() {
+  if (extensionGone) return;
   const token = sessionStorage.getItem('token');
   if (!token) { if (session) { session = null; raw = null; closePanel(); send({ type: 'session:end' }); } return; }
   if (session?.token === token) return;
@@ -57,8 +72,9 @@ async function checkSession() {
 /** 讀取雲端資料;期間換了病患就丟棄 */
 async function load() {
   const h = session?.idHash;
-  if (!h) return;
+  if (!h || extensionGone) return;
   const data = await fetchAll();
+  if (extensionGone) return;                                 // 讀取期間外掛已重新載入:不再畫出結果
   if (session?.idHash !== h) { log('讀取期間已換病患,丟棄舊資料'); return; }
   raw = data;
   render();
@@ -103,13 +119,17 @@ function showMessage(text) {
 
 /** recompute = false:沿用上次判定,只更新提示(例如 NIIS 未讀到健保卡) */
 async function render({ recompute = true } = {}) {
-  if (!panel || !session) return;
+  if (!panel || !session || extensionGone) return;          // 外掛已重新載入:面板只留「請重新整理」提示(onExtensionGone 畫的)
   const u = session.user;
   const notice = niisNoIdentity ? NOTICE_NO_ID : lastNotice;
   const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice, appVersion: APP_VERSION };
   if (!raw) { renderPanel(panel.wrap, { ...base, loading: true }, { close: closePanel }); return; }
   try {
-    if (recompute || computed?.idHash !== session.idHash) computed = await compute();
+    if (recompute || computed?.idHash !== session.idHash) {
+      const c = await compute();
+      if (extensionGone) return;                             // 計算時才發現斷線(session:get 回 null):不以缺人工條件與 NIIS 的結果覆蓋提示
+      computed = c;
+    }
     const { facts, result, niisMeta } = computed;
     const manualLabels = Object.fromEntries((rulesPack.rules.manualConditions || []).map((m) => [m.key, m.label]));
     renderPanel(panel.wrap, { ...base, notice: niisNoIdentity ? NOTICE_NO_ID : lastNotice, result, sourceStatus: facts.sourceStatus, manual: facts.manual, manualLabels }, {
@@ -135,6 +155,7 @@ function exportDiag(facts, result, niisMeta) {
 }
 
 async function openPanel({ quiet = false } = {}) {
+  if (extensionGone) return;
   await checkSession();
   if (!session) { if (quiet) showMessage('尚未登入健保雲端'); else alert('疫苗檢核:尚未讀到健保卡(請先插卡登入健保雲端)'); return; }
   if (!rulesPack) { rulesPack = await send({ type: 'rules:get' }); if (!rulesPack?.ok) { rulesPack = null; if (quiet) showMessage('規則載入失敗'); else alert('疫苗檢核:規則載入失敗'); return; } }
@@ -218,8 +239,10 @@ function addButton() {
   if (document.getElementById('vaxcheck-fab')) return;
   const host = document.createElement('div'); host.id = 'vaxcheck-fab';
   const root = host.attachShadow({ mode: 'open' });
-  root.innerHTML = `<style>button{position:fixed;right:18px;bottom:18px;z-index:2147483645;font:600 15px "Microsoft JhengHei",system-ui,sans-serif;padding:10px 16px;border-radius:24px;border:0;background:#1C2B3A;color:#fff;box-shadow:0 4px 14px rgba(28,43,58,.3);cursor:pointer}button:focus-visible{outline:3px solid #2B6CB0;outline-offset:2px}</style><button type="button">疫苗檢核</button>`;
-  root.querySelector('button').addEventListener('click', () => openPanel());
+  root.innerHTML = `<style>button{position:fixed;right:18px;bottom:18px;z-index:2147483645;font:600 15px "Microsoft JhengHei",system-ui,sans-serif;padding:10px 16px;border-radius:24px;border:0;background:${extensionGone ? '#8A5300' : '#1C2B3A'};color:#fff;box-shadow:0 4px 14px rgba(28,43,58,.3);cursor:pointer}button:focus-visible{outline:3px solid #2B6CB0;outline-offset:2px}</style><button type="button"></button>`;
+  const btn = root.querySelector('button');
+  btn.textContent = extensionGone ? RELOAD_TEXT : '疫苗檢核';
+  btn.addEventListener('click', () => (extensionGone ? location.reload() : openPanel()));   // 重新整理由使用者按,不自動重整(避免打斷看診)
   document.documentElement.append(host);
 }
 
@@ -232,6 +255,6 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
 
 addButton();
 checkSession();
-setInterval(checkSession, 2000);
+pollTimer = setInterval(checkSession, 2000);
 log(`已載入 v${APP_VERSION}${isLoginUrl(location.href) ? '(登入頁)' : ''}`);
 send({ type: 'autorun:get' }).then((r) => { if (r?.pending) autorun(r.pending); }).catch(() => {});

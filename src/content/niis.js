@@ -3,10 +3,17 @@
 import codes from '../../rules/niis-vaccine-codes.json';
 import { makeCodeTable, niisVaccinations, parseNiisDocument } from '../adapters/niis/parse.js';
 import { sha256Hex } from '../adapters/nhi/token.js';
+import { makeSend } from './alive.js';
 
 const table = makeCodeTable(codes);
 const log = (...a) => console.info('[疫苗檢核]', ...a);
 let lastSig = null;
+let extensionGone = false;   // v0.4.29:外掛更新/重新載入後,本頁是舊版 → 停止解析,只提示重新整理
+const send = makeSend(() => {
+  extensionGone = true;
+  log('外掛已更新或重新載入,此頁的舊版已停止;請重新整理此頁(F5)');
+  toast('疫苗檢核已更新,請重新整理此頁(F5)', 'warn');
+});
 
 function toast(text, tone = 'info') {
   let host = document.getElementById('vaxcheck-toast');
@@ -17,6 +24,7 @@ function toast(text, tone = 'info') {
 }
 
 async function scan() {
+  if (extensionGone) return;
   const res = document.querySelector('#div_result');
   if (!res || !res.querySelector('table')) return;
   const sig = res.textContent.length + ':' + res.textContent.slice(0, 200);
@@ -29,10 +37,11 @@ async function scan() {
     // 讀卡失敗頁面仍會送出:身分為空的「查無接種紀錄」不可當成 0 筆
     toast('疫苗檢核:NIIS 未讀到健保卡,接種史未更新', 'warn');
     log('NIIS 未讀到健保卡(#tb_RocID 為空),接種史未更新');
-    chrome.runtime.sendMessage({ type: 'niis:no_identity' }).catch(() => {});
+    send({ type: 'niis:no_identity' }).catch(() => {});
     return;
   }
-  const reply = await chrome.runtime.sendMessage({ type: 'niis:result', idHash: v.idHash, records: v.records, meta: r.meta });
+  const reply = await send({ type: 'niis:result', idHash: v.idHash, records: v.records, meta: r.meta });
+  if (extensionGone) return;
   if (reply?.ok) toast(`疫苗檢核:已擷取 ${reply.count} 筆接種紀錄${r.meta.unmapped.length ? `(${r.meta.unmapped.length} 筆未對應)` : ''}`, 'ok');
   else if (reply?.reason === 'mismatch') toast('疫苗檢核:NIIS 查詢的身分與健保雲端不同,未併入', 'stop');
   else if (reply?.reason === 'no_session') toast('疫苗檢核:健保雲端尚未開啟本病患', 'stop');
@@ -57,6 +66,6 @@ new MutationObserver(() => { clearTimeout(scan.t); scan.t = setTimeout(scan, 300
 log(`NIIS 已載入 v${chrome.runtime.getManifest().version}`);
 (async () => {
   // 先回報頁面狀態(全新查詢頁或已有結果),再解析,確保 background 先清掉舊的身分雜湊
-  await chrome.runtime.sendMessage({ type: 'niis:page', url: location.href, hasResult: !!document.querySelector('#div_result') }).catch(() => {});
+  await send({ type: 'niis:page', url: location.href, hasResult: !!document.querySelector('#div_result') }).catch(() => {});
   scan();
 })();
