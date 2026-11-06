@@ -408,8 +408,18 @@ gPage.on('console', (m) => { if (/context invalidated/i.test(m.text())) gErrors.
 await gPage.goto(`${MC}/imu/IMUE1000/IMUE2000`);
 const fabText = () => gPage.evaluate(() => document.getElementById('vaxcheck-fab')?.shadowRoot?.querySelector('button')?.textContent || '');
 await until(async () => (await fabText()) === '疫苗檢核', 10000);
+// 面板開著時重新載入外掛,再按「重新讀取」:舊面板不可再畫出(缺人工條件與 NIIS 的)判定結果(Codex 審查 PR #8)
+const gPanel = () => gPage.evaluate(() => { const r = document.querySelector('#vaxcheck-panel')?.shadowRoot; return r ? { text: r.textContent, lists: r.querySelectorAll('.vx-list').length } : null; });
+await gPage.evaluate(() => document.getElementById('vaxcheck-fab').shadowRoot.querySelector('button').click());
+const gOpened = await until(async () => ((await gPanel())?.lists || 0) > 0, 15000);
 await sw.evaluate(() => chrome.runtime.reload()).catch(() => {});        // service worker 隨之結束,evaluate 可能來不及回覆
 await sleep(1000);
+await gPage.evaluate(() => [...document.querySelector('#vaxcheck-panel').shadowRoot.querySelectorAll('.vx-btn')].find((b) => b.textContent === '重新讀取').click());
+const gNotice = await until(async () => /外掛已更新/.test((await gPanel())?.text || ''), 10000);
+await sleep(1500);                                                          // 讀取與計算的後續若未擋住,會在這段時間覆蓋提示
+const gAfter = await gPanel();
+check('G2 面板開著時重新載入外掛,按「重新讀取」→ 面板維持「外掛已更新,請重新整理」,不再畫出判定結果',
+  !!gOpened && !!gNotice && /外掛已更新/.test(gAfter?.text || '') && gAfter?.lists === 0, `開啟 ${!!gOpened};提示 ${!!gNotice};之後清單 ${gAfter?.lists}`);
 // 換病患:舊版 2 秒輪詢會讀到新 token → 呼叫外掛 → 斷線
 await gPage.evaluate((t) => sessionStorage.setItem('token', t), jwt({ ...P1, UserID: 'B223456789', UserName: '測試丙' }));
 const gone = await until(async () => (await fabText()).includes('請按此重新整理'), 10000);

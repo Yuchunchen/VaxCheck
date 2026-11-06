@@ -72,8 +72,9 @@ async function checkSession() {
 /** 讀取雲端資料;期間換了病患就丟棄 */
 async function load() {
   const h = session?.idHash;
-  if (!h) return;
+  if (!h || extensionGone) return;
   const data = await fetchAll();
+  if (extensionGone) return;                                 // 讀取期間外掛已重新載入:不再畫出結果
   if (session?.idHash !== h) { log('讀取期間已換病患,丟棄舊資料'); return; }
   raw = data;
   render();
@@ -118,13 +119,17 @@ function showMessage(text) {
 
 /** recompute = false:沿用上次判定,只更新提示(例如 NIIS 未讀到健保卡) */
 async function render({ recompute = true } = {}) {
-  if (!panel || !session) return;
+  if (!panel || !session || extensionGone) return;          // 外掛已重新載入:面板只留「請重新整理」提示(onExtensionGone 畫的)
   const u = session.user;
   const notice = niisNoIdentity ? NOTICE_NO_ID : lastNotice;
   const base = { user: { name: u.name, sex: u.sex, age: u.birthDate ? ageYears(u.birthDate, todayISO()) : null }, jurisdictionNames: rulesPack?.meta.names, rulesMeta: rulesPack?.meta, notice, appVersion: APP_VERSION };
   if (!raw) { renderPanel(panel.wrap, { ...base, loading: true }, { close: closePanel }); return; }
   try {
-    if (recompute || computed?.idHash !== session.idHash) computed = await compute();
+    if (recompute || computed?.idHash !== session.idHash) {
+      const c = await compute();
+      if (extensionGone) return;                             // 計算時才發現斷線(session:get 回 null):不以缺人工條件與 NIIS 的結果覆蓋提示
+      computed = c;
+    }
     const { facts, result, niisMeta } = computed;
     const manualLabels = Object.fromEntries((rulesPack.rules.manualConditions || []).map((m) => [m.key, m.label]));
     renderPanel(panel.wrap, { ...base, notice: niisNoIdentity ? NOTICE_NO_ID : lastNotice, result, sourceStatus: facts.sourceStatus, manual: facts.manual, manualLabels }, {
